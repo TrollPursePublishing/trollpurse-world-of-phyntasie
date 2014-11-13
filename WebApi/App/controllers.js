@@ -188,9 +188,9 @@ angular.module('app.controllers', ['app.services'])
     // Path: /userwelcome
     .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', function ($scope, $location, $window, UserService, NotificationService) {
         $scope.$root.title = 'AdventureQuestGame | ' + UserService.userName;
-        $scope.username = UserService.user.FullName;
-        $scope.isLoggedIn = UserService.isLoggedIn;
-        $scope.userImageUrl = UserService.getUserImage(UserService.user.Id);
+        $scope.username = '';
+        $scope.isLoggedIn = false;
+        $scope.userImageUrl = '';
         $scope.user = {};
         $scope.acheivements = {};
 
@@ -214,8 +214,13 @@ angular.module('app.controllers', ['app.services'])
             if (!UserService.isLoggedIn) {
                 $location.path('/');
                 return false;
+            } else {
+                $scope.username = UserService.user.FullName;
+                $scope.isLoggedIn = UserService.isLoggedIn;
+                $scope.userImageUrl = UserService.getUserImage(UserService.user.Id);
+                return true;
             }
-            return true;
+            
         };
 
         $scope.getData = function () {
