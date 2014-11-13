@@ -1,0 +1,46 @@
+﻿<div class="row" ng-if="checkRerouteToUserpage()">
+    <div class="col-sm-12 col-md-8">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h1>{{user.FullName}}</h1>
+            </div>
+            <div class="panel-body">
+                <!--<img ng-src="{{userImageUrl}}" style="max-height:300px; max-width:300px;" />-->
+                <div class="row">
+                    <div class="col-sm-3 text-right">Title:</div>
+                    <div class="col-sm-9">{{user.title.name}}</div>
+
+                    <div class="col-sm-3 text-right">Exploring Since:</div>
+                    <div class="col-sm-9">{{user.stats.joinDate | date}}</div>
+
+                    <div class="col-sm-3 text-right">Monsters Brutally Slain:</div>
+                    <div class="col-sm-9">{{user.stats.monstersKilled | number:0}}</div>
+
+                    <div class="col-sm-3 text-right">Current Level:</div>
+                    <div class="col-sm-9">{{user.attributes.level | number:0}}</div>
+
+                    <div class="col-sm-3 text-right">Total Experience:</div>
+                    <div class="col-sm-9">{{user.attributes.experience | number:0}}</div>
+
+                    <div class="col-sm-3 text-right">Areas Explored:</div>
+                    <div class="col-sm-9">{{user.stats.areasDiscovered | number:0}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button class="col-sm-4 btn btn-danger" ng-click="logout()">End Today's Adventure</button>
+            <button class="col-sm-8 btn btn-success" ng-click="adventure()">Begin Adventuring!</button>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="panel panel-warning">
+            <div class="panel-heading"><h1>Your Achievements</h1></div>
+            <div class="panel-body">
+                <div ng-repeat="a in acheivements.pairs track by $index">
+                    <p><strong>{{a.name}}</strong></p>
+                    <p>{{a.description}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
