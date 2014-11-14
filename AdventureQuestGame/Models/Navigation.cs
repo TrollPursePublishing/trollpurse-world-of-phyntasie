@@ -15,7 +15,7 @@ namespace AdventureQuestGame.Models
             isInRoom = false;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public virtual Location currentLocation { get; set; }
         public virtual Area currentArea { get; set; }
         public virtual Room currentRoom { get; set; }

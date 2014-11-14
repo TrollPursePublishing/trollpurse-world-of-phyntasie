@@ -44,7 +44,7 @@ namespace AdventureQuestGame.Models
             leveledUp = false;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public int strength {get; set;}
         public int mana { get; set; }
         public int stanima { get; set; }

@@ -18,7 +18,7 @@ namespace AdventureQuestGame.Models
             this.description = description;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string title { get; set; }
         public string description { get; set; }
     }

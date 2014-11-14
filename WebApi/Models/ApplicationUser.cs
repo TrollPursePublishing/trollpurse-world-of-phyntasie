@@ -43,7 +43,7 @@ namespace WebApi.Models
         }
     }
 
-    public sealed class AuthInit : DropCreateDatabaseIfModelChanges<AuthenticationDbContext>
+    public sealed class AuthInit : CreateDatabaseIfNotExists<AuthenticationDbContext>
     {
         protected override void Seed(AuthenticationDbContext context)
         {

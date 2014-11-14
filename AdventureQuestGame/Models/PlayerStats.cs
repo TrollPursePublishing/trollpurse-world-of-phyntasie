@@ -16,13 +16,15 @@ namespace AdventureQuestGame.Models
             areasDiscovered = 0;
             monstersKilled = 0;
             score = 0;
+
         }
 
-        public Guid Id { get; set; }
-        public DateTime joinDate { get; set; }
+        public Guid Id { get; private set; }
+        public DateTime joinDate { get; private set; }
         public int areasDiscovered { get; set; }
         public int monstersKilled { get; set; }
         public int score { get; set; }
         public virtual ICollection<PlayerVisits> placesVisited { get; set; }
+        public string playerImageUrl { get; private set; }
     }
 }

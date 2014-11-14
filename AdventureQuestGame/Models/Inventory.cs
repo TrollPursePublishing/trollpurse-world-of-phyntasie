@@ -19,7 +19,7 @@ namespace AdventureQuestGame.Models
             gold = 1000;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public virtual ICollection<Armor> armors { get; set; }
         public virtual ICollection<Potion> potions { get; set; }
         public virtual ICollection<Weapon> weapons { get; set; }

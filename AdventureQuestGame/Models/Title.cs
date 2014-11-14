@@ -20,7 +20,7 @@ namespace AdventureQuestGame.Models
             this.levelToAcheive = levelToAcheive;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string name { get; set; }
         public string description {get; set;}
         public Gender genderRelation { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Contexts.Initializers
 {
-    public sealed class GameInit : DropCreateDatabaseIfModelChanges<GameContext>
+    public sealed class GameInit : CreateDatabaseIfNotExists<GameContext>
     {
         private PlayerAttributes PlayerAttributesWithLevel(int strength, int toughness, int health)
         {

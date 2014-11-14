@@ -24,7 +24,7 @@ namespace AdventureQuestGame.Models
             this.effectTurns = effectTurns;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string name { get; set; }
         public int healingValue { get; set; }
         public int poisonValue { get; set; }
