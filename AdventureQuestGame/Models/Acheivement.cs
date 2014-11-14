@@ -20,7 +20,7 @@ namespace AdventureQuestGame.Models
             this.player = p;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public DateTime time { get; set; }
         public string name { get; set; }
         public string description { get; set; }

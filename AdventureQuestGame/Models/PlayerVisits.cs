@@ -12,7 +12,7 @@ namespace AdventureQuestGame.Models
         {
             Id = Guid.NewGuid();
         }
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public Guid placesVisitedId { get; set; }
     }
 }

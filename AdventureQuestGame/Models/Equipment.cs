@@ -14,7 +14,7 @@ namespace AdventureQuestGame.Models
             Id = Guid.NewGuid();
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public virtual Armor arm { get; set; }
         public virtual Armor head { get; set; }
         public virtual Armor torso { get; set; }

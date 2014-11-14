@@ -19,7 +19,7 @@ namespace AdventureQuestGame.Models
             this.locations = new List<Location>();
         }
 
-        public Guid Id { get; set; } 
+        public Guid Id { get; private set; } 
         public string name { get; set; }
         public string description { get; set; }
         public virtual ICollection<Location> locations { get; set; }
