@@ -1,4 +1,5 @@
-﻿using AdventureQuestGame.Models;
+﻿using AdventureQuestGame.Contexts;
+using AdventureQuestGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class RestService
+    class RestCommandWorker : ICommandWorker
     {
-        public IList<string> Process(Player player)
+        public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             List<string> result = new List<string>();
             if (player.navigation.currentLocation.hasMarket)
@@ -20,6 +21,11 @@ namespace AdventureQuestGame.Services.Private
             else
                 result.Add(String.Format("{0} does not have an Inn. I must find a place with a Market to find and Inn and rest.", player.navigation.currentLocation.name));
             return result;
+        }
+
+        public Commands Handles()
+        {
+            return Commands.rest;
         }
     }
 }

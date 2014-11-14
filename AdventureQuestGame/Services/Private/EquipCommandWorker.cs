@@ -1,4 +1,5 @@
-﻿using AdventureQuestGame.Models;
+﻿using AdventureQuestGame.Contexts;
+using AdventureQuestGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class EquipService
+    class EquipCommandWorker : ICommandWorker
     {
-        public IList<string> Process(Player player, string additionalParams)
+        public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             IList<string> result = new List<string>();
 
@@ -46,6 +47,11 @@ namespace AdventureQuestGame.Services.Private
                 result.Add(String.Format("I do not have a {0} to equip.", additionalParams));
             }
             return result;
+        }
+
+        public Commands Handles()
+        {
+            return Commands.equip;
         }
     }
 }

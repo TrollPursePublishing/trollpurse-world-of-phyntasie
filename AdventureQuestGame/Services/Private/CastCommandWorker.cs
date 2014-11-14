@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class CastService
+    class CastCommandWorker : ICommandWorker
     {
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
@@ -48,6 +48,11 @@ namespace AdventureQuestGame.Services.Private
             {
                 return new List<string>(new[]{ "I cannot cast a spell right now."});
             }
+        }
+
+        public Commands Handles()
+        {
+            return Commands.cast;
         }
     }
 }

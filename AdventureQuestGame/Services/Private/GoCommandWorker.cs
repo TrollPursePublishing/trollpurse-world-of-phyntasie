@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class GoService : AbstractService
+    class GoCommandWorker : ICommandWorker
     {
         const int size = 7;
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
@@ -109,6 +109,11 @@ namespace AdventureQuestGame.Services.Private
             }
             //finally, if we reach this point
             return new List<string>(new[]{String.Format("I do not know where {0} is.", additionalParams)});
+        }
+
+        public Commands Handles()
+        {
+            return Commands.go;
         }
     }
 }

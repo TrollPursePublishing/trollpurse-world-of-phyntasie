@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class AttackService
+    class AttackCommandWorker : ICommandWorker
     {
-        public IList<string> Process(Player player, GameContext GameCtx)
+        public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             if (player.isInCombat)
             {
@@ -44,6 +44,11 @@ namespace AdventureQuestGame.Services.Private
             {
                 return new List<string>(new[] { "I am not in combat right now." });
             }
+        }
+
+        public Commands Handles()
+        {
+            return Commands.attack;
         }
     }
 }

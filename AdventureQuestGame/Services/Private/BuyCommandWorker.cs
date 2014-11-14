@@ -1,4 +1,5 @@
-﻿using AdventureQuestGame.Models;
+﻿using AdventureQuestGame.Contexts;
+using AdventureQuestGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class BuyService : AbstractService
+    class BuyCommandWorker : ICommandWorker
     {
-        public IList<string> Process(Player player, string additionalParams)
+        public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             if (player.isInCombat || player.isInside)
             {
@@ -37,11 +38,20 @@ namespace AdventureQuestGame.Services.Private
                 return new List<string>(new[]{player.BuyInventoryItem(w)});
 
             //else just show the player what he/she can buy
-            IList<string> result = new List<string>(new[]{String.Format("{0} was not found in the market.", additionalParams), "Here is what is in the market: "});
+            IList<string> result = new List<string>();
+            if(!additionalParams.TrimStart().TrimEnd().Equals(String.Format("-{0}", Commands.buy.ToString())))
+                result.Add(String.Format("{0} was not found in the market.", additionalParams));
+            
+            result.Add("Here is what is in the market: ");
             market.inventory.armors.ToList().ForEach(aa => result.Add(aa.name));
             market.inventory.potions.ToList().ForEach(pp => result.Add(pp.name));
             market.inventory.weapons.ToList().ForEach(ww => result.Add(ww.name));
             return result;
+        }
+
+        public Commands Handles()
+        {
+            return Commands.buy;
         }
     }
 }

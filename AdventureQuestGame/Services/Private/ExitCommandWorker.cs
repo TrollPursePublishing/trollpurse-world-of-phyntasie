@@ -1,4 +1,5 @@
-﻿using AdventureQuestGame.Models;
+﻿using AdventureQuestGame.Contexts;
+using AdventureQuestGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class ExitService
+    class ExitCommandWorker : ICommandWorker
     {
-        public IList<string> Process(Player player)
+        public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             if (player.isInCombat)
                 return new List<string>(new[] { "I am no coward, I cannot leave whilst combating a mighty foe!" });
@@ -25,6 +26,11 @@ namespace AdventureQuestGame.Services.Private
             {
                 return new List<string>(new[]{"There is not exit in this place."});
             }
+        }
+
+        public Commands Handles()
+        {
+            return Commands.exit;
         }
     }
 }
