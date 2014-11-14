@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace AdventureQuestGame.Services
 {
@@ -38,15 +39,27 @@ namespace AdventureQuestGame.Services
 
     public class CommandService : AbstractService
     {
-        private GoService goService = new GoService();
-        private ExitService exitService = new ExitService();
-        private AttackService attackService = new AttackService();
-        private CastService castService = new CastService();
-        private UseService useService = new UseService();
-        private EquipService equipService = new EquipService();
-        private BuyService buyService = new BuyService();
-        private ExploreService exploreService = new ExploreService();
-        private RestService restService = new RestService();
+        private ICollection<ICommandWorker> workers;
+
+        public CommandService()
+        {
+            workers = new List<ICommandWorker>();
+            foreach (Type worker in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetInterfaces().Contains(typeof(ICommandWorker))))
+            {
+                workers.Add(Activator.CreateInstance(worker) as ICommandWorker); 
+            }
+        }
+
+        public string ParseCommands(ref string additionalParams)
+        {
+            bool hasParams = additionalParams.IndexOf(' ') > 0;
+            int commandEndIndex = hasParams ? additionalParams.IndexOf(' ') - 1 : additionalParams.Length - 1;
+            string command = additionalParams.Substring(1, commandEndIndex).Trim().ToLower();
+            if (hasParams)
+                additionalParams = additionalParams.Substring(commandEndIndex + 2);
+
+            return command;
+        }
 
         public Player ResolvePlayer(Guid id)
         {
@@ -59,12 +72,7 @@ namespace AdventureQuestGame.Services
             if (!additionalParams.StartsWith("-"))
                 return new GameResponse(new List<string>(new[]{"Commands must start with '-', type '-help' for help."}), player);
 
-            bool hasParams = additionalParams.IndexOf(' ') > 0;
-            int commandEndIndex = hasParams ? additionalParams.IndexOf(' ') - 1 : additionalParams.Length - 1;
-            string command = additionalParams.Substring(1, commandEndIndex).Trim().ToLower();
-            if (hasParams)
-                additionalParams = additionalParams.Substring(commandEndIndex + 2);
-
+            string command = ParseCommands(ref additionalParams);
             Commands ecommand;
             bool success = Enum.TryParse<Commands>(command, true, out ecommand);
 
@@ -73,70 +81,13 @@ namespace AdventureQuestGame.Services
                 return new GameResponse(new List<string>(new[]{String.Format("I do not know how to {0}", command)}), player);
             }
 
-            switch (ecommand)
-            {
-                case Commands.go:
-                    result = goService.Process(player, additionalParams, GameCtx);
-                    break;
-
-                case Commands.exit:
-                    result = exitService.Process(player);
-                    break;
-
-                case Commands.attack:
-                    result = attackService.Process(player, GameCtx);
-                    break;
-
-                case Commands.cast:
-                    result = castService.Process(player, additionalParams, GameCtx);
-                    break;
-
-                case Commands.use:
-                    result = useService.Process(player, additionalParams, GameCtx);
-                    break;
-
-                case Commands.equip:
-                    result = equipService.Process(player, additionalParams);
-                    break;
-
-                case Commands.buy:
-                    result = buyService.Process(player, additionalParams);
-                    break;
-
-                case Commands.map:
-                    result = PrintMap(player);
-                    break;
-
-                case Commands.explore:
-                    result = exploreService.Process(player);
-                    break;
-
-                case Commands.rest:
-                    result = restService.Process(player);
-                    break;
-
-                default:
-                    result = new List<string>();
-                    foreach(var i in Enum.GetValues(typeof(Commands)))
-                    {
-                        result.Add("-" + i.ToString());
-                    }
-                    break;
-            }
+            result = workers.First(w => w.Handles().Equals(ecommand)).Process(player, additionalParams, GameCtx);
 
             DetectOneToOneRemovals(player);
             DetectLevelUpEvent(player);
             GameCtx.SaveChanges();
-            return new GameResponse(result, player);
-        }
 
-        private IList<string> PrintMap(Player p)
-        {
-            IList<string> result = new List<string>();
-            p.navigation.currentWorld.areas
-                .ToList()
-                .ForEach(a => result.Add(a.name));
-            return result;            
+            return new GameResponse(result, player);
         }
 
         private void DetectLevelUpEvent(Player player)

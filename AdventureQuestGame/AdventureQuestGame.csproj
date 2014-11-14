@@ -76,20 +76,23 @@
     <Compile Include="Models\Weapon.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICommandWorker.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\Private\AbstractService.cs" />
     <Compile Include="Services\AchievementsService.cs" />
-    <Compile Include="Services\Private\AttackService.cs" />
-    <Compile Include="Services\Private\BuyService.cs" />
-    <Compile Include="Services\Private\CastService.cs" />
+    <Compile Include="Services\Private\AttackCommandWorker.cs" />
+    <Compile Include="Services\Private\BuyCommandWorker.cs" />
+    <Compile Include="Services\Private\CastCommandWorker.cs" />
     <Compile Include="Services\CommandService.cs" />
-    <Compile Include="Services\Private\EquipService.cs" />
-    <Compile Include="Services\Private\ExitService.cs" />
-    <Compile Include="Services\Private\ExploreService.cs" />
-    <Compile Include="Services\Private\GoService.cs" />
-    <Compile Include="Services\Private\RestService.cs" />
-    <Compile Include="Services\Private\UseService.cs" />
+    <Compile Include="Services\Private\EquipCommandWorker.cs" />
+    <Compile Include="Services\Private\ExitCommandWorker.cs" />
+    <Compile Include="Services\Private\ExploreCommandWorker.cs" />
+    <Compile Include="Services\Private\GoCommandWorker.cs" />
+    <Compile Include="Services\Private\HelpCommandWorker.cs" />
+    <Compile Include="Services\Private\MapCommandWorker.cs" />
+    <Compile Include="Services\Private\RestCommandWorker.cs" />
+    <Compile Include="Services\Private\UseCommandWorker.cs" />
     <Compile Include="Services\RankService.cs" />
   </ItemGroup>
   <ItemGroup />

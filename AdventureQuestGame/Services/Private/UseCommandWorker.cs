@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services.Private
 {
-    class UseService
+    class UseCommandWorker : ICommandWorker
     {
         public IList<string> Process(Player player, string addtionalParams, GameContext GameCtx)
         {
@@ -40,6 +40,11 @@ namespace AdventureQuestGame.Services.Private
                 return result;
             }
             return new List<string>(new[] { player.UsePotion(index) });
+        }
+
+        public Commands Handles()
+        {
+            return Commands.use;
         }
     }
 }
