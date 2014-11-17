@@ -117,21 +117,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\app.js" />
+    <Content Include="App\app.min.js" />
     <Content Include="App\controllers.js" />
+    <Content Include="App\controllers.min.js" />
     <Content Include="App\directives.js" />
+    <Content Include="App\directives.min.js" />
     <Content Include="App\filters.js" />
+    <Content Include="App\filters.min.js" />
     <Content Include="App\services.js" />
+    <Content Include="App\services.min.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\hint.css" />
+    <Content Include="Content\hint.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\public\Untitled.png" />
     <Content Include="Images\userprofileimages\5153F533-1C94-4A5F-A482-49C8CC5D7C07.svg" />
     <Content Include="Images\userprofileimages\9B244CD6-FA37-409E-8E60-B2A3753EFA71.svg" />
     <Content Include="Index.html" />
+    <Content Include="Index.min.html">
+      <DependentUpon>Index.html</DependentUpon>
+    </Content>
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-aria.js" />
@@ -890,9 +899,37 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="App\app.min.js.map" />
+    <Content Include="App\controllers.min.js.map" />
+    <Content Include="App\directives.min.js.map" />
+    <Content Include="App\services.min.js.map" />
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="View\404.min.html">
+      <DependentUpon>404.html</DependentUpon>
+    </Content>
+    <Content Include="View\About.min.html">
+      <DependentUpon>About.html</DependentUpon>
+    </Content>
+    <Content Include="View\Game.min.html">
+      <DependentUpon>Game.html</DependentUpon>
+    </Content>
+    <Content Include="View\Index.min.html">
+      <DependentUpon>Index.html</DependentUpon>
+    </Content>
+    <Content Include="View\Login.min.html">
+      <DependentUpon>Login.html</DependentUpon>
+    </Content>
+    <Content Include="View\Ranks.min.html">
+      <DependentUpon>Ranks.html</DependentUpon>
+    </Content>
+    <Content Include="View\SignUp.min.html">
+      <DependentUpon>SignUp.html</DependentUpon>
+    </Content>
+    <Content Include="View\UserWelcome.min.html">
+      <DependentUpon>UserWelcome.html</DependentUpon>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="View\404.html" />
     <Content Include="View\About.html" />
