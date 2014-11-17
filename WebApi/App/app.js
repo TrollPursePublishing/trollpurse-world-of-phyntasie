@@ -44,12 +44,3 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         })
 
     }]);
-
-    //.run(['$rootScope', '$injector', function ($rootScope, $injector) {
-    //    $injector.get("$http").defaults.transformRequest = function (data, headersGetter) {
-    //        if ($rootScope.oauth) headersGetter()['Authorization'] = "Bearer " + $rootScope.oauth.access_token;
-    //        if (data) {
-    //            return angular.toJson(data);
-    //        }
-    //    };
-    //}]);

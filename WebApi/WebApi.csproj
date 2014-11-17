@@ -117,19 +117,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\app.js" />
-    <Content Include="App\app.min.js" />
+    <Content Include="App\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
     <Content Include="App\controllers.js" />
-    <Content Include="App\controllers.min.js" />
+    <Content Include="App\controllers.min.js">
+      <DependentUpon>controllers.js</DependentUpon>
+    </Content>
     <Content Include="App\directives.js" />
-    <Content Include="App\directives.min.js" />
+    <Content Include="App\directives.min.js">
+      <DependentUpon>directives.js</DependentUpon>
+    </Content>
     <Content Include="App\filters.js" />
-    <Content Include="App\filters.min.js" />
+    <Content Include="App\filters.min.js">
+      <DependentUpon>filters.js</DependentUpon>
+    </Content>
     <Content Include="App\services.js" />
-    <Content Include="App\services.min.js" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="App\services.min.js">
+      <DependentUpon>services.js</DependentUpon>
+    </Content>
     <Content Include="Content\hint.css" />
     <Content Include="Content\hint.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -897,12 +903,21 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="App\app.min.js.map" />
-    <Content Include="App\controllers.min.js.map" />
-    <Content Include="App\directives.min.js.map" />
-    <Content Include="App\services.min.js.map" />
+    <Content Include="App\app.min.js.map">
+      <DependentUpon>app.min.js</DependentUpon>
+    </Content>
+    <Content Include="App\controllers.min.js.map">
+      <DependentUpon>controllers.min.js</DependentUpon>
+    </Content>
+    <Content Include="App\directives.min.js.map">
+      <DependentUpon>directives.min.js</DependentUpon>
+    </Content>
+    <Content Include="App\filters.min.js.map">
+      <DependentUpon>filters.min.js</DependentUpon>
+    </Content>
+    <Content Include="App\services.min.js.map">
+      <DependentUpon>services.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
