@@ -21,7 +21,7 @@ namespace AdventureQuestGame.Models
             this.minLevel = minLevel;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string name { get; set; }
         public string description { get; set; }
         public int damage { get; set; }

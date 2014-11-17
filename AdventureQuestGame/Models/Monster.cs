@@ -29,7 +29,7 @@ namespace AdventureQuestGame.Models
             this.type = type;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public string name { get; set; }
         public string description { get; set; }
         public virtual PlayerAttributes attribute { get; set; }

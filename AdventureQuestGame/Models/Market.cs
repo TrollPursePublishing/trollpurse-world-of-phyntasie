@@ -18,7 +18,7 @@ namespace AdventureQuestGame.Models
             this.locationIAmIn = locationIAmIn;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
         public virtual Inventory inventory  { get; set; }
         public virtual Location locationIAmIn { get; set; }
     }

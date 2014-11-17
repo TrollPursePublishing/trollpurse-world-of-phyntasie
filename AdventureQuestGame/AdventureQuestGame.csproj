@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Contexts\GameContext.cs" />
     <Compile Include="Contexts\Initializers\GameInit.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Area.cs" />
     <Compile Include="Models\Armor.cs" />
     <Compile Include="Models\Equipment.cs" />
