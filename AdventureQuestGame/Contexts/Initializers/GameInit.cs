@@ -70,17 +70,17 @@ namespace AdventureQuestGame.Contexts.Initializers
 
             Room[] rooms =
             {
-                new Room("Entrance", "A dank, smelly, cold room filled with other rooms", true),
-                new Room("Torture Chamber", "A part of this room elicits excitement! Another part dread. I am so confused.", false),
-                new Room("Sewer Entrance", "A hole in the ground covered by a large copper plate. Easily set aside. Down I go!", true),
-                new Room("Sewer Hallway", "A long, dank, smelly, place. What could possibly be here?", false),
-                new Room("Sewer Cavern", "Chunks of the sewer has fallen away and something has burrowed in. Dare I see who is home?", false),
-                new Room("Sewer Crossroads", "Many other sewer hallways connect here, making for one large cesspool. Blech! What drove me here?", false),
-                new Room("Castle Entrance", "Majestic gates stand before you and wary guards eye you, best stow the weapons... for now.", true),
-                new Room("Grand Hall", "Large, ornate, and full of loot. Best get started.", false),
-                new Room("Farm Fields", "The wind lazily pushes the large strands of wheat around. They sway, as if drunk on the sunlight. The only thing menacing about these fields is what they can potentially hide.", true),
-                new Room("Burned Home", "This building used to house a family. Now, telling by the socerous scorch marks and bones, it houses the souls of the deceased.", false),
-                new Room("Overlook Hill", "Looming in the distance the opposite of the island, one can see Reedton. So interesting, a bustling city, diminished to such a puny size by something as simple as distance. One thing to note though is that this hill does not look natural.", false)
+                new Room("Entrance", "A dank, smelly, cold room filled with other rooms", true, 5),
+                new Room("Torture Chamber", "A part of this room elicits excitement! Another part dread. I am so confused.", false, 5),
+                new Room("Sewer Entrance", "A hole in the ground covered by a large copper plate. Easily set aside. Down I go!", true, 5),
+                new Room("Sewer Hallway", "A long, dank, smelly, place. What could possibly be here?", false, 5),
+                new Room("Sewer Cavern", "Chunks of the sewer has fallen away and something has burrowed in. Dare I see who is home?", false, 5),
+                new Room("Sewer Crossroads", "Many other sewer hallways connect here, making for one large cesspool. Blech! What drove me here?", false, 5),
+                new Room("Castle Entrance", "Majestic gates stand before you and wary guards eye you, best stow the weapons... for now.", true, 5),
+                new Room("Grand Hall", "Large, ornate, and full of loot. Best get started.", false, 5),
+                new Room("Farm Fields", "The wind lazily pushes the large strands of wheat around. They sway, as if drunk on the sunlight. The only thing menacing about these fields is what they can potentially hide.", true,5),
+                new Room("Burned Home", "This building used to house a family. Now, telling by the socerous scorch marks and bones, it houses the souls of the deceased.", false, 5),
+                new Room("Overlook Hill", "Looming in the distance the opposite of the island, one can see Reedton. So interesting, a bustling city, diminished to such a puny size by something as simple as distance. One thing to note though is that this hill does not look natural.", false, 5)
             };
 
             Spell[] spells =
@@ -121,8 +121,8 @@ namespace AdventureQuestGame.Contexts.Initializers
                 new Location("Buttleberry Gates", "Two large stone griffins peer into your eyes as you approach the iron-wrought gates of Buttleberry. They promise swift vengeance to evil-doers."){isExit=true},
                 new Location("Buttleberry Dungeon", "Well, it looks frightening enough."){rooms=new List<Room>(new[]{rooms[0], rooms[1]})},
                 new Location("Reedton Market", "A bustling venue filled with various shops and treats. To the left are some amazing artists of puppetry and to the right more sweet shops. Children run up to you in awe, while mothers wink from a distance."){hasMarket=true},
-                new Location("Reedton Castle", "Large a forboding, this castle overlooks the town square and surrounding ocean. Flags fly in the wind, indicating that the Lord and Lady are home. Perhaps paying them a visit will prove... fruitful"){rooms=new List<Room>(new[]{rooms[6], rooms[7]})},
-                new Location("Reedton Grasslands", "Being on an island, but space had to be conserved for farms. However, creatures of the night have claimed what farmers have not. Who knows what treasures await here."){rooms=new List<Room>(new[]{rooms[8], rooms[9], rooms[10]})},
+                new Location("Reedton Castle", "Large a forboding, this castle overlooks the town square and surrounding ocean. Flags fly in the wind, indicating that the Lord and Lady are home. Perhaps paying them a visit will prove... fruitful"){monsterTypeHere = MonsterType.Person, rooms=new List<Room>(new[]{rooms[6], rooms[7]})},
+                new Location("Reedton Grasslands", "Being on an island, but space had to be conserved for farms. However, creatures of the night have claimed what farmers have not. Who knows what treasures await here."){monsterTypeHere = MonsterType.Creature, rooms=new List<Room>(new[]{rooms[8], rooms[9], rooms[10]})},
                 new Location("Reedton Wharf", "The only way on or off this island legally. It controls the imports and exports of this island. It is said that one man owns it all, and thus owns the island."){isExit=true},
                 new Location("Reedton Sewers", "All the waste, and who knows what else, runs into these large caverns and into the ocean from the other side of the island. An engineering miracle."){rooms=new List<Room>(rooms.Where(r => r.name.StartsWith("Sewer")).ToArray())}
             };
