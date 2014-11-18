@@ -9,31 +9,31 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
 
         $routeProvider
         .when('/about', {
-            templateUrl: 'view/about.html',
+            templateUrl: 'view/about.min.html',
             controller: 'AboutCtrl'
         })
         .when('/adventure', {
-            templateUrl: 'view/game.html',
+            templateUrl: 'view/game.min.html',
             controller: 'CommandCtrl'
         })
         .when('/', {
-            templateUrl: 'view/index.html',
+            templateUrl: 'view/index.min.html',
             controller: 'HomeCtrl',
         })
         .when('/login', {
-            templateUrl: 'view/login.html',
+            templateUrl: 'view/login.min.html',
             controller: 'LoginCtrl'
         })
         .when('/ranks', {
-            templateUrl: 'view/ranks.html',
+            templateUrl: 'view/ranks.min.html',
             controller: 'RanksCtrl'
         })
         .when('/signup', {
-            templateUrl: 'view/signup.html',
+            templateUrl: 'view/signup.min.html',
             controller: 'SignUpCtrl'
         })
         .when('/userwelcome', {
-            templateUrl: 'view/userwelcome.html',
+            templateUrl: 'view/userwelcome.min.html',
             controller: 'UserCtrl',
         })
         .when('/View/*', {
