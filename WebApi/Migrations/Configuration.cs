@@ -1,5 +1,6 @@
 namespace WebApi.Migrations
 {
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -15,6 +16,9 @@ namespace WebApi.Migrations
 
         protected override void Seed(WebApi.Models.AuthenticationDbContext context)
         {
+            if(context.Roles.All(r => !r.Name.Equals("Player")))
+                context.Roles.AddOrUpdate(new IdentityRole("Player"));
+            context.SaveChanges();
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
@@ -27,6 +31,11 @@ namespace WebApi.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            context.Roles.AddOrUpdate(
+                r => r.Id);
+
+            context.Users.AddOrUpdate(
+                r => r.Id);
         }
     }
 }

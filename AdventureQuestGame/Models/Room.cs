@@ -20,12 +20,13 @@ namespace AdventureQuestGame.Models
     {
         protected Room() { }
 
-        public Room(string name, string description, bool isExit)
+        public Room(string name, string description, bool isExit, int chanceForRelic)
         {
             Id = Guid.NewGuid();
             this.name = name;
             this.description = description;
             this.isExit = isExit;
+            this.chanceForRelic = chanceForRelic;
             linkedRoom = new List<Room>();
         }
 
@@ -34,5 +35,6 @@ namespace AdventureQuestGame.Models
         public string description { get; set; }
         public bool isExit { get; set; }
         public virtual ICollection<Room> linkedRoom { get; set; }
+        public int chanceForRelic { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace AdventureQuestGame.Models
             this.rooms = new List<Room>();
             this.isExit = false;
             this.hasMarket = false;
+            monsterTypeHere = MonsterType.Monster;
         }
 
         public Guid Id { get; private set; }
@@ -27,5 +28,6 @@ namespace AdventureQuestGame.Models
         public virtual ICollection<Room> rooms { get; set; }
         public bool isExit { get; set; }
         public bool hasMarket { get; set; }
+        public MonsterType monsterTypeHere { get; set; }
     }
 }
