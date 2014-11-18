@@ -13,11 +13,7 @@
                             <span class="glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}} / {{user.attributes.health}} | <span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}} | <span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}} | <span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}} | <span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}
                         </div>
                     </div>
-                    <div class="panel-body" style="overflow:auto; max-height: 400px; min-height:400px">
-                        <div ng-repeat="message in messages track by $index">
-                            <p>{{message}}</p>
-                        </div>
-                    </div>
+                    <gameview></gameview>
                     <div class="panel-footer">
                         <form class="row" ng-submit="submit(data); data='';">
                             <input class="col-sm-8 col-sm-offset-1" type="text" ng-model="data" placeholder="Commands" required />
