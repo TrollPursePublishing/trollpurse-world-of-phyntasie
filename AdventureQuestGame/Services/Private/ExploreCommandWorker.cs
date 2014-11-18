@@ -19,9 +19,9 @@ namespace AdventureQuestGame.Services.Private
             if (player.isInside && !player.isInCombat)
             {
                 Random r = new Random();
-                if (r.Next(1000) < 970)
+                if (r.Next(100) > player.navigation.currentRoom.chanceForRelic)
                 {
-                    IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level).ToList();
+                    IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
                     int index = r.Next(monsters.Count);
                     Monster m = monsters[index];
                     result.Add(player.Engage(m.Copy()));

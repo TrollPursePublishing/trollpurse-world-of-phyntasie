@@ -31,6 +31,11 @@ namespace WebApi.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            context.Roles.AddOrUpdate(
+                r => r.Id);
+
+            context.Users.AddOrUpdate(
+                r => r.Id);
         }
     }
 }
