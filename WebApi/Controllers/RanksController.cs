@@ -43,9 +43,15 @@ namespace WebApi.Controllers
         [Route("api/ranks/topten")]
         public async Task<string> Get()
         {
-            RanksViewModel vm = new RanksViewModel();
-            service.GetTopTen().ToList().ForEach(r => vm.pairs.Add(new RankNameScorePair(r.FullName, r.stats.score)));
-            return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
+            try
+            {
+                RanksViewModel vm = new RanksViewModel();
+                service.GetTopTen().ToList().ForEach(r => vm.pairs.Add(new RankNameScorePair(r.FullName, r.stats.score)));
+                return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
+            }catch(Exception e)
+            {
+                return JsonConvert.SerializeObject(e);
+            }
         }
 
         [HttpGet]
