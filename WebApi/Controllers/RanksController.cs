@@ -48,7 +48,7 @@ namespace WebApi.Controllers
             service.GetTopTen().ToList().ForEach(r => vm.pairs.Add(new RankNameScorePair(r.FullName, r.stats.score)));
             return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
         }catch(Exception e){
-            return Json.Convert.SerializeObject(e);
+            return JsonConvert.SerializeObject(e);
         }
 
         }
