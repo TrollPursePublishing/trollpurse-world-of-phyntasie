@@ -37,6 +37,8 @@ namespace AdventureQuestGame.Migrations
                 r => r.Id
                 );
 
+            context.events.RemoveRange(context.events.Where(e => e.title.Equals("Game Update")));
+
             context.events.AddOrUpdate(
                 r => r.Id,
                 new Event("Game Update", "The game has been upgraded to a new version! Huzzah, there are tons of fixes and features added. Probably some new bugs as well.")
