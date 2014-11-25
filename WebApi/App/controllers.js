@@ -3,12 +3,15 @@
 angular.module('app.controllers', ['app.services'])
 
     // Path: /
-    .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService', function ($scope, $location, $window, UserService, CommandService) {
+    .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService','MessageService', function ($scope, $location, $window, UserService, CommandService, MessageService) {
         $scope.checkRerouteToUserpage = function () {
             if (!UserService.isLoggedIn) {
                 $location.path('/');
                 return false;
             }
+            MessageService.startupServices()
+            .then(function () { if (MessageService.chatConnected) { $scope.$parent.$emit('chatready'); } },
+            function (error) { console.log('error', error); });
             return true;
         };
 
@@ -17,18 +20,37 @@ angular.module('app.controllers', ['app.services'])
         $scope.currentDescription = {};
         $scope.navigation = {};
 
+        $scope.$parent.$on('chat', function (event, data) {
+            console.log('chat', data.name + ':' + data.msg);
+            $scope.$apply(function () {
+                $scope.messages.push(data.name + ' said, ' + data.msg);
+            });
+        });
+
+        $scope.$parent.$on('chatready', function () {
+            console.log('chatready', 'initialized');
+            MessageService.joinLocation(UserService.user.navigation.currentLocation.Id);
+        });
+
         $scope.submit = function (data) {
+            if (data.indexOf('"') === 0 && data.lastIndexOf('"') === data.length - 1) {
+                MessageService.send($scope.user.FullName, data, $scope.user.navigation.currentLocation.Id);
+            } else {
+                MessageService.leaveLocation($scope.user.navigation.currentLocation.Id);
                 CommandService.submit(data, $scope.user.Id)
                 .then(function (data) {
                     var d = angular.fromJson(data.data);
                     for (var i = 0; i < d.messages.length; i++) {
                         $scope.messages.push(d.messages[i]);
-                    }
+                    }                    
                     $scope.user = d.player;
                     UserService.user = $scope.user;
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id);
                 }, function (error) {
                     console.error('error', error);
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id);
                 });
+            }
         };
 
         $scope.detailedView = function (descriptableObject) {
@@ -100,16 +122,25 @@ angular.module('app.controllers', ['app.services'])
     }])
 
     // Path: /ranks
-    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', function ($scope, $location, $window, RanksService, UserService) {
+    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', '$filter', function ($scope, $location, $window, RanksService, UserService, $filter) {
         $scope.$root.title = 'AdventureQuestGame | Ranks';
         $scope.items = {};
         $scope.rankuser = {};
         $scope.isLoggedIn = UserService.isLoggedIn;
+        $scope.rank = '';
 
         $scope.getData = function(){
-            RanksService.get()
+            RanksService.getAll()
             .then(function (data) {
-                $scope.items = angular.fromJson(data.data).pairs;
+                $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
+                if ($scope.isLoggedIn) {
+                    for (var i = 0; i < $scope.items.length; ++i) {
+                        if ($scope.items[i].name === UserService.user.FullName) {
+                            $scope.rank = i + 1;
+                            break;
+                        }
+                    }
+                }
             });
 
             if (UserService.isLoggedIn) {

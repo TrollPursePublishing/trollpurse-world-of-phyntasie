@@ -13,16 +13,12 @@ namespace AdventureQuestGame.Services
     {
         public IList<Player> GetTopTen()
         {
-            if (GameCtx.players.Count() > 9)
-            {
-                return GameCtx.players.OrderBy(p => p.stats.score).ToList().GetRange(0, 10).ToList();
-            }
-            return GameCtx.players.OrderBy(p => p.stats.score).ToList();
+            return GameCtx.players.OrderBy(p => -p.stats.score).ToList().GetRange(0, 10).ToList();
         }
 
         public IList<Player> GetAllOrdered()
         {
-            return GameCtx.players.OrderBy(p => p.stats.score).ToList();
+            return GameCtx.players.OrderBy(p => -p.stats.score).ToList();
         }
 
         public PlayerStats GetStatsById(Guid playerId)
