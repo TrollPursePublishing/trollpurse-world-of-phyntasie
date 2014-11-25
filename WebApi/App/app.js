@@ -2,6 +2,7 @@
 
 // Declares how the application should be bootstrapped. See: http://docs.angularjs.org/guide/module
 angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
+    .value('$', $)
 
     // Gets executed during the provider registrations and configuration phase. Only providers and constants can be
     // injected here. This is to prevent accidental instantiation of services before they have been fully configured.
@@ -14,7 +15,7 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         })
         .when('/adventure', {
             templateUrl: 'view/game.min.html',
-            controller: 'CommandCtrl'
+            controller: 'CommandCtrl',
         })
         .when('/', {
             templateUrl: 'view/index.min.html',

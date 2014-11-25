@@ -44,25 +44,60 @@ angular.module('app.services', [])
 
     .factory('CommandService', ['$http', '$q', function ($http, $q) {
         var command = {};
-
         command.submit = function (data, userId) {
-            //console.log(data);
-            var q = $q.defer();
-            $http.get('api/Command/' + userId + '/' + data)
-            .success(function (data) {
-                q.resolve({ data: data });
-            })
-            .error(function (msg, code) {
-                q.reject(msg);
-            });
-            return q.promise;
+                //console.log(data);
+                var q = $q.defer();
+                $http.get('api/Command/' + userId + '/' + data)
+                .success(function (data) {
+                    q.resolve({ data: data });
+                })
+                .error(function (msg, code) {
+                    q.reject(msg);
+                });
+                return q.promise;
         };
 
         return command;
     }])
 
-    .factory('MessageService',  ['$http', '$q', function ($http, $q) {
-        //TODO: implement
+    .factory('MessageService',  ['$http', '$q', '$rootScope', '$', function ($http, $q, $rootScope, $) {
+        var message = {};
+        message.ChatHub = {};
+        message.chatConnected = false;
+        var proxy = null;
+
+
+        message.startupServices = function () {
+            var q = $q.defer();
+            if (!message.chatConnected) {
+                $(function () {
+                    message.ChatHub = $.connection.chatHub;
+                    message.ChatHub.client.broadcastMessage = function (playerName, msg) {
+                        console.log('broadcast', playerName + ':' + msg);
+                        $rootScope.$emit('chat', { name: playerName, msg: msg });
+                    }
+                    $.connection.hub.start()
+                    .done(function () { message.chatConnected = true; console.log('signalR', 'Connected!'); q.resolve('success'); })
+                    .fail(function () { message.chatConnected = false; console.log('signalR', 'Not Connected :('); q.reject('failure') });
+                });
+            }
+            return q.promise;
+        };
+
+        message.send = function (playerName, msg, locationId) {
+            message.ChatHub.server.send(playerName, msg, locationId);
+        };
+
+        message.joinLocation = function (locationId) {
+            message.ChatHub.server.joinLocation(locationId);
+        };
+
+        message.leaveLocation = function (locationId) {
+            message.ChatHub.server.leaveLocation(locationId);
+        };
+
+        return message;
+
     }])
 
     .factory('NotificationService', ['$http', '$q', function ($http, $q) {
@@ -96,7 +131,7 @@ angular.module('app.services', [])
         };
 
         ranks.getAll = function () {
-            getAsync('api/ach/all' + userId, $q, $http);
+            return getAsync('api/ranks/all', $q, $http);
         };
 
         return ranks;
@@ -136,4 +171,4 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.1');
+    .value('version', '0.0.2.0');
