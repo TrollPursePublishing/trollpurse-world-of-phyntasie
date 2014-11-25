@@ -9,7 +9,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in items | orderBy:'-score':false" ng-class="{success: $index==0}">
+                <tr ng-repeat="item in items" ng-class="{success: $index==0}">
                     <td>{{$index + 1}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.score}}</td>
@@ -22,6 +22,8 @@
             <div class="panel-heading">How Do I Stack Up?</div>
             <div class="panel-body">
                 <div class="row">
+                    <div class="col-sm-3">Rank:</div>
+                    <div class="col-sm-3">{{rank}}</div>
                     <div class="col-sm-3">Score:</div>
                     <div class="col-sm-3">{{rankuser.score}}</div>
                 </div>

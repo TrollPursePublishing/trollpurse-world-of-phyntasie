@@ -12,61 +12,79 @@
             <tr class="success">
                 <th><strong>Command</strong></th>
                 <th><strong>What It Does</strong></th>
+                <td><strong>Example</strong></td>
             </tr>
         </thead>
         <tr>
             <td>-help</td>
             <td>Displays all commands in your viewport</td>
+            <td>-help</td>
         </tr>
 
         <tr>
             <td>-attack</td>
             <td> When in combat, enables you to attack with your currently equipped weapon. If you have no weapon you will use your fists.</td>
+            <td>-attack</td>
         </tr>
 
         <tr>
             <td>-cast "SpellName"</td>
             <td>When in combat, allows you to cast a spell with a given name. When typing, just replace "SpellName" with the name of the spell you wish to cast, no need for the quotation marks.</td>
+            <td>-cast Spitball</td>
         </tr>
 
         <tr>
             <td>-use "PotionName"</td>
             <td>When not in combat or not, healing, mana restor, and stamina restore potions will restore the appropiate fields. When in combat, if the potion is a poison, it will poison the monster you are fighting. As always, no need for the quotation marks and replace "PotionName" with the name of a potion in your inventory.</td>
+            <td>-use The Magical Rememdy of Liquid Courage</td>
         </tr>
 
         <tr>
             <td>-buy "ItemName"</td>
             <td>This will allow you to buy "ItemName" (again, no quotation marks need and replace "ItemName" with the name of the item) from the market. If not in a market, you will be informed thus so.If you forget to type in a parameter, it will list all the items in the current market available for purchase. You may only buy in a market. Indicated by the <i class="market">blue text</i> in the area graph map</td>
+            <td>-buy Muddy Boots</td>
         </tr>
 
         <tr>
             <td>-explore</td>
             <td>Explore the immediate room that you are in. This is how you encounter monsters (for the most part) and discover relics.</td>
+            <td>-explore</td>
         </tr>
 
         <tr>
             <td>-go "Room/Location/Area"</td>
             <td>This allows you to travel to appropiate Rooms, Locations, or Areas. You can only go from one Area to another Area if you are in a Location of the current Area that is the exit. This will be indicated by <i class="exit">red text</i> on your local area graph. When in an Area, you can freely roam about the different Locations. When in a Room, you can only go to Rooms that are both in your current Location and linked to your current Room. When traveling in from one Location to the next, and one Room to the next, there is a small chance of encountering a monster.</td>
+            <td>-go Buttleberry Dungeon</td>
         </tr>
 
         <tr>
             <td>-rest</td>
             <td>If you are in a Market location (indicated by <i class="market">blue text</i> on your local area graph) you will rest, recovering all stats.</td>
+            <td>-rest</td>
         </tr>
 
         <tr>
             <td>-exit</td>
             <td>If you are in a room that is an exit to a Location (noted by <i class="entrance">green text</i> in the area graph map), you will leave the current Room you are in and travel back to the outside of the Location.</td>
+            <td>-exit</td>
         </tr>
 
         <tr>
             <td>-equip "ItemName"</td>
             <td>Equip the given "ItemName" to your equipment roster, unequipping anything that you may have equipped in that slot (putting back into your inventory). In order to equip an item it must be either a Weapon or Armor and currently reside in your inventory</td>
+            <td>-equip Gladius</td>
         </tr>
 
         <tr>
             <td>-map</td>
             <td>Print to your viewport all Areas you can travel to in the current World</td>
+            <td>-map</td>
+        </tr>
+
+        <tr>
+            <td>""</td>
+            <td>If you start and end a group of letters or numbers (or anything that is on the keyboard at that matter) with quotation marks, you are chatting. Chatting allows you to speak with players in your current Location. They may chat with you as well.</td>
+            <td>"This is a chat message."</td>
         </tr>
 
     </table>
@@ -132,7 +150,7 @@
     <p>As stated before, the upper right hand panel is your navigation graph map showing your current area, available locations, and the locations' rooms. There are several colored text hints available for you to help identify where to go.</p>
     <p>The hints are as follows:</p>
     <ul>
-        <li class="market">This color represents an area that has a market. Remember, all market's have an in and you are able to rest here.</li>
+        <li class="market">This color represents an area that has a market. Remember, all market's have an inn and you are able to rest here.</li>
         <li class="exit">This color represents an exit Location from an Area. In order to travel from one Area to the next, you must be in a Location of this type.</li>
         <li class="entrance">This color represents a room that acts as an entrance and exit. This is the first room you will enter as well as the one you must occupy before exiting a room back to the outside of a location</li>
     </ul>
