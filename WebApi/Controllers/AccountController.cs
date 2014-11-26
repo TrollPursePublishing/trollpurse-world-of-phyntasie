@@ -18,6 +18,8 @@ using Newtonsoft.Json;
 using WebApi.Models;
 using AdventureQuestGame.Services;
 using System.Web.Http.Description;
+using System.Text;
+using System.Linq;
 
 namespace WebApplication1.Controllers
 {
@@ -65,8 +67,9 @@ namespace WebApplication1.Controllers
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager _userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(new AuthenticationDbContext()));
+        private ApplicationUserManager _userManager = null;
         private PlayerService service = new PlayerService();
+        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net";
 
         public ApplicationUserManager UserManager
         {
@@ -81,6 +84,36 @@ namespace WebApplication1.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/account/confirm/{hash}/{confirmationCode}")]
+        public IHttpActionResult ConfirmEmail(string hash, string confirmationCode)
+        {
+            var users = UserManager.Users.Where(u => !u.EmailConfirmed);
+            if (users == null)
+                return BadRequest();
+
+            ApplicationUser user = null;
+            foreach (var u in users)
+            {
+                if (GenerateHashString(u.Id, u.PlayerId.ToString()).Equals(hash))
+                {
+                    user = u;
+                    break;
+                }
+            }
+            if (user == null)
+                return BadRequest();
+
+            if (user.Claims.FirstOrDefault(c => c.ClaimType.Equals(ClaimTypes.Email) && c.ClaimValue.Equals(confirmationCode)) != null)
+            {
+                UserManager.RegisterUserEmail(user.Id);
+                return Ok("Congrats, you may now play!");
+            }
+            else
+                return BadRequest();
+        }
 
         [HttpGet]
         [Authorize(Roles="Player")]
@@ -103,6 +136,8 @@ namespace WebApplication1.Controllers
             var user = await UserManager.FindAsync(model.username, model.password);
             if (user == null)
                 return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(new LoginReponseViewModel("Username and password pair not found", true)));
+            if (String.IsNullOrWhiteSpace(user.Email) || !user.EmailConfirmed)
+                return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(new LoginReponseViewModel("You have not confirmed your e-mail address. If you have not received the e-mail, please check your junk folder.", true)));
 
             var id = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             var ctx = Request.GetOwinContext();
@@ -124,14 +159,14 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
-            if(!model.password.Equals(model.confirmpassword))
+
+            if (!model.password.Equals(model.confirmpassword))
             {
                 return GetErrorResult(new IdentityResult("Passwords do not match!"));
             }
 
             var p = service.Create(model.username, model.gender);
-            var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.email };
+            var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.email};
 
             IdentityResult result = await UserManager.CreateAsync(user, model.password);
 
@@ -141,22 +176,41 @@ namespace WebApplication1.Controllers
                 return GetErrorResult(result);
             }
 
-            var claim = new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString());
+            string token = Guid.NewGuid().ToString();
+            var claims = new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()), new Claim(ClaimTypes.Email, token)};
+
             result = await UserManager.AddToRoleAsync(user.Id, "Player");
             if (!result.Succeeded)
             {
                 service.Delete(service.GetPlayer(p.Id));
+                UserManager.Delete(user);
                 return GetErrorResult(result);
             }
 
-            result = await UserManager.AddClaimAsync(user.Id, claim);
-            if (!result.Succeeded)
+            foreach (var claim in claims)
             {
-                service.Delete(service.GetPlayer(p.Id));
-                return GetErrorResult(result);
+                result = await UserManager.AddClaimAsync(user.Id, claim);
+                if (!result.Succeeded)
+                {
+                    UserManager.Delete(user);
+                    service.Delete(service.GetPlayer(p.Id));
+                    return GetErrorResult(result);
+                }
             }
 
-            return Ok();
+            string link = String.Format("{0}/api/account/confirm/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
+            try
+            {
+                await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{1}</a>\n If you cannot see the link, copy and paste this to your address bar: {2}", link, link, link));
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("d", "Could not send e-mail for confirmation.");
+                service.Delete(p);
+                UserManager.Delete(user);
+                return BadRequest();
+            }
+            return Ok(new IdentityResult("Please check your e-mail for a confirmation link, then you will be all set to adventure!"));
         }
 
         protected override void Dispose(bool disposing)
@@ -168,6 +222,19 @@ namespace WebApplication1.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private string GenerateHashString(string userId, string playerId)
+        {
+            using (var crypto = System.Security.Cryptography.SHA512.Create())
+            {
+                string result = String.Empty;
+                foreach (var b in crypto.ComputeHash(Encoding.UTF8.GetBytes(userId + playerId + "@4j$")))
+                {
+                    result += b.ToString("x2");
+                }
+                return result;
+            }
         }
 
         #region Helpers

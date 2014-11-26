@@ -97,16 +97,21 @@ angular.module('app.controllers', ['app.services'])
         $scope.$root.title = 'AdventureQuestGame | Join Now!';
         $scope.error = {};
         $scope.hasError = false;
+        $scope.registered = false;
+        $scope.notification = '';
 
         $scope.signup = function (username, password, confirmpassword, email, gender) {
             UserService.register(username, password, confirmpassword, email, gender)
             .then(function (data) {
+                console.log(data);
                 $scope.error = {};
                 $scope.hasError = false;
-                $location.path('/login');
+                $scope.registered = true;
+                $scope.notification = data.data.Errors[0];
             }, function (error) {
                 $scope.hasError = true;
                 var result = angular.fromJson(error);
+                console.log(result);
                 $scope.error = angular.fromJson(result.ModelState);
             });
             return $scope.success;

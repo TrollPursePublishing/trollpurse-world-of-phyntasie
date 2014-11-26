@@ -2,6 +2,7 @@
     <form class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4" ng-submit="signup(userName, password, confirmpassword, email, gender)">
         <h2 class="text-center">Join the Adventure Now!</h2>
         <div class="alert alert-danger" ng-show="hasError" ng-repeat="err in error.d">{{err}}</div>
+        <div class="alert alert-success" ng-show="registered">{{notification}}</div>
         <div class="form-box">
             <div class="form-group">
                 <input ng-model="userName" type="text" class="form-control" placeholder="Username" required autofocus />
