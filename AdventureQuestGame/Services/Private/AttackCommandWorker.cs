@@ -21,7 +21,7 @@ namespace AdventureQuestGame.Services.Private
                     return new List<string>(new[] { String.Format("I am too tired to use my {0}. I need {1} more stanima.", player.equipment.weapon.name, player.equipment.weapon.stanimaCost - player.attributes.currentStanima) });
                 }
                 result.Add(player.Attack());
-                if (player.engaging.attribute.currentHealth > 0)
+                if (player.engaging.attribute.currentHealth >= 0)
                 {
                     result.Add(player.Defend());
                     if (player.attributes.currentHealth <= 0)
