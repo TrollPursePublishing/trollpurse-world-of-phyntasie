@@ -10,7 +10,6 @@ namespace AdventureQuestGame.Services.Private
 {
     class GoCommandWorker : ICommandWorker
     {
-        const int size = 7;
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             if(player.isInCombat)
@@ -40,7 +39,7 @@ namespace AdventureQuestGame.Services.Private
                         Random r = new Random();
                         if(r.Next(5) > 1)
                         {
-                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
+                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
                             int index = r.Next(monsters.Count);
                             Monster m = monsters[index];
                             result.Add(player.Engage(m.Copy()));
@@ -84,7 +83,7 @@ namespace AdventureQuestGame.Services.Private
                     Random r = new Random();
                     if (r.Next(5) > 3)
                     {
-                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
+                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
                         int index = r.Next(monsters.Count);
                         Monster m = monsters[index];
                         result.Add(player.Engage(m.Copy()));
