@@ -37,8 +37,8 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/userwelcome.min.html',
             controller: 'UserCtrl',
         })
-        .when('/View/*', {
-            redirectTo: '/'
+        .when('/404', {
+            templateUrl: 'view/404.html'
         })
         .otherwise({
             redirectTo: '/'

@@ -11,6 +11,7 @@ namespace WebApi.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
             ContextKey = "WebApi.Models.AuthenticationDbContext";
         }
 

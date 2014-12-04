@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,7 @@ namespace AdventureQuestGame.Models
             isInCombat = false;
             isInside = false;
             expireRoom = false;
+            quests = new PlayerQuests();
         }
 
         public Guid Id { get; private set; }
@@ -47,6 +49,7 @@ namespace AdventureQuestGame.Models
         public virtual Navigation navigation { get; set; }
         public virtual Equipment equipment { get; set; }
         public virtual Monster engaging { get; protected set; }
+        public virtual PlayerQuests quests { get; set; }
         public bool isInCombat { get; set; }
         public bool isInside { get; set; }
         public bool expireRoom { get; set; }
@@ -154,29 +157,37 @@ namespace AdventureQuestGame.Models
             }
         }
 
+        public string AddToInventoryString(string name, string description)
+        {
+            return String.Format("{0} added to inventory. {1}", name, description);
+        }
+
         public string AddInventoryItem(Potion item)
         {
             inventory.potions.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Armor item)
         {
             inventory.armors.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Weapon item)
         {
             inventory.weapons.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Relic item)
         {
             inventory.relics.Add(item.Copy());
             stats.score += item.value;
-            return String.Format("{0} added to inventory.", item.name);
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Collect && q.Quest.NameOfObject.Equals(item.name));
+            if (quest != null)
+                quest.Count++;
+            return AddToInventoryString(item.name, item.description);
         }
 
         public Potion RemoveInventoryPotion(int index)
@@ -205,6 +216,9 @@ namespace AdventureQuestGame.Models
             Relic result = inventory.relics.ElementAt(index);
             stats.score -= result.value;
             inventory.relics.Remove(result);
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Collect && q.Quest.NameOfObject.Equals(result.name));
+            if (quest != null)
+                quest.Count--;
             return result;
         }
 
@@ -279,7 +293,7 @@ namespace AdventureQuestGame.Models
             int damage = spells.ElementAt(index).damage;
             engaging.attribute.currentHealth -= damage;
             attributes.currentMana -= spells.ElementAt(index).manaCost;
-            return String.Format("{0} casts {1} agains {2}, causing {3} damage!", FullName, spells.ElementAt(index).name, engaging.name, damage);
+            return String.Format("{0} casts {1} against {2}, causing {3} damage!", FullName, spells.ElementAt(index).name, engaging.name, damage);
         }
 
         public string Attack()
@@ -420,6 +434,11 @@ namespace AdventureQuestGame.Models
             attributes.AddExperience(exp);
             if(engaging.type == MonsterType.Monster)
                 stats.score += engaging.GetScore;
+
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Slay && q.Quest.NameOfObject.Equals(engaging.name));
+            if (quest != null)
+                quest.Count++;
+
             engaging = null;
             isInCombat = false;
             stats.monstersKilled++;

@@ -16,6 +16,9 @@ namespace WebApi
         {
             app.MapSignalR();
 
+            app.CreatePerOwinContext<AuthenticationDbContext>(AuthenticationDbContext.Create);
+            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
