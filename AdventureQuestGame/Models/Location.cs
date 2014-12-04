@@ -20,6 +20,7 @@ namespace AdventureQuestGame.Models
             this.isExit = false;
             this.hasMarket = false;
             monsterTypeHere = MonsterType.Monster;
+            this.QuestGiver = null;
         }
 
         public Guid Id { get; private set; }
@@ -29,5 +30,6 @@ namespace AdventureQuestGame.Models
         public bool isExit { get; set; }
         public bool hasMarket { get; set; }
         public MonsterType monsterTypeHere { get; set; }
+        public virtual QuestGiver QuestGiver { get; set; }
     }
 }
