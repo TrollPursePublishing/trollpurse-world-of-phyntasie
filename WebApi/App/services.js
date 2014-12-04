@@ -171,4 +171,4 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.3.0');
+    .value('version', '0.0.3.1');

@@ -293,7 +293,7 @@ namespace AdventureQuestGame.Models
             int damage = spells.ElementAt(index).damage;
             engaging.attribute.currentHealth -= damage;
             attributes.currentMana -= spells.ElementAt(index).manaCost;
-            return String.Format("{0} casts {1} against {2}, causing {3} damage!", FullName, spells.ElementAt(index).name, engaging.name, damage);
+            return String.Format("{0} casts {1} against {2}, causing {3} damage! {2} has {4} health remaining.", FullName, spells.ElementAt(index).name, engaging.name, damage, Math.Max(0, engaging.attribute.currentHealth));
         }
 
         public string Attack()
@@ -312,7 +312,7 @@ namespace AdventureQuestGame.Models
                 }
             }
             engaging.attribute.currentHealth -= damage;
-            return String.Format("{0} attacks {1}, causing {2} damage! {3}", FullName, engaging.name, damage, weapon);
+            return String.Format("{0} attacks {1}, causing {2} damage! {1} has {3} remaining health. {4}", FullName, engaging.name, damage, Math.Max(0, engaging.attribute.currentHealth), weapon);
         }
 
         private int Feet() 
@@ -407,14 +407,14 @@ namespace AdventureQuestGame.Models
             if (use.poisonValue > 0 && engaging != null)
             {
                 engaging.attribute.currentHealth -= use.poisonValue;
-                return String.Format("Poisoned {0} for {1}!", engaging.name, use.poisonValue);
+                return String.Format("Poisoned {0} for {1}. It has {2} health remaining!", engaging.name, use.poisonValue, Math.Max(0, engaging.attribute.currentHealth));
             }
             int healed;
             int stanima;
             int mana;
             attributes.currentHealth += healed = Math.Min(attributes.health - attributes.currentHealth, use.healingValue);
-            attributes.currentMana += stanima = Math.Min(attributes.mana - attributes.currentMana, use.manaRestoreValue);
-            attributes.currentStanima += mana = Math.Min(attributes.stanima - attributes.currentStanima, use.stanimaRestoreValue);
+            attributes.currentMana += mana = Math.Min(attributes.mana - attributes.currentMana, use.manaRestoreValue);
+            attributes.currentStanima += stanima = Math.Min(attributes.stanima - attributes.currentStanima, use.stanimaRestoreValue);
             return String.Format("Healed for {0}, Mana restored by {1}, Stanima restored by {2}", healed, mana, stanima);
         }
 
@@ -451,7 +451,11 @@ namespace AdventureQuestGame.Models
                 "Hooray",
                 "AH-HAAA",
                 "Victory",
-                "The world is safer now"
+                "The world is safer now",
+                "Avast, ye scalliwags",
+                "No monster is scary enough, no human is tough enough, nor creature vicious enough, to keep me from killing it, wench",
+                "EUALLEEAAA",
+                "Victorious Conquest"
             };
 
             return cheers[new Random().Next(cheers.Length)];

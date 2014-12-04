@@ -23,7 +23,7 @@ namespace AdventureQuestGame.Services.Private
                 //ONly move to rooms
                 if (player.navigation.currentRoom.linkedRoom != null)
                 {
-                    Room destination = player.navigation.currentRoom.linkedRoom.FirstOrDefault(r => r.name.Equals(additionalParams));
+                    Room destination = player.navigation.currentRoom.linkedRoom.FirstOrDefault(r => r.name.ToLower().Equals(additionalParams));
                     if (destination != null)
                     {
                         Room old = player.navigation.currentRoom;
@@ -54,7 +54,7 @@ namespace AdventureQuestGame.Services.Private
             {
                 if (player.navigation.currentLocation.rooms != null)
                 {
-                    Room destination = player.navigation.currentLocation.rooms.FirstOrDefault(r => r.isExit && r.name.Equals(additionalParams));
+                    Room destination = player.navigation.currentLocation.rooms.FirstOrDefault(r => r.isExit && r.name.ToLower().Equals(additionalParams));
                     if (destination != null)
                     {
                         if (player.OnMove(destination.Id.Value))
@@ -68,7 +68,7 @@ namespace AdventureQuestGame.Services.Private
                 }
 
                 //must be trying to go to a location
-                Location location = player.navigation.currentArea.locations.FirstOrDefault(l => l.name.Equals(additionalParams));
+                Location location = player.navigation.currentArea.locations.FirstOrDefault(l => l.name.ToLower().Equals(additionalParams));
                 if (location != null)
                 {
                     if (player.OnMove(location.Id))
@@ -91,7 +91,7 @@ namespace AdventureQuestGame.Services.Private
                     return result;
                 }
                 //finally, try to see if they are trying to go to a new area
-                Area area = player.navigation.currentWorld.areas.FirstOrDefault(a => a.name.Equals(additionalParams));
+                Area area = player.navigation.currentWorld.areas.FirstOrDefault(a => a.name.ToLower().Equals(additionalParams));
                 if (area != null)
                 {
                     if (player.navigation.currentLocation.isExit)

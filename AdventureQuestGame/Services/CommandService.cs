@@ -70,6 +70,7 @@ namespace AdventureQuestGame.Services
         public GameResponse ProcessCommand(Player player, string additionalParams)
         {
             IList<string> result;
+            additionalParams = additionalParams.ToLower();
             if (!additionalParams.StartsWith("-"))
                 return new GameResponse(new List<string>(new[] { "Commands must start with '-', type '-help' for help." }), player);
 
@@ -86,7 +87,7 @@ namespace AdventureQuestGame.Services
 
             GameplayStatics.DetectOneToOneRemovals(GameCtx, player);
             GameplayStatics.DetectLevelUpEvent(GameCtx, player);
-            GameplayStatics.DetectCompletedQuests(GameCtx, player);
+            (result as List<string>).AddRange(GameplayStatics.DetectCompletedQuests(GameCtx, player));
             GameCtx.SaveChanges();
 
             return new GameResponse(result, player);

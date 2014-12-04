@@ -11,8 +11,9 @@ namespace AdventureQuestGame.Services
 {
     public static class GameplayStatics
     {
-        public static void DetectCompletedQuests(GameContext GameCtx, Player player)
+        public static IList<string> DetectCompletedQuests(GameContext GameCtx, Player player)
         {
+            List<string> results = new List<string>();
             if (player.quests.Quests != null && player.quests.Quests.Count > 0)
             {
                 var check = player.quests.Quests.Where(q => !q.Complete);
@@ -23,11 +24,13 @@ namespace AdventureQuestGame.Services
                         if (q.Quest.IsComplete(q.Count))
                         {
                             q.MakeComplete(player);
+                            results.Add(String.Format("Completed {0}! Received {1} gold and {2} experience.", q.Quest.Title, q.Quest.Gold, q.Quest.Experience));
                             GameCtx.achievements.Add(new Acheivement(String.Format("Quest Completed: {0}", q.Quest.Title), "Completing a quest has this wonderful feeling behind it. A sense of accomplishment, a rush from the excitement, and the bulging purse from the extra coins. Indeed, all these things make a quest worth the work.", player));
                         }
                     }
                 }
             }
+            return results;
         }
 
 

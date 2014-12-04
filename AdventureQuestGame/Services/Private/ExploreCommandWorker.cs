@@ -10,6 +10,7 @@ namespace AdventureQuestGame.Services.Private
 {
     class ExploreCommandWorker : ICommandWorker
     {
+        private static int rsize = 5;
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             IList<string> result = new List<string>();

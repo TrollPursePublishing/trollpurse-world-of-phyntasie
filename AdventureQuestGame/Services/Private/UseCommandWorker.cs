@@ -12,7 +12,7 @@ namespace AdventureQuestGame.Services.Private
     {
         public IList<string> Process(Player player, string addtionalParams, GameContext GameCtx)
         {
-            int index = player.inventory.potions.ToList().IndexOf(player.inventory.potions.FirstOrDefault(p => p.name == addtionalParams));
+            int index = player.inventory.potions.ToList().IndexOf(player.inventory.potions.FirstOrDefault(p => p.name.ToLower() == addtionalParams));
             if(index < 0){
                 return new List<string>(new[]{String.Format("I do not have a {0}", addtionalParams)});
             }
@@ -21,7 +21,7 @@ namespace AdventureQuestGame.Services.Private
                 IList<string> result = new List<string>();
                 result.Add(player.UsePotion(index));
 
-                if (player.engaging.attribute.currentHealth <= 0)
+                if (player.engaging.attribute.currentHealth < 0)
                 {
                     result.Add(player.Disengage());
                     return result;

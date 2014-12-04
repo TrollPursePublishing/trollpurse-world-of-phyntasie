@@ -14,7 +14,7 @@ namespace AdventureQuestGame.Services.Private
         {
             if (player.isInCombat)
             {
-                int spellIndex = player.spells.ToList().IndexOf(player.spells.FirstOrDefault(s => s.name == additionalParams));
+                int spellIndex = player.spells.ToList().IndexOf(player.spells.FirstOrDefault(s => s.name.ToLower() == additionalParams));
                 if (spellIndex < 0)
                     return new List<string>(new[]{String.Format("I do not know how to cast {0}", additionalParams)});
                 if(player.attributes.currentMana >= player.spells.ElementAt(spellIndex).manaCost)
