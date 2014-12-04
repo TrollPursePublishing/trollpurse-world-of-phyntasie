@@ -82,6 +82,11 @@ namespace AdventureQuestGame.Contexts
             modelBuilder.Entity<PlayerQuests>()
                 .HasMany<PlayerQuestQuest>(pq => pq.Quests);
 
+            modelBuilder.Entity<QuestGiver>()
+                .HasMany<Quest>(qg => qg.QuestsToUnlockThisQuestGiver)
+                .WithMany();
+                
+
             base.OnModelCreating(modelBuilder);
         }
     }

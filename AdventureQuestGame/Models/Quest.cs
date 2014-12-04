@@ -10,7 +10,8 @@ namespace AdventureQuestGame.Models
     public enum QuestType
     {
         Slay,
-        Collect
+        Collect,
+        GoTo
     }
 
     [Serializable]
@@ -18,7 +19,7 @@ namespace AdventureQuestGame.Models
     {
         protected Quest() { }
 
-        public Quest(string title, string description, string instructions, int goldReward, int scoreReward, int experienceReward, QuestType type, string nameOfObject, int countNeeded)
+        public Quest(string title, string description, string instructions, int goldReward, int scoreReward, int experienceReward, QuestType type, string nameOfObject, int countNeeded = 1, Quest nextQuest = null)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -30,6 +31,7 @@ namespace AdventureQuestGame.Models
             Type = type;
             NameOfObject = nameOfObject;
             CountNeeded = countNeeded;
+            NextQuest = nextQuest;
         }
 
         public Guid Id { get; private set; }
@@ -43,5 +45,6 @@ namespace AdventureQuestGame.Models
         public QuestType Type { get; private set; }
         public string NameOfObject { get; private set; }
         public bool IsComplete(int currentCount) { return currentCount >= CountNeeded; }
+        public virtual Quest NextQuest { get; private set; }
     }
 }

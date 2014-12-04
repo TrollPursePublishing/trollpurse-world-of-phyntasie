@@ -2,6 +2,7 @@ namespace AdventureQuestGame.Migrations
 {
     using AdventureQuestGame.Models;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -64,6 +65,18 @@ namespace AdventureQuestGame.Migrations
                 rw.QuestGiver = new QuestGiver("Dying Gentleman", "The Dying Gentleman is sitting there, hands folded. His eyes wander to you, looking hopefully. You feel drawn to him, as if you share a brotherhood. It seems he has something to request of you.",
                    new Quest("One Last Glimpse...", "Dear Adventurer, will you aid a foolish old man? Like you, I used to adventure, until I took a bolt to the hip. I have seen many things, marvelous things: creatures you cannot imagine, dungeons deeper than the earth itself, and treasures beyond mortal comprehension. Alas, I have never laid my eyes upon on object of which I could never find. Will you assist me... with my dying wish? I wish to lay eyes upon the Basket of Rock, go forth and find it, please, afore I waste to nothing.",
                        "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1));
+
+            var bm = context.locations.First(l => l.name.Equals("Buttleberry, The Marble Manor"));
+            if (bm.QuestGiver == null)
+                bm.QuestGiver = new QuestGiver("Lord Buttleberry", "LordButtleberry stands at his Manor, clearly aggitated. He is pacing back and forth, his leather boots echoing across the manor grounds. His brow furrowed, he has the likeness of a boar. His ostentatious clothes billow wildly about him as he spins around. Finally, you both match stares, he approaches you.",
+                    new Quest("Failing Fields", "\"Thank the spiritual entities that you are here adventurer! How do I know are one? Look at your garb! Enough idle talk. I am in the need of your assistance. It seems that the rivalry with Reedton has gone a too far this time! Some of our crops have gone bad and the farmers swear that the fields were poisoned. I need you to confront the Lord of Reedton, Alexander, about this and report to me the details. Hurry, go, Buttleberry will be most in your debt.\"", "Go to Grand Hall in Reedton Castle", 100, 25, 30, QuestType.GoTo, "Grand Hall", 1,
+                        new Quest("Speaking of Farm Fields", "I confronted Lord Alexander Reedton about the poisoned farm fields in Buttleberry and Lord Buttleberry's concerns. His face nearly exploded as he exclaimed, \"You.. HE dares to accuse me! Just yesterday our farmers brought to me the same complaints! Do you challenge my authority!? Go, see for yourself.\"", "Go to Farm Fields in Reedton Grassland", 50, 20, 35, QuestType.GoTo, "Farm Fields")));
+
+            var rg = context.locations.First(l => l.name.Equals("Reedton Grasslands"));
+            if(rg.QuestGiver == null)
+                rg.QuestGiver = new QuestGiver("Aggitated Farmer", "He looks... lost, as if he has no purpose left in life. His eyes look at you, but it is as if he does not see you.",
+                    new Quest("Lost Souls", "The only thing I could hear from the farmer where the same words, over and over: \"They were here, but not, then the rest were not, gone, like ghosts, gone, gone... gone\". Eerie to say the least.", "Go to a haunted place and inspect it.", 100, 25, 35, QuestType.GoTo, "The Tall Tree", 1,
+                        new Quest("Putting Souls to Rest", "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping sought you out and spoke to you, in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispered to me, \"Release us... defeat the Vengeful Souls that... harm... pain\". After that she wept some more, her small shoulders rapidly rising and falling twice with each sob.", "Slay ten Vengeful Souls", 1250, 250, 3000, QuestType.Slay, "Vengeful Soul", 10)), new List<Quest>() { bm.QuestGiver.Quest.NextQuest });
                
 
             context.locations.AddOrUpdate(

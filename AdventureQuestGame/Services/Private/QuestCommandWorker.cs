@@ -18,7 +18,7 @@ namespace AdventureQuestGame.Services.Private
             List<string> Results = new List<string>();
             if (additionalParams.Equals("start"))
             {
-                if (player.navigation.currentLocation.QuestGiver == null)
+                if (player.navigation.currentLocation.QuestGiver == null || (player.navigation.currentLocation.QuestGiver != null && !player.navigation.currentLocation.QuestGiver.CanDoQuest(player)))
                     Results.Add("There are no quest givers here.");
                 else if (player.quests.Quests.FirstOrDefault(q => q.Quest.Title.Equals(player.navigation.currentLocation.QuestGiver.Quest.Title)) != null)
                     Results.Add(String.Format("I have already accepted or completed {0}. {1}", player.navigation.currentLocation.QuestGiver.Quest.Title,

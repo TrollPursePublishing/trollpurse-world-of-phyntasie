@@ -51,16 +51,26 @@ namespace AdventureQuestGame.Contexts.Initializers
                 PlayerAttributesWithLevel(10, 2, 12), //Guard
             };
 
-            QuestGiver[] questGivers =
+            QuestGiver[] questGivers = new QuestGiver[4]
             {
                 new QuestGiver("Buttleberry Herald", "He stands there, smug, with his uniform sporting a large orange berry. His myraid colours truly relay his job - a herald. Town crier, the easiest job of late. A true slacker. However, it seems he has a job for me.",
                     new Quest("The Imp Menace", "Hear ye! Hear ye, there are most abundant collections of nasty creatures within our dungeon that are of most import to remove from the vacinity. Rewards, a-plenty. Honor, a-plenty. All bestowed upon the completion of this boon from our most merciful Lord Buttleberry!",
                         "Combat and slay three Imps.", 100, 10, 300, QuestType.Slay, "Imp", 3)),
+
                 new QuestGiver("Dying Gentleman", "The Dying Gentleman is sitting there, hands folded. His eyes wander to you, looking hopefully. You feel drawn to him, as if you share a brotherhood. It seems he has something to request of you.", 
                     new Quest("One Last Glimpse...", "Dear Adventurer, will you aid a foolish old man? Like you, I used to adventure, until I took a bolt to the hip. I have seen many things, marvelous things: creatures you cannot imagine, dungeons deeper than the earth itself, and treasures beyond mortal comprehension. Alas, I have never laid my eyes upon on object of which I could never find. Will you assist me... with my dying wish? I wish to lay eyes upon the Basket of Rock, go forth and find it, please, afore I waste to nothing.",
-                        "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1))
-            };
+                        "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1, 
+                        new Quest("One Final Treasure", "The old man wanted to see this back at Reedton Wharf.", "Go to Reedton Wharf", 1000, 125, 100, QuestType.GoTo, "Reedton Wharf"))),
 
+                new QuestGiver("Lord Buttleberry", "LordButtleberry stands at his Manor, clearly aggitated. He is pacing back and forth, his leather boots echoing across the manor grounds. His brow furrowed, he has the likeness of a boar. His ostentatious clothes billow wildly about him as he spins around. Finally, you both match stares, he approaches you.",
+                    new Quest("Failing Fields", "\"Thank the spiritual entities that you are here adventurer! How do I know are one? Look at your garb! Enough idle talk. I am in the need of your assistance. It seems that the rivalry with Reedton has gone a too far this time! Some of our crops have gone bad and the farmers swear that the fields were poisoned. I need you to confront the Lord of Reedton, Alexander, about this and report to me the details. Hurry, go, Buttleberry will be most in your debt.\"", "Go to Grand Hall in Reedton Castle", 100, 25, 30, QuestType.GoTo, "Grand Hall", 1, 
+                        new Quest("Speaking of Farm Fields", "I confronted Lord Alexander Reedton about the poisoned farm fields in Buttleberry and Lord Buttleberry's concerns. His face nearly exploded as he exclaimed, \"You.. HE dares to accuse me! Just yesterday our farmers brought to me the same complaints! Do you challenge my authority!? Go, see for yourself.\"", "Go to Farm Fields in Reedton Grassland", 50, 20, 35, QuestType.GoTo, "Farm Fields", 1))),
+
+                        null
+            };
+            questGivers[3] = new QuestGiver("Aggitated Farmer", "He looks... lost, as if he has no purpose left in life. His eyes look at you, but it is as if he does not see you.",
+                    new Quest("Lost Souls", "The only thing I could hear from the farmer where the same words, over and over: \"They were here, but not, then the rest were not, gone, like ghosts, gone, gone... gone\". Eerie to say the least.", "Go to a haunted place and inspect it.", 100, 25, 35, QuestType.GoTo, "The Tall Tree", 1,
+                        new Quest("Putting Souls to Rest", "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping sought you out and spoke to you, in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispered to me, \"Release us... defeat the Vengeful Souls that... harm... pain\". After that she wept some more, her small shoulders rapidly rising and falling twice with each sob.", "Slay ten Vengeful Souls", 1250, 250, 3000, QuestType.Slay, "Vengeful Soul", 10)), new List<Quest>() { questGivers[2].Quest.NextQuest });
 
             Potion[] potions =
             {
@@ -124,7 +134,7 @@ namespace AdventureQuestGame.Contexts.Initializers
             Location[] locations = 
             {
                 new Location("Nowhere, The Void", "The place beyond the concious physical realm, where all are born but none remain."){isExit=true},
-                new Location("Buttleberry, The Marble Manor", "Within Buttleberry is a large manor. Its walls are carved from a solid mammoth cut of marble. How such was acheived is only known by the original owners, long passed away. Although impressive, the building resembles a block with holes cut into it for windows and doors. Guards partrol the area, looking for nefarious individuals."),
+                new Location("Buttleberry, The Marble Manor", "Within Buttleberry is a large manor. Its walls are carved from a solid mammoth cut of marble. How such was acheived is only known by the original owners, long passed away. Although impressive, the building resembles a block with holes cut into it for windows and doors. Guards partrol the area, looking for nefarious individuals."){QuestGiver=questGivers[2]},
                 new Location("Grove of the Elder", "These woods contain many mysteries. This is one of them. It is said that child sacrifice and the birth of demons took place here. The rituals too unspeakable to speak anymore of. It looks peacefull now, with the exception of the blood stained stone table resting in the middle of the grove. It speaks to you, calling your name."){isExit=true},
                 new Location("The Tall Tree", "Of all the trees in this forest, this particular specimen seems to know the most. Its presence unsettles you. Sweat begins dripping down your eye, stinging. However, you can't help but feel that it is this wooden creature before you, crying through your soul."),
                 new Location("Buttleberry Square", "Vibrant colors, and boisterous sounds make this town a living entity within a dreary world. The market has several shops that interest you."){hasMarket=true,QuestGiver=questGivers[0]},
@@ -133,7 +143,7 @@ namespace AdventureQuestGame.Contexts.Initializers
                 new Location("Buttleberry Dungeon", "Well, it looks frightening enough."){rooms=new List<Room>(new[]{rooms[0], rooms[1]})},
                 new Location("Reedton Market", "A bustling venue filled with various shops and treats. To the left are some amazing artists of puppetry and to the right more sweet shops. Children run up to you in awe, while mothers wink from a distance."){hasMarket=true},
                 new Location("Reedton Castle", "Large a forboding, this castle overlooks the town square and surrounding ocean. Flags fly in the wind, indicating that the Lord and Lady are home. Perhaps paying them a visit will prove... fruitful"){monsterTypeHere = MonsterType.Person, rooms=new List<Room>(new[]{rooms[6], rooms[7]})},
-                new Location("Reedton Grasslands", "Being on an island, but space had to be conserved for farms. However, creatures of the night have claimed what farmers have not. Who knows what treasures await here."){monsterTypeHere = MonsterType.Creature, rooms=new List<Room>(new[]{rooms[8], rooms[9], rooms[10]})},
+                new Location("Reedton Grasslands", "Being on an island, but space had to be conserved for farms. However, creatures of the night have claimed what farmers have not. Who knows what treasures await here."){monsterTypeHere = MonsterType.Creature, rooms=new List<Room>(new[]{rooms[8], rooms[9], rooms[10]}), QuestGiver=questGivers[3]},
                 new Location("Reedton Wharf", "The only way on or off this island legally. It controls the imports and exports of this island. It is said that one man owns it all, and thus owns the island."){isExit=true,QuestGiver=questGivers[1]},
                 new Location("Reedton Sewers", "All the waste, and who knows what else, runs into these large caverns and into the ocean from the other side of the island. An engineering miracle."){rooms=new List<Room>(rooms.Where(r => r.name.StartsWith("Sewer")).ToArray())}
             };

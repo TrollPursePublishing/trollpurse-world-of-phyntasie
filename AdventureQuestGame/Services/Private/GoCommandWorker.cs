@@ -78,7 +78,7 @@ namespace AdventureQuestGame.Services.Private
                     IList<string> result = new List<string>();
                     player.navigation.currentLocation = location;
                     result.Add(String.Format("{0}, {1}", location.name, location.description));
-                    if (location.QuestGiver != null)
+                    if (location.QuestGiver != null && location.QuestGiver.CanDoQuest(player))
                         result.Add(String.Format("{0} is here. {1}", location.QuestGiver.Name, location.QuestGiver.Description));
                     Random r = new Random();
                     if (r.Next(5) > 3)
