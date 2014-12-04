@@ -19,12 +19,12 @@
             <div class="form-group">
                 <p class="form-control-static">Character Gender:</p>
                 <select class="form-control" ng-model="gender" required>
-                    <option value="0" selected="selected">Male</option>
-                    <option value="1">Female</option>
+                    <option ng-value="0">Male</option>
+                    <option ng-value="1">Female</option>
                 </select>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit" ng-disabled="!(email && userName && password && (password == confirmpassword))" disabled>Join Now!</button>
+                <button class="btn btn-primary btn-block" type="submit" ng-disabled="!(email && userName && password && (password == confirmpassword) && gender)" disabled>Join Now!</button>
             </div>
         </div>
     </form>
