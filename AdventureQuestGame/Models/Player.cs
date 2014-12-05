@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,7 @@ namespace AdventureQuestGame.Models
             isInCombat = false;
             isInside = false;
             expireRoom = false;
+            quests = new PlayerQuests();
         }
 
         public Guid Id { get; private set; }
@@ -47,6 +49,7 @@ namespace AdventureQuestGame.Models
         public virtual Navigation navigation { get; set; }
         public virtual Equipment equipment { get; set; }
         public virtual Monster engaging { get; protected set; }
+        public virtual PlayerQuests quests { get; set; }
         public bool isInCombat { get; set; }
         public bool isInside { get; set; }
         public bool expireRoom { get; set; }
@@ -78,6 +81,19 @@ namespace AdventureQuestGame.Models
 
         public bool OnMove(Guid placeGuid)
         {
+            if(navigation.currentRoom != null)
+            {
+                var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.GoTo && q.Quest.NameOfObject.Equals(navigation.currentRoom.name));
+                if (quest != null)
+                    quest.Count++;
+            }
+
+            var qq = quests.Quests.FirstOrDefault(qs => !qs.Complete && qs.Quest.Type == QuestType.GoTo && qs.Quest.NameOfObject.Equals(navigation.currentLocation.name));
+            if (qq == null)
+                qq = quests.Quests.FirstOrDefault(qs => !qs.Complete && qs.Quest.Type == QuestType.GoTo && qs.Quest.NameOfObject.Equals(navigation.currentArea.name));
+
+            if (qq != null)
+                qq.Count++;
 
             if (stats.placesVisited.FirstOrDefault(p => p.placesVisitedId == placeGuid) == null)
             {
@@ -154,29 +170,37 @@ namespace AdventureQuestGame.Models
             }
         }
 
+        public string AddToInventoryString(string name, string description)
+        {
+            return String.Format("{0} added to inventory. {1}", name, description);
+        }
+
         public string AddInventoryItem(Potion item)
         {
             inventory.potions.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Armor item)
         {
             inventory.armors.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Weapon item)
         {
             inventory.weapons.Add(item.Copy());
-            return String.Format("{0} added to inventory.", item.name);
+            return AddToInventoryString(item.name, item.description);
         }
 
         public string AddInventoryItem(Relic item)
         {
             inventory.relics.Add(item.Copy());
             stats.score += item.value;
-            return String.Format("{0} added to inventory.", item.name);
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Collect && q.Quest.NameOfObject.Equals(item.name));
+            if (quest != null)
+                quest.Count++;
+            return AddToInventoryString(item.name, item.description);
         }
 
         public Potion RemoveInventoryPotion(int index)
@@ -205,6 +229,9 @@ namespace AdventureQuestGame.Models
             Relic result = inventory.relics.ElementAt(index);
             stats.score -= result.value;
             inventory.relics.Remove(result);
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Collect && q.Quest.NameOfObject.Equals(result.name));
+            if (quest != null)
+                quest.Count--;
             return result;
         }
 
@@ -279,7 +306,7 @@ namespace AdventureQuestGame.Models
             int damage = spells.ElementAt(index).damage;
             engaging.attribute.currentHealth -= damage;
             attributes.currentMana -= spells.ElementAt(index).manaCost;
-            return String.Format("{0} casts {1} agains {2}, causing {3} damage!", FullName, spells.ElementAt(index).name, engaging.name, damage);
+            return String.Format("{0} casts {1} against {2}, causing {3} damage! {2} has {4} health remaining.", FullName, spells.ElementAt(index).name, engaging.name, damage, Math.Max(0, engaging.attribute.currentHealth));
         }
 
         public string Attack()
@@ -298,7 +325,7 @@ namespace AdventureQuestGame.Models
                 }
             }
             engaging.attribute.currentHealth -= damage;
-            return String.Format("{0} attacks {1}, causing {2} damage! {3}", FullName, engaging.name, damage, weapon);
+            return String.Format("{0} attacks {1}, causing {2} damage! {1} has {3} remaining health. {4}", FullName, engaging.name, damage, Math.Max(0, engaging.attribute.currentHealth), weapon);
         }
 
         private int Feet() 
@@ -393,14 +420,14 @@ namespace AdventureQuestGame.Models
             if (use.poisonValue > 0 && engaging != null)
             {
                 engaging.attribute.currentHealth -= use.poisonValue;
-                return String.Format("Poisoned {0} for {1}!", engaging.name, use.poisonValue);
+                return String.Format("Poisoned {0} for {1}. It has {2} health remaining!", engaging.name, use.poisonValue, Math.Max(0, engaging.attribute.currentHealth));
             }
             int healed;
             int stanima;
             int mana;
             attributes.currentHealth += healed = Math.Min(attributes.health - attributes.currentHealth, use.healingValue);
-            attributes.currentMana += stanima = Math.Min(attributes.mana - attributes.currentMana, use.manaRestoreValue);
-            attributes.currentStanima += mana = Math.Min(attributes.stanima - attributes.currentStanima, use.stanimaRestoreValue);
+            attributes.currentMana += mana = Math.Min(attributes.mana - attributes.currentMana, use.manaRestoreValue);
+            attributes.currentStanima += stanima = Math.Min(attributes.stanima - attributes.currentStanima, use.stanimaRestoreValue);
             return String.Format("Healed for {0}, Mana restored by {1}, Stanima restored by {2}", healed, mana, stanima);
         }
 
@@ -420,6 +447,11 @@ namespace AdventureQuestGame.Models
             attributes.AddExperience(exp);
             if(engaging.type == MonsterType.Monster)
                 stats.score += engaging.GetScore;
+
+            var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Slay && q.Quest.NameOfObject.Equals(engaging.name));
+            if (quest != null)
+                quest.Count++;
+
             engaging = null;
             isInCombat = false;
             stats.monstersKilled++;
@@ -432,7 +464,11 @@ namespace AdventureQuestGame.Models
                 "Hooray",
                 "AH-HAAA",
                 "Victory",
-                "The world is safer now"
+                "The world is safer now",
+                "Avast, ye scalliwags",
+                "No monster is scary enough, no human is tough enough, nor creature vicious enough, to keep me from killing it, wench",
+                "EUALLEEAAA",
+                "Victorious Conquest"
             };
 
             return cheers[new Random().Next(cheers.Length)];

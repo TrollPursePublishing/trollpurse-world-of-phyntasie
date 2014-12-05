@@ -10,7 +10,6 @@ namespace AdventureQuestGame.Services.Private
 {
     class GoCommandWorker : ICommandWorker
     {
-        const int size = 7;
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             if(player.isInCombat)
@@ -24,7 +23,7 @@ namespace AdventureQuestGame.Services.Private
                 //ONly move to rooms
                 if (player.navigation.currentRoom.linkedRoom != null)
                 {
-                    Room destination = player.navigation.currentRoom.linkedRoom.FirstOrDefault(r => r.name.Equals(additionalParams));
+                    Room destination = player.navigation.currentRoom.linkedRoom.FirstOrDefault(r => r.name.ToLower().Equals(additionalParams));
                     if (destination != null)
                     {
                         Room old = player.navigation.currentRoom;
@@ -40,7 +39,7 @@ namespace AdventureQuestGame.Services.Private
                         Random r = new Random();
                         if(r.Next(5) > 1)
                         {
-                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
+                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
                             int index = r.Next(monsters.Count);
                             Monster m = monsters[index];
                             result.Add(player.Engage(m.Copy()));
@@ -55,7 +54,7 @@ namespace AdventureQuestGame.Services.Private
             {
                 if (player.navigation.currentLocation.rooms != null)
                 {
-                    Room destination = player.navigation.currentLocation.rooms.FirstOrDefault(r => r.isExit && r.name.Equals(additionalParams));
+                    Room destination = player.navigation.currentLocation.rooms.FirstOrDefault(r => r.isExit && r.name.ToLower().Equals(additionalParams));
                     if (destination != null)
                     {
                         if (player.OnMove(destination.Id.Value))
@@ -69,7 +68,7 @@ namespace AdventureQuestGame.Services.Private
                 }
 
                 //must be trying to go to a location
-                Location location = player.navigation.currentArea.locations.FirstOrDefault(l => l.name.Equals(additionalParams));
+                Location location = player.navigation.currentArea.locations.FirstOrDefault(l => l.name.ToLower().Equals(additionalParams));
                 if (location != null)
                 {
                     if (player.OnMove(location.Id))
@@ -79,10 +78,12 @@ namespace AdventureQuestGame.Services.Private
                     IList<string> result = new List<string>();
                     player.navigation.currentLocation = location;
                     result.Add(String.Format("{0}, {1}", location.name, location.description));
+                    if (location.QuestGiver != null && location.QuestGiver.CanDoQuest(player))
+                        result.Add(String.Format("{0} is here. {1}", location.QuestGiver.Name, location.QuestGiver.Description));
                     Random r = new Random();
                     if (r.Next(5) > 3)
                     {
-                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
+                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
                         int index = r.Next(monsters.Count);
                         Monster m = monsters[index];
                         result.Add(player.Engage(m.Copy()));
@@ -90,7 +91,7 @@ namespace AdventureQuestGame.Services.Private
                     return result;
                 }
                 //finally, try to see if they are trying to go to a new area
-                Area area = player.navigation.currentWorld.areas.FirstOrDefault(a => a.name.Equals(additionalParams));
+                Area area = player.navigation.currentWorld.areas.FirstOrDefault(a => a.name.ToLower().Equals(additionalParams));
                 if (area != null)
                 {
                     if (player.navigation.currentLocation.isExit)
@@ -100,7 +101,7 @@ namespace AdventureQuestGame.Services.Private
                             GameCtx.achievements.Add(new Acheivement(String.Format("Adventurous Soul: {0}", area.name), String.Format("Discovering {0} has given a fresh new outlook on life and adventuring - for good or bad. {1}", area.name, area.description), player));
                         }
                         player.navigation.currentArea = area;
-                        player.navigation.currentLocation = area.locations.First();
+                        player.navigation.currentLocation = area.locations.First(l => l.isExit);
                         return new List<string>(new[]{String.Format("I have travelled to {0}. {1}", area.name, area.description)});
                     }
                     return new List<string>(new[]{String.Format("I cannot go to {0} from {1}", area.name, player.navigation.currentLocation.name)});

@@ -91,6 +91,7 @@ namespace AdventureQuestGame.Models
         public void AddExperience(int value)
         {
             experience += value;
+            experience = (experience <= 0 ? 0 : experience);
             if(experience > ((level * 1000 + (100 * (level % 100)))))
             {
                 LevelUp();

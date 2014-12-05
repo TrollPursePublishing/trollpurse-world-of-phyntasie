@@ -25,15 +25,15 @@ namespace AdventureQuestGame.Services.Private
                 return new List<string>(new[]{"I am not in a location where I can do this."});
             }
 
-            Armor a = market.inventory.armors.FirstOrDefault(ar => ar.name == additionalParams);
+            Armor a = market.inventory.armors.FirstOrDefault(ar => ar.name.ToLower() == additionalParams);
             if (a != null)
                 return new List<string>(new[]{player.BuyInventoryItem(a)});
 
-            Potion p = market.inventory.potions.FirstOrDefault(pp => pp.name == additionalParams);
+            Potion p = market.inventory.potions.FirstOrDefault(pp => pp.name.ToLower() == additionalParams);
             if (p != null)
                 return new List<string>(new[]{player.BuyInventoryItem(p)});
 
-            Weapon w = market.inventory.weapons.FirstOrDefault(ww => ww.name == additionalParams);
+            Weapon w = market.inventory.weapons.FirstOrDefault(ww => ww.name.ToLower() == additionalParams);
             if (w != null)
                 return new List<string>(new[]{player.BuyInventoryItem(w)});
 

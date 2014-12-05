@@ -10,8 +10,7 @@ namespace AdventureQuestGame.Services.Private
 {
     class ExploreCommandWorker : ICommandWorker
     {
-        private const int rsize = 5;
-
+        private static int rsize = 5;
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             IList<string> result = new List<string>();
@@ -21,7 +20,7 @@ namespace AdventureQuestGame.Services.Private
                 Random r = new Random();
                 if (r.Next(100) > player.navigation.currentRoom.chanceForRelic)
                 {
-                    IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere).ToList();
+                    IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
                     int index = r.Next(monsters.Count);
                     Monster m = monsters[index];
                     result.Add(player.Engage(m.Copy()));

@@ -14,7 +14,7 @@ namespace AdventureQuestGame.Services.Private
         {
             IList<string> result = new List<string>();
 
-            Armor a = player.inventory.armors.FirstOrDefault(aa => aa.name.Equals(additionalParams));
+            Armor a = player.inventory.armors.FirstOrDefault(aa => aa.name.ToLower().Equals(additionalParams));
             if(a != null)
             {
                 a = player.RemoveInventoryArmor(a);
@@ -28,7 +28,7 @@ namespace AdventureQuestGame.Services.Private
                 return result;
             }
 
-            Weapon w = player.inventory.weapons.FirstOrDefault(ww => ww.name.Equals(additionalParams));
+            Weapon w = player.inventory.weapons.FirstOrDefault(ww => ww.name.ToLower().Equals(additionalParams));
             if(w != null)
             {
                 w = player.RemoveInventoryWeapon(w);

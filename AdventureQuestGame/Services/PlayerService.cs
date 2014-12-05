@@ -61,7 +61,7 @@ namespace AdventureQuestGame.Services
             if(p.navigation.currentRoom != null)
                 p.navigation.currentRoom.Id = null;
 
-            GameCtx.achievements.Add(new Acheivement("Gone on an Adventure!", "Winding roads, rustling trees, and death await this journey. Never will life be the same! Imaging it - loot, combat, and being maimed.", p));
+            GameCtx.achievements.Add(new Acheivement("Gone on an Adventure!", "Winding roads, rustling trees, and death await this journey. Never will life be the same! Imagine it - loot, combat, and being maimed.", p));
             
             GameCtx.players.Add(p);
             GameCtx.SaveChanges();

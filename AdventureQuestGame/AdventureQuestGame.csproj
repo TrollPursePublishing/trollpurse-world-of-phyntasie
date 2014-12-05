@@ -67,9 +67,13 @@
     <Compile Include="Models\Navigation.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerAttributes.cs" />
+    <Compile Include="Models\PlayerQuestQuest.cs" />
+    <Compile Include="Models\PlayerQuests.cs" />
     <Compile Include="Models\PlayerStats.cs" />
     <Compile Include="Models\PlayerVisits.cs" />
     <Compile Include="Models\Potion.cs" />
+    <Compile Include="Models\Quest.cs" />
+    <Compile Include="Models\QuestGiver.cs" />
     <Compile Include="Models\Relic.cs" />
     <Compile Include="Models\Room.cs" />
     <Compile Include="Models\Spell.cs" />
@@ -77,6 +81,7 @@
     <Compile Include="Models\Weapon.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\GameplayStatics.cs" />
     <Compile Include="Services\ICommandWorker.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlayerService.cs" />
@@ -92,11 +97,11 @@
     <Compile Include="Services\Private\GoCommandWorker.cs" />
     <Compile Include="Services\Private\HelpCommandWorker.cs" />
     <Compile Include="Services\Private\MapCommandWorker.cs" />
+    <Compile Include="Services\Private\QuestCommandWorker.cs" />
     <Compile Include="Services\Private\RestCommandWorker.cs" />
     <Compile Include="Services\Private\UseCommandWorker.cs" />
     <Compile Include="Services\RankService.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

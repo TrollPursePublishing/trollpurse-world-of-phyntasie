@@ -37,6 +37,9 @@ namespace AdventureQuestGame.Contexts
         public DbSet<PlayerStats> playerstats { get; set; }
         public DbSet<Acheivement> achievements { get; set; }
 
+        public DbSet<Quest> quests { get; set; }
+        public DbSet<QuestGiver> questGivers { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<World>()
@@ -75,6 +78,14 @@ namespace AdventureQuestGame.Contexts
 
             modelBuilder.Entity<PlayerStats>()
                 .HasMany<PlayerVisits>(p => p.placesVisited);
+
+            modelBuilder.Entity<PlayerQuests>()
+                .HasMany<PlayerQuestQuest>(pq => pq.Quests);
+
+            modelBuilder.Entity<QuestGiver>()
+                .HasMany<Quest>(qg => qg.QuestsToUnlockThisQuestGiver)
+                .WithMany();
+                
 
             base.OnModelCreating(modelBuilder);
         }
