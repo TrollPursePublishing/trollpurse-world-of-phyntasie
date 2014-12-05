@@ -64,7 +64,8 @@ namespace AdventureQuestGame.Migrations
             if (rw.QuestGiver == null)
                 rw.QuestGiver = new QuestGiver("Dying Gentleman", "The Dying Gentleman is sitting there, hands folded. His eyes wander to you, looking hopefully. You feel drawn to him, as if you share a brotherhood. It seems he has something to request of you.",
                    new Quest("One Last Glimpse...", "Dear Adventurer, will you aid a foolish old man? Like you, I used to adventure, until I took a bolt to the hip. I have seen many things, marvelous things: creatures you cannot imagine, dungeons deeper than the earth itself, and treasures beyond mortal comprehension. Alas, I have never laid my eyes upon on object of which I could never find. Will you assist me... with my dying wish? I wish to lay eyes upon the Basket of Rock, go forth and find it, please, afore I waste to nothing.",
-                       "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1));
+                       "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1,
+                           new Quest("One Final Treasure", "The old man wanted to see this back at Reedton Wharf.", "Go to Reedton Wharf", 1000, 125, 100, QuestType.GoTo, "Reedton Wharf")));
 
             var bm = context.locations.First(l => l.name.Equals("Buttleberry, The Marble Manor"));
             if (bm.QuestGiver == null)
