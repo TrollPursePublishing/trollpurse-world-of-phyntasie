@@ -303,10 +303,18 @@ namespace AdventureQuestGame.Models
 
         public string CastSpell(int index)
         {
-            int damage = spells.ElementAt(index).damage;
-            engaging.attribute.currentHealth -= damage;
-            attributes.currentMana -= spells.ElementAt(index).manaCost;
-            return String.Format("{0} casts {1} against {2}, causing {3} damage! {2} has {4} health remaining.", FullName, spells.ElementAt(index).name, engaging.name, damage, Math.Max(0, engaging.attribute.currentHealth));
+            Spell sp = spells.ElementAt(index);
+            if(sp != null)
+            {
+                try{
+                    attributes.currentMana -= sp.manaCost;
+                    return typeof(AdventureQuestGame.Services.SpellStatics).GetMethod(sp.methodName).Invoke(null, new object[] { this, sp }).ToString();
+                }catch(Exception e)
+                {
+                    return "The winds of magic are a fickle mistress. I cannot cast the spell!";
+                }
+            }
+            return "The spell fizzles out as I attempt to cast it.";
         }
 
         public string Attack()
@@ -435,7 +443,7 @@ namespace AdventureQuestGame.Models
         {
             engaging = monster.Copy();
             isInCombat = true;
-            return String.Format("{0} has encounterd a(n) {1}. {2}! Combat ensues!", FullName, engaging.name, engaging.description);
+            return String.Format("{0} has encounterd a(n) {1}. {2} Combat ensues!", FullName, engaging.name, engaging.description);
         }
 
         public string Disengage()
@@ -451,6 +459,9 @@ namespace AdventureQuestGame.Models
             var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.Slay && q.Quest.NameOfObject.Equals(engaging.name));
             if (quest != null)
                 quest.Count++;
+
+            attributes.currentStrength = attributes.strength;
+            attributes.currentToughness = attributes.toughness;
 
             engaging = null;
             isInCombat = false;

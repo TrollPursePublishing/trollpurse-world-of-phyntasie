@@ -30,6 +30,8 @@
         <div class="row">
             <button class="col-sm-4 btn btn-danger" ng-click="logout()">End Today's Adventure</button>
             <button class="col-sm-8 btn btn-success" ng-click="adventure()">Begin Adventuring!</button>
+            <button ng-if="!registerSuccess" class="col-sm-12 btn btn-primary" ng-click="registerToGetEmail()">Start receiving E-mail Updates!</button>
+            <div ng-if="registerClicked" class=" col-sm-12 alert" ng-class="{'alert-success': registerSuccess, 'alert-warning': !registerSuccess}">{{registerText}}</div>
         </div>
     </div>
     <div class="col-sm-12 col-md-4">

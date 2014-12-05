@@ -14,7 +14,7 @@ namespace AdventureQuestGame.Services
         {
             using (var ctx = GameCtx)
             {
-                return ctx.events.ToList();
+                return ctx.events.OrderByDescending(e => e.when).ToList();
             }
         }
     }

@@ -99,8 +99,11 @@ angular.module('app.controllers', ['app.services'])
         $scope.hasError = false;
         $scope.registered = false;
         $scope.notification = '';
+        $scope.hasClicked = false;
+        $scope.pleasewait = 'Trying to register, please wait :D';
 
         $scope.signup = function (username, password, confirmpassword, email, gender) {
+            $scope.hasClicked = true;
             UserService.register(username, password, confirmpassword, email, gender)
             .then(function (data) {
                 console.log(data);
@@ -108,11 +111,13 @@ angular.module('app.controllers', ['app.services'])
                 $scope.hasError = false;
                 $scope.registered = true;
                 $scope.notification = data.data.Errors[0];
+                $scope.hasClicked = false;
             }, function (error) {
                 $scope.hasError = true;
                 var result = angular.fromJson(error);
                 console.log(result);
                 $scope.error = angular.fromJson(result.ModelState);
+                $scope.hasClicked = false;
             });
             return $scope.success;
         };
@@ -222,13 +227,28 @@ angular.module('app.controllers', ['app.services'])
     }])
 
     // Path: /userwelcome
-    .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', function ($scope, $location, $window, UserService, NotificationService) {
-        $scope.$root.title = 'AdventureQuestGame | ' + UserService.userName;
+    .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', 'AccountService', function ($scope, $location, $window, UserService, NotificationService, AccountService) {
+        $scope.$root.title = 'AdventureQuestGame | ' + UserService.user.FullName;
         $scope.username = '';
         $scope.isLoggedIn = false;
         $scope.userImageUrl = '';
         $scope.user = {};
         $scope.acheivements = {};
+        $scope.registerText = '';
+        $scope.registerSuccess = false;
+        $scope.registerClicked = false;
+
+        $scope.registerToGetEmail = function () {
+            AccountService.registerForUpdates($scope.user.Id)
+            .then(function (data) {
+                $scope.registerText = angular.fromJson(data.data).msg;
+                $scope.registerSuccess = true;
+            }, function (error) {
+                $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
+                $scope.registerSuccess = false;
+            });
+            $scope.registerClicked = true;
+        };
 
         $scope.logout = function () {
             UserService.logout(UserService.user.Id)
@@ -275,6 +295,34 @@ angular.module('app.controllers', ['app.services'])
             $scope.getData();
         });
 
+    }])
+
+    .controller('AccountCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService){
+        $scope.$root.title = 'External Portal';
+        $scope.result = {}
+
+        $scope.$on('$viewContentLoaded', function () {
+            AccountService.doNotDisturb($routeParams.hash)
+            .then(function (data) {
+                $scope.result = angular.fromJson(data.data);
+            }, function (error) {
+               $scope.result = { msg: 'Action not successful. I\'m Sorry', success: false };
+            });
+        });
+    }])
+
+    .controller('RegisterCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
+        $scope.$root.title = 'External Portal';
+        $scope.result = {}
+
+        $scope.$on('$viewContentLoaded', function () {
+            AccountService.confirmEmail($routeParams.hash, $routeParams.confirmationCode)
+            .then(function (data) {
+                $scope.result = angular.fromJson(data.data);
+            }, function (error) {
+                $scope.result = { msg: 'Registration not successful, please contact support. I\'m Sorry', success: false };
+            });
+        });
     }])
 
     // Path: /error/404

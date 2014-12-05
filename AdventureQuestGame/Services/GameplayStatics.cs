@@ -77,7 +77,7 @@ namespace AdventureQuestGame.Services
                         has |= ps.name.Equals(s.name);
                     
                     if (!has)
-                        player.spells.Add(s.Copy());
+                        player.spells.Add(s/*.Copy()*/);
                 }
 
                 GameCtx.achievements.Add(new Acheivement("Has Grown More Wiser", String.Format("Gained another point to their level, making them stronger, braver, faster than before. This is granted for reaching level {0}.", player.attributes.level), player));

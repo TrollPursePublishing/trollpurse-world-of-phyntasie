@@ -14,12 +14,14 @@ namespace AdventureQuestGame.Models
         public Event(string title, string description)
         {
             Id = Guid.NewGuid();
+            when = DateTime.UtcNow;
             this.title = title;
             this.description = description;
         }
 
         public Guid Id { get; private set; }
-        public string title { get; set; }
-        public string description { get; set; }
+        public string title { get; private set; }
+        public string description { get; private set; }
+        public DateTime when { get; private set; }
     }
 }
