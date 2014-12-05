@@ -37,11 +37,19 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/userwelcome.min.html',
             controller: 'UserCtrl',
         })
+        .when('/external/account/donotdisturb/:hash', {
+            templateUrl: 'view/externalaction.min.html',
+            controller: 'AccountCtrl'
+        })
+        .when('/external/account/register/:hash/:confirmationCode', {
+            templateUrl: 'view/register.min.html',
+            controller: 'RegisterCtrl'
+        })
         .when('/404', {
             templateUrl: 'view/404.html'
         })
         .otherwise({
-            redirectTo: '/'
+            redirectTo: '/404'
         })
 
     }]);

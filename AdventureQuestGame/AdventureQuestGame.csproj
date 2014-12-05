@@ -101,6 +101,7 @@
     <Compile Include="Services\Private\RestCommandWorker.cs" />
     <Compile Include="Services\Private\UseCommandWorker.cs" />
     <Compile Include="Services\RankService.cs" />
+    <Compile Include="Services\SpellStatics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

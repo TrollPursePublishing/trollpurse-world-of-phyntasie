@@ -939,6 +939,10 @@
     <Content Include="View\About.min.html">
       <DependentUpon>About.html</DependentUpon>
     </Content>
+    <Content Include="View\ExternalAction.html" />
+    <Content Include="View\ExternalAction.min.html">
+      <DependentUpon>ExternalAction.html</DependentUpon>
+    </Content>
     <Content Include="View\Game.min.html">
       <DependentUpon>Game.html</DependentUpon>
     </Content>
@@ -950,6 +954,10 @@
     </Content>
     <Content Include="View\Ranks.min.html">
       <DependentUpon>Ranks.html</DependentUpon>
+    </Content>
+    <Content Include="View\Register.html" />
+    <Content Include="View\Register.min.html">
+      <DependentUpon>Register.html</DependentUpon>
     </Content>
     <Content Include="View\SignUp.min.html">
       <DependentUpon>SignUp.html</DependentUpon>

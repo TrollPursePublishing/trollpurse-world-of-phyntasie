@@ -42,7 +42,8 @@ namespace AdventureQuestGame.Services
 
         public void Delete(Player p)
         {
-            GameCtx.spells.RemoveRange(p.spells);
+            foreach (var s in p.spells.ToList())
+                p.spells.Remove(s);
             GameCtx.players.Remove(p);
             GameCtx.SaveChanges();
         }
@@ -54,7 +55,7 @@ namespace AdventureQuestGame.Services
                 egender = Gender.Male;
             Player p = new Player(name, GameCtx.titles.First(t => t.genderRelation == egender && t.levelToAcheive == 1).Copy());
             p.gender = egender;
-            p.spells.Add(GameCtx.spells.First(s => s.name.Equals("Spitball")).Copy());
+            p.spells.Add(GameCtx.spells.First(s => s.name.Equals("Spitball"))/*.Copy()*/);
             p.navigation.currentWorld = GameCtx.worlds.First();
             p.navigation.currentArea = p.navigation.currentWorld.areas.First(a => a.name.StartsWith("Buttleberry"));
             p.navigation.currentLocation = p.navigation.currentArea.locations.First();

@@ -137,6 +137,24 @@ angular.module('app.services', [])
         return ranks;
     }])
 
+    .factory('AccountService', ['$http', '$q', function ($http, $q) {
+        var acc = {};
+
+        acc.confirmEmail = function (hash, confirmationCode) {
+            return getAsync('api/account/confirm/' + hash + '/' + confirmationCode, $q, $http);
+        };
+
+        acc.doNotDisturb = function (hash) {
+            return getAsync('api/account/donotdisturb/' + hash, $q, $http);
+        };
+
+        acc.registerForUpdates = function (playerId) {
+            return getAsync('api/account/sendmail/' + playerId, $q, $http);
+        };
+
+        return acc;
+    }])
+
     .factory('UserService',  ['$http', '$q', function ($http, $q) {
         var user = {};
         user.isLoggedIn = false;
@@ -171,4 +189,4 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.3.1');
+    .value('version', '0.0.3.2');

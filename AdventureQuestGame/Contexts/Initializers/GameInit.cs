@@ -106,12 +106,13 @@ namespace AdventureQuestGame.Contexts.Initializers
 
             Spell[] spells =
             {
-                new Spell("Spitball", "A small flame flicks out from my finger and it kind of hurts the monster. Not that impressive, but good for carnival tricks", 3, 1, 1),
-                new Spell("Ice Cube", "A small cube of ice. Looking at it though, you can't help but feel that it is angry... Perhaps throwing it at the enemy will do damage.", 4, 1, 2),
-                new Spell("Earthen Spike Wall", "The ground trembles and roars, splitting open beneath your foe. Large stalagmites erupt from the surface, piercing them.", 8, 4, 4),
-                new Spell("Torrentual Downpour", "Mother always said the rain wouldn't hurt you. WELL SHE WAS WRONG!", 13, 7, 5),
-                new Spell("Red Tide", "Like a screaming banshee, it tears out of the valley and strikes all who opposes it, covering them in hot sticky blood. The foe chokes from such a onslaught.", 18, 8, 6),
-                new Spell("Dove of Doom", "Summon a black dove to swoop and peck your opponent. It's pretty neat.", 20, 10, 8)
+                new Spell("Spitball", "A small flame flicks out from my finger and it kind of hurts the monster. Not that impressive, but good for carnival tricks", 3, 1, 1, "Damage"),
+                new Spell("Ice Cube", "A small cube of ice. Looking at it though, you can't help but feel that it is angry... Perhaps throwing it at the enemy will do damage.", 4, 1, 2, "Damage"),
+                new Spell("Earthen Spike Wall", "The ground trembles and roars, splitting open beneath your foe. Large stalagmites erupt from the surface, piercing them.", 8, 4, 4, "Damage"),
+                new Spell("Torrentual Downpour", "Mother always said the rain wouldn't hurt you. WELL SHE WAS WRONG!", 13, 7, 5, "Damage"),
+                new Spell("Red Tide", "Like a screaming banshee, it tears out of the valley and strikes all who opposes it, covering them in hot sticky blood. The foe chokes from such a onslaught.", 18, 8, 6, "Damage"),
+                new Spell("Dove of Doom", "Summon a black dove to swoop and peck your opponent. It's pretty neat.", 20, 10, 8, "Damage"),
+                new Spell("Healing Touch", "My hand glows blue and I start to feel better when I touch myself.", 5, 1, 1, "Heal")
             };
 
             Title[] titles =

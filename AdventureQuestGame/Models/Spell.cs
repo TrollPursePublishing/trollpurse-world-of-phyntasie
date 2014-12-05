@@ -11,7 +11,7 @@ namespace AdventureQuestGame.Models
     {
         protected Spell() { }
 
-        public Spell(string name, string description, int damage, int manaCost, int minLevel)
+        public Spell(string name, string description, int damage, int manaCost, int minLevel, string methodName)
         {
             Id = Guid.NewGuid();
             this.name = name;
@@ -19,6 +19,7 @@ namespace AdventureQuestGame.Models
             this.damage = damage;
             this.manaCost = manaCost;
             this.minLevel = minLevel;
+            this.methodName = methodName;
         }
 
         public Guid Id { get; private set; }
@@ -27,12 +28,13 @@ namespace AdventureQuestGame.Models
         public int damage { get; set; }
         public int manaCost { get; set; }
         public int minLevel { get; set; }
+        public string methodName { get; set; }
 
-        public Spell Copy()
-        {
-            Spell sp = MemberwiseClone() as Spell;
-            sp.Id = Guid.NewGuid();
-            return sp;
-        }
+        //public Spell Copy()
+        //{
+        //    Spell sp = MemberwiseClone() as Spell;
+        //    sp.Id = Guid.NewGuid();
+        //    return sp;
+        //}
     }
 }
