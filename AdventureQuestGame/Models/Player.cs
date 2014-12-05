@@ -81,6 +81,19 @@ namespace AdventureQuestGame.Models
 
         public bool OnMove(Guid placeGuid)
         {
+            if(navigation.currentRoom != null)
+            {
+                var quest = quests.Quests.FirstOrDefault(q => !q.Complete && q.Quest.Type == QuestType.GoTo && q.Quest.NameOfObject.Equals(navigation.currentRoom.name));
+                if (quest != null)
+                    quest.Count++;
+            }
+
+            var qq = quests.Quests.FirstOrDefault(qs => !qs.Complete && qs.Quest.Type == QuestType.GoTo && qs.Quest.NameOfObject.Equals(navigation.currentLocation.name));
+            if (qq == null)
+                qq = quests.Quests.FirstOrDefault(qs => !qs.Complete && qs.Quest.Type == QuestType.GoTo && qs.Quest.NameOfObject.Equals(navigation.currentArea.name));
+
+            if (qq != null)
+                qq.Count++;
 
             if (stats.placesVisited.FirstOrDefault(p => p.placesVisitedId == placeGuid) == null)
             {

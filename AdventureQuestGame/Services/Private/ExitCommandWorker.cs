@@ -20,7 +20,14 @@ namespace AdventureQuestGame.Services.Private
                 player.isInside = false;
                 Room old = player.navigation.currentRoom;
                 player.expireRoom = true;
-                return new List<string>(new[]{String.Format("Exiting {0}.", old.name)});
+
+                List<string> result = new List<string>(){ String.Format("Exiting {0}.", old.name) };
+
+                result.Add(String.Format("{0}, {1}", player.navigation.currentLocation.name, player.navigation.currentLocation.description));
+                if (player.navigation.currentLocation.QuestGiver != null && player.navigation.currentLocation.QuestGiver.CanDoQuest(player))
+                    result.Add(String.Format("{0} is here. {1}", player.navigation.currentLocation.QuestGiver.Name, player.navigation.currentLocation.QuestGiver.Description));
+                
+                return result;
             }
             else
             {
