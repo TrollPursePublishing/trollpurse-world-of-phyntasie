@@ -23,6 +23,17 @@ using System.Linq;
 
 namespace WebApplication1.Controllers
 {
+    class EmailViewModel
+    {
+        public EmailViewModel(string msg, bool success)
+        {
+            this.msg = msg;
+            this.success = success;
+        }
+        public string msg { get; private set; }
+        public bool success { get; private set; }
+    }
+
     class RegisterViewModel
     {
         public RegisterViewModel(string username, string password, string confirmpassword, string email, string gender)
@@ -85,6 +96,20 @@ namespace WebApplication1.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
+        private ApplicationUser GetUserFromHash(string hash)
+        {
+            ApplicationUser user = null;
+            foreach (var u in UserManager.Users)
+            {
+                if (GenerateHashString(u.Id, u.PlayerId.ToString()).Equals(hash))
+                {
+                    user = u;
+                    break;
+                }
+            }
+            return user;
+        }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("api/account/confirm/{hash}/{confirmationCode}")]
@@ -109,10 +134,40 @@ namespace WebApplication1.Controllers
             if (user.Claims.FirstOrDefault(c => c.ClaimType.Equals(ClaimTypes.Email) && c.ClaimValue.Equals(confirmationCode)) != null)
             {
                 UserManager.RegisterUserEmail(user.Id);
-                return Ok("Congrats, you may now play!");
+                return Ok(new EmailViewModel("Alright! you may now play!", true));
             }
             else
                 return BadRequest();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/account/donotdisturb/{hash}")]
+        public IHttpActionResult DoNotDisturb(string hash)
+        {
+            var user = GetUserFromHash(hash);
+            if (user == null)
+                return BadRequest();
+            user.SendMail = false;
+            return Ok(new EmailViewModel("You have been removed from the mailing list.", true));
+        }
+
+        [HttpGet]
+        [Authorize(Roles="Player")]
+        [Route("api/account/sendmail/{playerId}")]
+        public IHttpActionResult SendMeUpdates(string playerId)
+        {
+            var ctx = Request.GetOwinContext();
+            var user = ctx.Authentication.User;
+            var claims = user.Claims;
+            if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
+            {
+                Guid id = Guid.Parse(playerId);
+                var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
+                us.SendMail = true;
+                return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
+            }
+            else return BadRequest();
         }
 
         [HttpGet]
@@ -198,7 +253,7 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            string link = String.Format("{0}/api/account/confirm/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
+            string link = String.Format("{0}/#/external/account/register/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
             try
             {
                 await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{1}</a>\n If you cannot see the link, copy and paste this to your address bar: {2}", link, link, link));

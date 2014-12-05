@@ -21,12 +21,14 @@ namespace WebApi.Models
         }
 
         public Guid PlayerId { get; private set; }
+        public bool SendMail { get; set; }
 
         protected ApplicationUser() { }
 
         public ApplicationUser(Guid PlayerId)
         {
             this.PlayerId = PlayerId;
+            SendMail = true;
         }
     }
 

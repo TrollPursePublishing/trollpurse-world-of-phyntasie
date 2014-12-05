@@ -23,6 +23,17 @@ namespace AdventureQuestGame.Migrations
                 if(room.chanceForRelic <= 0)
                     room.chanceForRelic = 5;
             }
+
+            foreach (Event e in context.events)
+            {
+                if (e.when == null)
+                {
+                    var refresh = new Event(e.title, e.description);
+                    context.events.Remove(e);
+                    context.events.Add(refresh);
+                }
+            }
+
             context.rooms.AddOrUpdate(
                 r => r.Id
                 );
@@ -92,10 +103,45 @@ namespace AdventureQuestGame.Migrations
                 r => r.Id
                 );
 
+            if (context.spells.Count() <= 0)
+            {
+                context.spells.AddRange(new[]
+                {
+                    new Spell("Spitball", "A small flame flicks out from my finger and it kind of hurts the monster. Not that impressive, but good for carnival tricks", 3, 1, 1, "Damage"),
+                    new Spell("Ice Cube", "A small cube of ice. Looking at it though, you can't help but feel that it is angry... Perhaps throwing it at the enemy will do damage.", 4, 1, 2, "Damage"),
+                    new Spell("Earthen Spike Wall", "The ground trembles and roars, splitting open beneath your foe. Large stalagmites erupt from the surface, piercing them.", 8, 4, 4, "Damage"),
+                    new Spell("Torrentual Downpour", "Mother always said the rain wouldn't hurt you. WELL SHE WAS WRONG!", 13, 7, 5, "Damage"),
+                    new Spell("Red Tide", "Like a screaming banshee, it tears out of the valley and strikes all who opposes it, covering them in hot sticky blood. The foe chokes from such a onslaught.", 18, 8, 6, "Damage"),
+                    new Spell("Dove of Doom", "Summon a black dove to swoop and peck your opponent. It's pretty neat.", 20, 10, 8, "Damage"),
+                    new Spell("Healing Touch", "My hand glows blue and I start to feel better when I touch myself.", 5, 1, 1, "Heal")
+                });
+            }
+
+            var sp = context.spells.Distinct().ToList();
+            foreach (var s in context.spells)
+                context.spells.Remove(s);
+            context.SaveChanges();
+            var strarr = new string[]{ "Spitball", "Ice Cube", "Earhen Spike Wall", "Torrentual Downpour", "Red Tide", "Dove of Doom"};
+            foreach (var x in sp.Where(y => strarr.Contains(y.name)))
+                x.methodName = "Damage";
+            context.spells.AddRange(sp);
+            context.SaveChanges();
+            
+            if(context.spells.FirstOrDefault(ss => ss.name.Equals("Healing Touch")) == null)
+                context.spells.Add(new Spell("Healing Touch", "My hand glows blue and I start to feel better when I touch myself.", 5, 1, 1, "Heal"));
+            
+            context.SaveChanges();
+
             foreach(Player p in context.players)
             {
                 if (p.quests == null)
                     p.quests = new PlayerQuests();
+
+                if (p.spells.Count == 0)
+                {
+                    foreach (var spell in context.spells.Where(spp => spp.minLevel <= p.attributes.level))
+                        p.spells.Add(spell);
+                }
             }
             context.players.AddOrUpdate(
                 r => r.Id

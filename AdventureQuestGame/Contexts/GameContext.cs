@@ -62,13 +62,15 @@ namespace AdventureQuestGame.Contexts
                 .HasMany<Weapon>(i => i.weapons);
 
             modelBuilder.Entity<Inventory>()
-                .HasMany<Relic>(i => i.relics);
+                .HasMany<Relic>(i => i.relics)
+                .WithMany();
 
             modelBuilder.Entity<Inventory>()
                 .HasMany<Potion>(i => i.potions);
 
             modelBuilder.Entity<Player>()
-                .HasMany<Spell>(p => p.spells);
+                .HasMany<Spell>(p => p.spells)
+                .WithMany();
 
             modelBuilder.Entity<Acheivement>()
                 .HasRequired<Player>(a => a.player);
@@ -85,7 +87,6 @@ namespace AdventureQuestGame.Contexts
             modelBuilder.Entity<QuestGiver>()
                 .HasMany<Quest>(qg => qg.QuestsToUnlockThisQuestGiver)
                 .WithMany();
-                
 
             base.OnModelCreating(modelBuilder);
         }
