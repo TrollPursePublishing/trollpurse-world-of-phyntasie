@@ -13,6 +13,9 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/about.min.html',
             controller: 'AboutCtrl'
         })
+        .when('/contest', {
+            templateUrl: 'view/contest.min.html'
+        })
         .when('/adventure', {
             templateUrl: 'view/game.min.html',
             controller: 'CommandCtrl',
