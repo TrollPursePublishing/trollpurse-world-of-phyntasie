@@ -939,6 +939,10 @@
     <Content Include="View\About.min.html">
       <DependentUpon>About.html</DependentUpon>
     </Content>
+    <Content Include="View\Contest.html" />
+    <Content Include="View\Contest.min.html">
+      <DependentUpon>Contest.html</DependentUpon>
+    </Content>
     <Content Include="View\ExternalAction.html" />
     <Content Include="View\ExternalAction.min.html">
       <DependentUpon>ExternalAction.html</DependentUpon>
