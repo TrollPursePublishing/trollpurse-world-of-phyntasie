@@ -23,13 +23,13 @@ namespace WebApi
             };
 
             //Migrations
-            var authmigration = new WebApi.Migrations.Configuration();
-            var migrator = new DbMigrator(authmigration);
-            migrator.Update();
+            //var authmigration = new WebApi.Migrations.Configuration();
+            //var migrator = new DbMigrator(authmigration);
+            //migrator.Update();
 
-            var gamemigration = new AdventureQuestGame.Migrations.Configuration();
-            migrator = new DbMigrator(gamemigration);
-            migrator.Update();
+           // var gamemigration = new AdventureQuestGame.Migrations.Configuration();
+           // migrator = new DbMigrator(gamemigration);
+           // migrator.Update();
 
             //Initiailizers
             Database.SetInitializer(new GameInit());
