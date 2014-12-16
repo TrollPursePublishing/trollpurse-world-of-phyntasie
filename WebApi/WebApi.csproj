@@ -151,8 +151,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\public\Untitled.png" />
-    <Content Include="Images\userprofileimages\5153F533-1C94-4A5F-A482-49C8CC5D7C07.svg" />
-    <Content Include="Images\userprofileimages\9B244CD6-FA37-409E-8E60-B2A3753EFA71.svg" />
     <Content Include="Index.html" />
     <Content Include="Index.min.html">
       <DependentUpon>Index.html</DependentUpon>
@@ -943,6 +941,10 @@
     <Content Include="View\Contest.min.html">
       <DependentUpon>Contest.html</DependentUpon>
     </Content>
+    <Content Include="View\Events.html" />
+    <Content Include="View\Events.min.html">
+      <DependentUpon>Events.html</DependentUpon>
+    </Content>
     <Content Include="View\ExternalAction.html" />
     <Content Include="View\ExternalAction.min.html">
       <DependentUpon>ExternalAction.html</DependentUpon>
@@ -955,6 +957,10 @@
     </Content>
     <Content Include="View\Login.min.html">
       <DependentUpon>Login.html</DependentUpon>
+    </Content>
+    <Content Include="View\Manual.html" />
+    <Content Include="View\Manual.min.html">
+      <DependentUpon>Manual.html</DependentUpon>
     </Content>
     <Content Include="View\Ranks.min.html">
       <DependentUpon>Ranks.html</DependentUpon>

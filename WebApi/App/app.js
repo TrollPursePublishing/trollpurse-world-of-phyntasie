@@ -11,7 +11,13 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         $routeProvider
         .when('/about', {
             templateUrl: 'view/about.min.html',
-            controller: 'AboutCtrl'
+        })
+        .when('/events', {
+            templateUrl: 'view/events.min.html',
+            controller: 'HomeCtrl'
+        })
+        .when('/manual', {
+            templateUrl: 'view/manual.min.html'
         })
         .when('/contest', {
             templateUrl: 'view/contest.min.html'
@@ -22,7 +28,6 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         })
         .when('/', {
             templateUrl: 'view/index.min.html',
-            controller: 'HomeCtrl',
         })
         .when('/login', {
             templateUrl: 'view/login.min.html',
