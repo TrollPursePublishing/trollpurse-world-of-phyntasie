@@ -25,7 +25,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit" ng-disabled="!(email && userName && password && (password == confirmpassword) && gender)" disabled>Join Now!</button>
+                <button class="btn btn-primary btn-block" type="submit" ng-disabled="(!(email && userName && password && (password == confirmpassword) && gender)) || hasClicked" disabled>Join Now!</button>
             </div>
         </div>
     </form>

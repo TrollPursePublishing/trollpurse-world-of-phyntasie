@@ -1,28 +1,55 @@
-﻿<div class="row" ng-if="checkRerouteToUserpage()">
-    <div class="col-sm-8">
-        <div class="row">
-            <div class="sm-col-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <ol class="breadcrumb" style="background-color: transparent;">
-                            <li class="active" style="color: #fff">{{user.navigation.currentArea.name}}</li>
-                            <li class="active" style="color: #fff">{{user.navigation.currentLocation.name}}</li>
-                            <li class="active" style="color: #fff"><strong>{{user.navigation.currentRoom.name}}</strong></li>
-                        </ol>
-                        <div>
-                            <span class="glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}} / {{user.attributes.health}} | <span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}} | <span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}} | <span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}} | <span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}
-                        </div>
-                    </div>
-                    <gameview></gameview>
-                    <div class="panel-footer">
-                        <form class="row" ng-submit="submit(data); data='';">
-                            <input class="col-sm-8 col-sm-offset-1" type="text" ng-model="data" placeholder="Commands" required />
-                            <button class="col-sm-2 btn btn-primary" type="submit" ng-disabled="$invalid">Do</button>
-                        </form>
-                    </div>
-                </div>
-            </div>               
+﻿<nav class="nav navbar navbar-default navbar-fixed-top" style="padding-top:50px; z-index:9;" role="navigation" ng-if=" !layout ">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#gamenavbar" aria-controls="gamenavbar">
+                <span class="sr-only">Toggle Stats Menu</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand">{{user.FullName}}</div>
         </div>
+        <div id="gamenavbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href=""><span class="glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}} / {{user.attributes.health}}</a>
+                </li>
+                <li>
+                    <a href=""><span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}}</a>
+                </li>
+                <li>
+                    <a href=""><span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}</a>
+                </li>
+                <li>
+                    <a href=""><span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</a>
+                </li>
+                <li>
+                    <a href=""><span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</a>
+                </li>
+                <!--<li>
+                    <ol class="breadcrumb" style="background-color: transparent;">
+                        <li class="active" style="color: #fff">{{user.navigation.currentArea.name}}</li>
+                        <li class="active" style="color: #fff">{{user.navigation.currentLocation.name}}</li>
+                        <li class="active" style="color: #fff"><strong>{{user.navigation.currentRoom.name}}</strong></li>
+                    </ol>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+
+<div class="row" style="padding-top:50px;" ng-if="checkRerouteToUserpage()">
+    <div class="col-sm-8">
+        <data-gameview></data-gameview>
+        <form class="row" ng-submit="submit(data); data='';">
+            <input class="col-sm-9" type="text" ng-model="data" placeholder="Commands" data-autofocus required />
+            <button class="col-sm-offset-1 col-sm-2 btn btn-primary" type="submit" ng-disabled="$invalid">Do</button>
+        </form>
     </div>
     <div class="col-sm-4">
         <div class="row">
@@ -39,7 +66,41 @@
                     </div>
                 </div>
             </div>
-            <div class="sm-col-12">
+            <div class="sm-col-4">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <a class="panel-default" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    My Story
+                                </h4>
+                            </div>
+                        </a>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Content
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div class="panel panel-default">
                     <div class="panel-heading">Inventory | Gold: {{user.inventory.gold}}</div>
                     <div class="panel-body" style="overflow:auto; max-height: 150px; min-height:150px; border-bottom: 1px solid #808080">

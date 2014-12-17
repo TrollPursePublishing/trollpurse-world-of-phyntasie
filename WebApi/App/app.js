@@ -12,6 +12,9 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         .when('/about', {
             templateUrl: 'view/about.min.html',
         })
+        .when('/credits', {
+            templateUrl: 'view/credits.min.html'
+        })
         .when('/events', {
             templateUrl: 'view/events.min.html',
             controller: 'HomeCtrl'

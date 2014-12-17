@@ -941,6 +941,10 @@
     <Content Include="View\Contest.min.html">
       <DependentUpon>Contest.html</DependentUpon>
     </Content>
+    <Content Include="View\Credits.html" />
+    <Content Include="View\Credits.min.html">
+      <DependentUpon>Credits.html</DependentUpon>
+    </Content>
     <Content Include="View\Events.html" />
     <Content Include="View\Events.min.html">
       <DependentUpon>Events.html</DependentUpon>
