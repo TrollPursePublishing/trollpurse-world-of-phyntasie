@@ -35,6 +35,19 @@ namespace AdventureQuestGame.Services
         {
             this.messages = messages;
             this.player = player;
+
+            //Trim data
+            this.player.stats = null;
+            this.player.navigation.currentWorld.areas = null;
+            foreach (var r in this.player.navigation.currentLocation.rooms)
+                r.linkedRoom = null;
+            foreach (var l in this.player.navigation.currentArea.locations)
+            {
+                l.QuestGiver = null;
+                foreach (var rr in l.rooms)
+                    rr.linkedRoom = null;
+            }
+            this.player.quests = null;
         }
     }
 
@@ -54,12 +67,14 @@ namespace AdventureQuestGame.Services
         public string ParseCommands(ref string additionalParams)
         {
             bool hasParams = additionalParams.IndexOf(' ') > 0;
-            int commandEndIndex = hasParams ? additionalParams.IndexOf(' ') - 1 : additionalParams.Length - 1;
-            string command = additionalParams.Substring(1, commandEndIndex).Trim().ToLower();
-            if (hasParams)
-                additionalParams = additionalParams.Substring(commandEndIndex + 2);
+            if (!hasParams)
+                return additionalParams;
 
-            return command;
+            string[] split = additionalParams.Split(' ');
+            string[] add = new string[split.Length - 1];
+            Array.ConstrainedCopy(split, 1, add, 0, add.Length);
+            additionalParams = String.Join(" ", add);
+            return split[0];
         }
 
         public Player ResolvePlayer(Guid id)
@@ -71,9 +86,6 @@ namespace AdventureQuestGame.Services
         {
             IList<string> result;
             additionalParams = additionalParams.ToLower();
-            if (!additionalParams.StartsWith("-"))
-                return new GameResponse(new List<string>(new[] { "Commands must start with '-', type '-help' for help." }), player);
-
             string command = ParseCommands(ref additionalParams);
             Commands ecommand;
             bool success = Enum.TryParse<Commands>(command, true, out ecommand);

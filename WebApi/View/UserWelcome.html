@@ -1,48 +1,75 @@
 ﻿<div class="row" ng-if="checkRerouteToUserpage()">
-    <div class="col-sm-12 col-md-8">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h1>{{user.FullName}}</h1>
-            </div>
-            <div class="panel-body">
-                <!--<img ng-src="{{userImageUrl}}" style="max-height:300px; max-width:300px;" />-->
-                <div class="row">
-                    <div class="col-sm-3 text-right">Title:</div>
-                    <div class="col-sm-9">{{user.title.name}}</div>
-
-                    <div class="col-sm-3 text-right">Exploring Since:</div>
-                    <div class="col-sm-9">{{user.stats.joinDate | date}}</div>
-
-                    <div class="col-sm-3 text-right">Monsters Brutally Slain:</div>
-                    <div class="col-sm-9">{{user.stats.monstersKilled | number:0}}</div>
-
-                    <div class="col-sm-3 text-right">Current Level:</div>
-                    <div class="col-sm-9">{{user.attributes.level | number:0}}</div>
-
-                    <div class="col-sm-3 text-right">Total Experience:</div>
-                    <div class="col-sm-9">{{user.attributes.experience | number:0}}</div>
-
-                    <div class="col-sm-3 text-right">Areas Explored:</div>
-                    <div class="col-sm-9">{{user.stats.areasDiscovered | number:0}}</div>
-                </div>
-            </div>
-        </div>
+    <div class="col-sm-12">
+        <h1>{{user.FullName}}</h1>
+    </div>
+    <div ng-if="registerClicked" class=" col-sm-12 alert" ng-class="{'alert-success': registerSuccess, 'alert-warning': !registerSuccess}">{{registerText}}</div>
+    <div class="col-sm-8">
         <div class="row">
-            <button class="col-sm-4 btn btn-danger" ng-click="logout()">End Today's Adventure</button>
-            <button class="col-sm-8 btn btn-success" ng-click="adventure()">Begin Adventuring!</button>
-            <button ng-if="!registerSuccess" class="col-sm-12 btn btn-primary" ng-click="registerToGetEmail()">Start receiving E-mail Updates!</button>
-            <div ng-if="registerClicked" class=" col-sm-12 alert" ng-class="{'alert-success': registerSuccess, 'alert-warning': !registerSuccess}">{{registerText}}</div>
+            <div class="col-sm-6 col-md-4">
+                <a href="" class="text-success">
+                    <div class="panel panel-success" ng-click="adventure()">
+                        <div class="panel-body"><center><i class="fa fa-trophy fa-5x"></i></center></div>
+                        <div class="panel-footer">
+                            Begin Adventuring!
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <a href="" class="text-danger">
+                    <div class="panel panel-danger" ng-click="logout()">
+                        <div class="panel-body"><center><i class="fa fa-sign-out fa-5x"></i></center></div>
+                        <div class="panel-footer">
+                            End Today's Adventure
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <a href="" class="text-warning">
+                    <div class="panel panel-warning" ng-click="registerToGetEmail()">
+                        <div class="panel-body"><center><i class="fa fa-envelope fa-5x"></i></center></div>
+                        <div class="panel-footer">
+                            Register For Emails
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="panel panel-warning">
-            <div class="panel-heading"><h1>Your Achievements</h1></div>
-            <div class="panel-body">
-                <div ng-repeat="a in acheivements.pairs track by $index">
-                    <p><strong>{{a.name}}</strong></p>
-                    <p>{{a.description}}</p>
-                </div>
-            </div>
+    <div class="col-sm-4">
+        <table class="table table-responsive">
+            <tr>
+                <td><strong>Title </strong></td>
+                <td>{{user.title.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>Exploring Since </strong></td>
+                <td>{{user.stats.joinDate | date}}</td>
+            </tr>
+            <tr>
+                <td><strong>Monsters Brutally Slain </strong></td>
+                <td>{{user.stats.monstersKilled | number:0}}</td>
+            </tr>
+            <tr>
+                <td><strong>Current Level </strong></td>
+                <td>{{user.attributes.level | number:0}}</td>
+            </tr>
+            <tr>
+                <td><strong>Total Experience </strong></td>
+                <td>{{user.attributes.experience | number:0}}</td>
+            </tr>
+            <tr>
+                <td><strong>Areas Explored </strong></td>
+                <td>{{user.stats.areasDiscovered | number:0}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-12">
+        <h2>Your Achievements</h2>
+        <div ng-repeat="a in acheivements.pairs track by $index">
+            <p><strong>{{a.name}}</strong></p>
+            <p>{{a.description}}</p>
         </div>
     </div>
 </div>
