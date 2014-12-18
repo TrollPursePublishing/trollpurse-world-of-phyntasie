@@ -3,7 +3,7 @@
 angular.module('app.controllers', ['app.services'])
 
     // Path: /
-    .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService','MessageService', function ($scope, $location, $window, UserService, CommandService, MessageService) {
+    .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService', 'MessageService', '$filter', function ($scope, $location, $window, UserService, CommandService, MessageService, $filter) {
         $scope.checkRerouteToUserpage = function () {
             if (!UserService.isLoggedIn) {
                 $location.path('/');
@@ -42,7 +42,7 @@ angular.module('app.controllers', ['app.services'])
                     var d = angular.fromJson(data.data);
                     for (var i = 0; i < d.messages.length; i++) {
                         $scope.messages.push(d.messages[i]);
-                    }                    
+                    }
                     $scope.user = d.player;
                     UserService.user = $scope.user;
                     MessageService.joinLocation($scope.user.navigation.currentLocation.Id);
@@ -56,6 +56,11 @@ angular.module('app.controllers', ['app.services'])
         $scope.detailedView = function (descriptableObject) {
             delete descriptableObject.Id;
             $scope.currentDescription = descriptableObject;
+            angular.forEach(descriptableObject, function (value, key) {
+                if (key.indexOf('$') < 0) {
+                    $scope.messages.push($filter('property')(key) + ':   ' + value);
+                }
+            });
         };
     }])
 
@@ -93,7 +98,7 @@ angular.module('app.controllers', ['app.services'])
         });
     }])
 
-    .controller('SignUpCtrl', ['$scope', '$location', '$window', 'UserService', function($scope, $location, $window, UserService){
+    .controller('SignUpCtrl', ['$scope', '$location', '$window', 'UserService', function ($scope, $location, $window, UserService) {
         $scope.$root.title = 'AdventureQuestGame | Join Now!';
         $scope.error = {};
         $scope.hasError = false;
@@ -139,7 +144,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.isLoggedIn = UserService.isLoggedIn;
         $scope.rank = '';
 
-        $scope.getData = function(){
+        $scope.getData = function () {
             RanksService.getAll()
             .then(function (data) {
                 $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
@@ -234,7 +239,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.userImageUrl = '';
         $scope.user = {};
         $scope.acheivements = {};
-        $scope.registerText = '';
+        $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
         $scope.registerClicked = false;
 
@@ -276,7 +281,7 @@ angular.module('app.controllers', ['app.services'])
                 $scope.userImageUrl = UserService.getUserImage(UserService.user.Id);
                 return true;
             }
-            
+
         };
 
         $scope.getData = function () {
@@ -297,7 +302,7 @@ angular.module('app.controllers', ['app.services'])
 
     }])
 
-    .controller('AccountCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService){
+    .controller('AccountCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
         $scope.$root.title = 'External Portal';
         $scope.result = {}
 
@@ -306,7 +311,7 @@ angular.module('app.controllers', ['app.services'])
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
-               $scope.result = { msg: 'Action not successful. I\'m Sorry', success: false };
+                $scope.result = { msg: 'Action not successful. I\'m Sorry', success: false };
             });
         });
     }])

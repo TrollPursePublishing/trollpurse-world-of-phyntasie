@@ -45,22 +45,22 @@ angular.module('app.services', [])
     .factory('CommandService', ['$http', '$q', function ($http, $q) {
         var command = {};
         command.submit = function (data, userId) {
-                //console.log(data);
-                var q = $q.defer();
-                $http.get('api/Command/' + userId + '/' + data)
-                .success(function (data) {
-                    q.resolve({ data: data });
-                })
-                .error(function (msg, code) {
-                    q.reject(msg);
-                });
-                return q.promise;
+            //console.log(data);
+            var q = $q.defer();
+            $http.get('api/Command/' + userId + '/' + data)
+            .success(function (data) {
+                q.resolve({ data: data });
+            })
+            .error(function (msg, code) {
+                q.reject(msg);
+            });
+            return q.promise;
         };
 
         return command;
     }])
 
-    .factory('MessageService',  ['$http', '$q', '$rootScope', '$', function ($http, $q, $rootScope, $) {
+    .factory('MessageService', ['$http', '$q', '$rootScope', '$', function ($http, $q, $rootScope, $) {
         var message = {};
         message.ChatHub = {};
         message.chatConnected = false;
@@ -68,6 +68,10 @@ angular.module('app.services', [])
 
 
         message.startupServices = function () {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+                console.log('Enabling tooltips.');
+            });
             var q = $q.defer();
             if (!message.chatConnected) {
                 $(function () {
@@ -103,7 +107,7 @@ angular.module('app.services', [])
     .factory('NotificationService', ['$http', '$q', function ($http, $q) {
         var notifications = {};
 
-        notifications.getEvents = function(){
+        notifications.getEvents = function () {
             return getAsync('api/message/events', $q, $http);
         };
 
@@ -118,7 +122,7 @@ angular.module('app.services', [])
         return notifications;
     }])
 
-    .factory('RanksService',  ['$http', '$q', function ($http, $q) {
+    .factory('RanksService', ['$http', '$q', function ($http, $q) {
         var ranks = {};
 
         //TODO: http get call
@@ -155,7 +159,7 @@ angular.module('app.services', [])
         return acc;
     }])
 
-    .factory('UserService',  ['$http', '$q', function ($http, $q) {
+    .factory('UserService', ['$http', '$q', function ($http, $q) {
         var user = {};
         user.isLoggedIn = false;
         user.user;
@@ -189,4 +193,4 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.3.2');
+    .value('version', '0.0.4.2');

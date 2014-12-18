@@ -7,11 +7,9 @@ angular.module('app.directives', [])
             scope: true,
             restrict: 'EA',
             replace: true,
-            template: '<div id="gamebody" class="panel-body" style="overflow:auto; max-height: 400px; min-height:400px">' +
-                        '<div ng-repeat="message in messages track by $index">' +
-                            '<p>{{message}}</p>' +
-                        '</div>' +
-                    '</div>',
+            template: '<div id="gamebody" style="overflow:auto; max-height: 600px; min-height: 600px;">' +
+                          '<p ng-repeat="message in messages track by $index">{{message}}</p>' +
+                      '</div>',
             link: function (scope, element, attrs, controller) {
                 scope.$watch('messages', function (messages) {
                     element[0].scrollTop = element[0].scrollHeight;

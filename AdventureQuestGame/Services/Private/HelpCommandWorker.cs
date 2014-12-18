@@ -15,10 +15,10 @@ namespace AdventureQuestGame.Services.Private
 
         public IList<string> Process(Models.Player player, string additionalParams, Contexts.GameContext GameCtx)
         {
-            IList<string> result = new List<string>();
+            IList<string> result = new List<string> { "Available Commands:" };
             foreach (var i in Enum.GetValues(typeof(Commands)))
             {
-                result.Add("-" + i.ToString());
+                result.Add(i.ToString());
             }
             return result;
         }
