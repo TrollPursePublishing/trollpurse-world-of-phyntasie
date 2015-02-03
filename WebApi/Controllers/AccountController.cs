@@ -92,7 +92,7 @@ namespace WebApplication1.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager = null;
         private PlayerService service = new PlayerService();
-        private static readonly string Website = /*@"http://adventuregamequest.azurewebsites.net"*/ "http://localhost:61191/";
+        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net" /*"http://localhost:61191/"*/;
 
         public ApplicationUserManager UserManager
         {
