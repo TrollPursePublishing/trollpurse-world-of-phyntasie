@@ -20,7 +20,7 @@ namespace AdventureQuestGame.Services
             int damage = theSpell.damage;
             p.engaging.attribute.currentHealth -= damage;
             p.attributes.currentMana -= theSpell.manaCost;
-            return String.Format("I cast {1} against {2}, causing {3} damage! {2} has {4} health remaining.", theSpell.name, p.engaging.name, damage, Math.Max(0, p.engaging.attribute.currentHealth));
+            return String.Format("I cast {0} against {1}, causing {2} damage! {1} has {3} health remaining.", theSpell.name, p.engaging.name, damage, Math.Max(0, p.engaging.attribute.currentHealth));
         }
 
         public static string Heal(Player p, Spell theSpell)
