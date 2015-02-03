@@ -973,6 +973,10 @@
     <Content Include="View\Register.min.html">
       <DependentUpon>Register.html</DependentUpon>
     </Content>
+    <Content Include="View\Reset.html" />
+    <Content Include="View\Reset.min.html">
+      <DependentUpon>Reset.html</DependentUpon>
+    </Content>
     <Content Include="View\SignUp.min.html">
       <DependentUpon>SignUp.html</DependentUpon>
     </Content>

@@ -16,4 +16,10 @@ angular.module('app.filters', [])
         return function (text) {
             return String(text).replace(/\%VERSION\%/mg, version);
         };
+    }])
+
+    .filter('game', ['gamename', function (gamename) {
+        return function (text) {
+            return String(text).replace(/\%GAMENAME\%/mg, gamename);
+        }
     }]);

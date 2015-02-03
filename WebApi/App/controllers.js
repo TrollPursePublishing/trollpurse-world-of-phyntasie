@@ -64,8 +64,39 @@ angular.module('app.controllers', ['app.services'])
         };
     }])
 
-    .controller('HomeCtrl', ['$scope', '$location', '$window', 'RanksService', 'NotificationService', function ($scope, $location, $window, RankService, NotificationService) {
-        $scope.$root.title = 'AdventureQuestGame';
+    .controller('ResetCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
+        $scope.$root.title = 'External Portal';
+        $scope.result = {};
+        $scope.enterResult = {};
+        $scope.showClick = false;
+
+        $scope.submitClick = function (password, confirmPassword) {
+            $scope.showClick = (password == confirmPassword);
+        };
+
+        $scope.resetPassword = function (password, confirmPassword) {
+            AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword)
+            .then(function (data) {
+                console.log(data.data);
+                $scope.showClick = false;
+                $scope.result = angular.fromJson(data.data);
+            }, function (error) {
+                $scope.result = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false, additionalData: $scope.enterResult.additionalData };
+            });
+        }
+
+        $scope.$on('$viewContentLoaded', function () {
+            AccountService.resetConfirm($routeParams.hash, $routeParams.securityStamp)
+            .then(function (data) {
+                $scope.enterResult = angular.fromJson(data.data);
+            }, function (error) {
+                $scope.enterResult = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false };
+            });
+        });
+    }])
+
+    .controller('HomeCtrl', ['$scope', '$location', '$window', 'RanksService', 'NotificationService', 'gamename', function ($scope, $location, $window, RankService, NotificationService, gamename) {
+        $scope.$root.title = gamename;
         $scope.items = {};
         $scope.events = {};
         $scope.acheivements = {};
@@ -98,8 +129,8 @@ angular.module('app.controllers', ['app.services'])
         });
     }])
 
-    .controller('SignUpCtrl', ['$scope', '$location', '$window', 'UserService', function ($scope, $location, $window, UserService) {
-        $scope.$root.title = 'AdventureQuestGame | Join Now!';
+    .controller('SignUpCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
+        $scope.$root.title = gamename + ' | Join Now!';
         $scope.error = {};
         $scope.hasError = false;
         $scope.registered = false;
@@ -137,8 +168,8 @@ angular.module('app.controllers', ['app.services'])
     }])
 
     // Path: /ranks
-    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', '$filter', function ($scope, $location, $window, RanksService, UserService, $filter) {
-        $scope.$root.title = 'AdventureQuestGame | Ranks';
+    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', '$filter', 'gamename', function ($scope, $location, $window, RanksService, UserService, $filter, gamename) {
+        $scope.$root.title = gamename +' | Ranks';
         $scope.items = {};
         $scope.rankuser = {};
         $scope.isLoggedIn = UserService.isLoggedIn;
@@ -173,17 +204,27 @@ angular.module('app.controllers', ['app.services'])
     }])
 
     // Path: /about
-    .controller('AboutCtrl', ['$scope', '$location', '$window', function ($scope, $location, $window) {
-        $scope.$root.title = 'AdventureQuestGame | About';
+    .controller('AboutCtrl', ['$scope', '$location', '$window', 'gamename', function ($scope, $location, $window, gamename) {
+        $scope.$root.title = gamename+' | About';
     }])
 
     // Path: /login
-    .controller('LoginCtrl', ['$scope', '$location', '$window', 'UserService', function ($scope, $location, $window, UserService) {
-        $scope.$root.title = 'AdventureQuestGame | Sign In';
+    .controller('LoginCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
+        $scope.$root.title = gamename+' | Sign In';
         $scope.user = {};
         $scope.isLoggedIn = false;
         $scope.authError = '';
+        $scope.result = {};
         $scope.bAuthError = false;
+
+        $scope.reset = function (email) {
+            UserService.reset(email).then(function (data) {
+                $scope.result = angular.fromJson(data.data);
+            }, function (error) {
+                $scope.result = { msg: 'Sorry, an error occured.', success: false };
+            });
+        };
+
         $scope.login = function (entereduserName, password) {
             UserService.login(entereduserName, password)
             .then(function (data) {
@@ -232,8 +273,8 @@ angular.module('app.controllers', ['app.services'])
     }])
 
     // Path: /userwelcome
-    .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', 'AccountService', function ($scope, $location, $window, UserService, NotificationService, AccountService) {
-        $scope.$root.title = 'AdventureQuestGame | ' + UserService.user.FullName;
+    .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', 'AccountService', 'gamename', function ($scope, $location, $window, UserService, NotificationService, AccountService, gamename) {
+        $scope.$root.title = gamename+' | ' + UserService.user.FullName;
         $scope.username = '';
         $scope.isLoggedIn = false;
         $scope.userImageUrl = '';
