@@ -151,7 +151,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\public\adventure.png" />
-    <Content Include="Images\public\emotion.jpg" />
+    <Content Include="Images\public\emotion.png" />
     <Content Include="Images\public\Untitled.png" />
     <Content Include="Images\public\worldcompetition.png" />
     <Content Include="Index.html" />
