@@ -57,20 +57,20 @@ namespace AdventureQuestGame.Contexts.Initializers
                     new Quest("The Imp Menace", "Hear ye! Hear ye, there are most abundant collections of nasty creatures within our dungeon that are of most import to remove from the vacinity. Rewards, a-plenty. Honor, a-plenty. All bestowed upon the completion of this boon from our most merciful Lord Buttleberry!",
                         "Combat and slay three Imps.", 100, 10, 300, QuestType.Slay, "Imp", 3)),
 
-                new QuestGiver("Dying Gentleman", "The Dying Gentleman is sitting there, hands folded. His eyes wander to you, looking hopefully. You feel drawn to him, as if you share a brotherhood. It seems he has something to request of you.", 
+                new QuestGiver("Dying Gentleman", "The Dying Gentleman is sitting there, hands folded. His eyes wander to me, looking hopefully. I feel drawn to him, as if I share a brotherhood. It seems he has something to request of me.", 
                     new Quest("One Last Glimpse...", "Dear Adventurer, will you aid a foolish old man? Like you, I used to adventure, until I took a bolt to the hip. I have seen many things, marvelous things: creatures you cannot imagine, dungeons deeper than the earth itself, and treasures beyond mortal comprehension. Alas, I have never laid my eyes upon on object of which I could never find. Will you assist me... with my dying wish? I wish to lay eyes upon the Basket of Rock, go forth and find it, please, afore I waste to nothing.",
                         "Explore and find one Basket of Rock", 120, 5, 150, QuestType.Collect, "Basket of Rock", 1, 
                         new Quest("One Final Treasure", "The old man wanted to see this back at Reedton Wharf.", "Go to Reedton Wharf", 1000, 125, 100, QuestType.GoTo, "Reedton Wharf"))),
 
-                new QuestGiver("Lord Buttleberry", "LordButtleberry stands at his Manor, clearly aggitated. He is pacing back and forth, his leather boots echoing across the manor grounds. His brow furrowed, he has the likeness of a boar. His ostentatious clothes billow wildly about him as he spins around. Finally, you both match stares, he approaches you.",
+                new QuestGiver("Lord Buttleberry", "LordButtleberry stands at his Manor, clearly aggitated. He is pacing back and forth, his leather boots echoing across the manor grounds. His brow furrowed, he has the likeness of a boar. His ostentatious clothes billow wildly about him as he spins around. Finally, we match stares, he approaches me.",
                     new Quest("Failing Fields", "\"Thank the spiritual entities that you are here adventurer! How do I know are one? Look at your garb! Enough idle talk. I am in the need of your assistance. It seems that the rivalry with Reedton has gone a too far this time! Some of our crops have gone bad and the farmers swear that the fields were poisoned. I need you to confront the Lord of Reedton, Alexander, about this and report to me the details. Hurry, go, Buttleberry will be most in your debt.\"", "Go to Grand Hall in Reedton Castle", 100, 25, 30, QuestType.GoTo, "Grand Hall", 1, 
                         new Quest("Speaking of Farm Fields", "I confronted Lord Alexander Reedton about the poisoned farm fields in Buttleberry and Lord Buttleberry's concerns. His face nearly exploded as he exclaimed, \"You.. HE dares to accuse me! Just yesterday our farmers brought to me the same complaints! Do you challenge my authority!? Go, see for yourself.\"", "Go to Farm Fields in Reedton Grassland", 50, 20, 35, QuestType.GoTo, "Farm Fields", 1))),
 
                         null
             };
-            questGivers[3] = new QuestGiver("Aggitated Farmer", "He looks... lost, as if he has no purpose left in life. His eyes look at you, but it is as if he does not see you.",
+            questGivers[3] = new QuestGiver("Aggitated Farmer", "He looks... lost, as if he has no purpose left in life. His eyes look at I, but it is as if he does not see me.",
                     new Quest("Lost Souls", "The only thing I could hear from the farmer where the same words, over and over: \"They were here, but not, then the rest were not, gone, like ghosts, gone, gone... gone\". Eerie to say the least.", "Go to a haunted place and inspect it.", 100, 25, 35, QuestType.GoTo, "The Tall Tree", 1,
-                        new Quest("Putting Souls to Rest", "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping sought you out and spoke to you, in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispered to me, \"Release us... defeat the Vengeful Souls that... harm... pain\". After that she wept some more, her small shoulders rapidly rising and falling twice with each sob.", "Slay ten Vengeful Souls", 1250, 250, 3000, QuestType.Slay, "Vengeful Soul", 10)), new List<Quest>() { questGivers[2].Quest.NextQuest });
+                        new Quest("Putting Souls to Rest", "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping sought me out and spoke to me, in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispered to me, \"Release us... defeat the Vengeful Souls that... harm... pain\". After that she wept some more, her small shoulders rapidly rising and falling twice with each sob.", "Slay ten Vengeful Souls", 1250, 250, 3000, QuestType.Slay, "Vengeful Soul", 10)), new List<Quest>() { questGivers[2].Quest.NextQuest });
 
             Potion[] potions =
             {
@@ -84,7 +84,7 @@ namespace AdventureQuestGame.Contexts.Initializers
             {
                 new Relic("Golden Statue", "Rather boring golden statue. It has some neat carvings on it, hopefully not curses.", 10),
                 new Relic("Jade Elephant", "Still, green, and not as large as the real thing. This extinct animal is portrayed perfectly... I think. A trunk, three legs, and one eye, must have been a frightening creation!", 20),
-                new Relic("Basket of Rock", "Worth more than you think!", 30),
+                new Relic("Basket of Rock", "Probably worth more than I think!", 30),
                 new Relic("Nude Statue and Statuette", "Some people might be interested in this for thier own pleasure. However, I just might keep it for myself.", 45),
                 new Relic("Chest full of silver", "Now that's what I'm talkin' about!", 200)
             };
@@ -97,7 +97,7 @@ namespace AdventureQuestGame.Contexts.Initializers
                 new Room("Sewer Hallway", "A long, dank, smelly, place. What could possibly be here?", false, 5),
                 new Room("Sewer Cavern", "Chunks of the sewer has fallen away and something has burrowed in. Dare I see who is home?", false, 5),
                 new Room("Sewer Crossroads", "Many other sewer hallways connect here, making for one large cesspool. Blech! What drove me here?", false, 5),
-                new Room("Castle Entrance", "Majestic gates stand before you and wary guards eye you, best stow the weapons... for now.", true, 5),
+                new Room("Castle Entrance", "Majestic gates stand before me and wary guards' eyes wander over my exteriior, best stow the weapons... for now.", true, 5),
                 new Room("Grand Hall", "Large, ornate, and full of loot. Best get started.", false, 5),
                 new Room("Farm Fields", "The wind lazily pushes the large strands of wheat around. They sway, as if drunk on the sunlight. The only thing menacing about these fields is what they can potentially hide.", true,5),
                 new Room("Burned Home", "This building used to house a family. Now, telling by the socerous scorch marks and bones, it houses the souls of the deceased.", false, 5),
@@ -107,11 +107,11 @@ namespace AdventureQuestGame.Contexts.Initializers
             Spell[] spells =
             {
                 new Spell("Spitball", "A small flame flicks out from my finger and it kind of hurts the monster. Not that impressive, but good for carnival tricks", 3, 1, 1, "Damage"),
-                new Spell("Ice Cube", "A small cube of ice. Looking at it though, you can't help but feel that it is angry... Perhaps throwing it at the enemy will do damage.", 4, 1, 2, "Damage"),
-                new Spell("Earthen Spike Wall", "The ground trembles and roars, splitting open beneath your foe. Large stalagmites erupt from the surface, piercing them.", 8, 4, 4, "Damage"),
-                new Spell("Torrentual Downpour", "Mother always said the rain wouldn't hurt you. WELL SHE WAS WRONG!", 13, 7, 5, "Damage"),
+                new Spell("Ice Cube", "A small cube of ice. Looking at it though, I can't help but feel that it is angry... Perhaps throwing it at the enemy will do damage.", 4, 1, 2, "Damage"),
+                new Spell("Earthen Spike Wall", "The ground trembles and roars, splitting open beneath my foe. Large stalagmites erupt from the surface, piercing them.", 8, 4, 4, "Damage"),
+                new Spell("Torrentual Downpour", "Mother always said the rain wouldn't hurt me. WELL SHE WAS WRONG!", 13, 7, 5, "Damage"),
                 new Spell("Red Tide", "Like a screaming banshee, it tears out of the valley and strikes all who opposes it, covering them in hot sticky blood. The foe chokes from such a onslaught.", 18, 8, 6, "Damage"),
-                new Spell("Dove of Doom", "Summon a black dove to swoop and peck your opponent. It's pretty neat.", 20, 10, 8, "Damage"),
+                new Spell("Dove of Doom", "Summon a black dove to swoop and peck my opponent. It's pretty neat.", 20, 10, 8, "Damage"),
                 new Spell("Healing Touch", "My hand glows blue and I start to feel better when I touch myself.", 5, 1, 1, "Heal")
             };
 
@@ -136,13 +136,13 @@ namespace AdventureQuestGame.Contexts.Initializers
             {
                 new Location("Nowhere, The Void", "The place beyond the concious physical realm, where all are born but none remain."){isExit=true},
                 new Location("Buttleberry, The Marble Manor", "Within Buttleberry is a large manor. Its walls are carved from a solid mammoth cut of marble. How such was acheived is only known by the original owners, long passed away. Although impressive, the building resembles a block with holes cut into it for windows and doors. Guards partrol the area, looking for nefarious individuals."){QuestGiver=questGivers[2]},
-                new Location("Grove of the Elder", "These woods contain many mysteries. This is one of them. It is said that child sacrifice and the birth of demons took place here. The rituals too unspeakable to speak anymore of. It looks peacefull now, with the exception of the blood stained stone table resting in the middle of the grove. It speaks to you, calling your name."){isExit=true},
-                new Location("The Tall Tree", "Of all the trees in this forest, this particular specimen seems to know the most. Its presence unsettles you. Sweat begins dripping down your eye, stinging. However, you can't help but feel that it is this wooden creature before you, crying through your soul."),
-                new Location("Buttleberry Square", "Vibrant colors, and boisterous sounds make this town a living entity within a dreary world. The market has several shops that interest you."){hasMarket=true,QuestGiver=questGivers[0]},
-                new Location("The Widower Colossus", "Being the only sentitent being left in these wastes, you cannot help but feel a sense of lonliness emanate from the statue. It looks across the desert, peering, waiting for it's lover's return."){isExit=true},
-                new Location("Buttleberry Gates", "Two large stone griffins peer into your eyes as you approach the iron-wrought gates of Buttleberry. They promise swift vengeance to evil-doers."){isExit=true},
+                new Location("Grove of the Elder", "These woods contain many mysteries. This is one of them. It is said that child sacrifice and the birth of demons took place here. The rituals too unspeakable to speak anymore of. It looks peacefull now, with the exception of the blood stained stone table resting in the middle of the grove. It speaks to me, calling my name."){isExit=true},
+                new Location("The Tall Tree", "Of all the trees in this forest, this particular specimen seems to know the most. Its presence unsettles me. Sweat begins dripping down my eyes, stinging. However, I can't help but feel that it is this wooden creature before me, crying through my soul."),
+                new Location("Buttleberry Square", "Vibrant colors, and boisterous sounds make this town a living entity within a dreary world. The market has several shops that interest me."){hasMarket=true,QuestGiver=questGivers[0]},
+                new Location("The Widower Colossus", "Being the only sentitent being left in these wastes, I cannot help but feel a sense of lonliness emanate from the statue. It looks across the desert, peering, waiting for it's lover's return."){isExit=true},
+                new Location("Buttleberry Gates", "Two large stone griffins peer into my eyes as I approach the iron-wrought gates of Buttleberry. They promise swift vengeance to evil-doers."){isExit=true},
                 new Location("Buttleberry Dungeon", "Well, it looks frightening enough."){rooms=new List<Room>(new[]{rooms[0], rooms[1]})},
-                new Location("Reedton Market", "A bustling venue filled with various shops and treats. To the left are some amazing artists of puppetry and to the right more sweet shops. Children run up to you in awe, while mothers wink from a distance."){hasMarket=true},
+                new Location("Reedton Market", "A bustling venue filled with various shops and treats. To the left are some amazing artists of puppetry and to the right more sweet shops. Children run up to me in awe, while mothers wink from a distance."){hasMarket=true},
                 new Location("Reedton Castle", "Large a forboding, this castle overlooks the town square and surrounding ocean. Flags fly in the wind, indicating that the Lord and Lady are home. Perhaps paying them a visit will prove... fruitful"){monsterTypeHere = MonsterType.Person, rooms=new List<Room>(new[]{rooms[6], rooms[7]})},
                 new Location("Reedton Grasslands", "Being on an island, but space had to be conserved for farms. However, creatures of the night have claimed what farmers have not. Who knows what treasures await here."){monsterTypeHere = MonsterType.Creature, rooms=new List<Room>(new[]{rooms[8], rooms[9], rooms[10]}), QuestGiver=questGivers[3]},
                 new Location("Reedton Wharf", "The only way on or off this island legally. It controls the imports and exports of this island. It is said that one man owns it all, and thus owns the island."){isExit=true,QuestGiver=questGivers[1]},
@@ -151,15 +151,15 @@ namespace AdventureQuestGame.Contexts.Initializers
 
             Area[] areas =
             {
-                new Area("The Barren Wastes", "The moans of the dead ride the howling wind in this arid plane. Naught but your soul and those of the perished remain here. For miles, nothing can be seen."){locations=new List<Location>(new[]{locations[5]})},
-                new Area("Buttleberry", "Cheerfully, the vibrant roofs of this town reach for the heavens in jubilee. The town charms you, reminding you that there is joy and happiness left in this world. There are many homes and a humble market. Atop a hill sits the governor's estate, encased in marble."){locations=new List<Location>(locations.Where(l => l.name.StartsWith("Buttleberry")).ToArray())},
-                new Area("Haunted Forest", "As always, this forest is haunted, filled with the nightmares born of the surrounding villagers suuperstitions and fears. It looms ahead, gaping, a maw ready to devour your soul. Have any ever made it through alive? Have any ever even attempted such a trail? Why not take the path?"){locations=new List<Location>(new[]{locations[2], locations[3]})},
+                new Area("The Barren Wastes", "The moans of the dead ride the howling wind in this arid plane. Naught but my soul and those of the perished remain here. For miles, nothing can be seen."){locations=new List<Location>(new[]{locations[5]})},
+                new Area("Buttleberry", "Cheerfully, the vibrant roofs of this town reach for the heavens in jubilee. The town is charming, reminding me that there is joy and happiness left in this world. There are many homes and a humble market. Atop a hill sits the governor's estate, encased in marble."){locations=new List<Location>(locations.Where(l => l.name.StartsWith("Buttleberry")).ToArray())},
+                new Area("Haunted Forest", "As always, this forest is haunted, filled with the nightmares born of the surrounding villagers suuperstitions and fears. It looms ahead, gaping, a maw ready to devour my soul. Have any ever made it through alive? Have any ever even attempted such a trail? Why not take the path?"){locations=new List<Location>(new[]{locations[2], locations[3]})},
                 new Area("Reedton", "A small town precariously nestled above the cliffs of a small island. It looks fragile, as if the first gust will take it - and it's inhabitants - into the deep blue. There seems to be more here and they share a friendly rivalry with Buttleberry."){locations=new List<Location>(locations.Where(l => l.name.StartsWith("Reedton")).ToArray())}
             };
 
             World[] worlds =
             {
-                new World("Phynomen", "The world you love and cherish"){areas=new List<Area>(areas)}
+                new World("Phynomen", "The world I love and cherish"){areas=new List<Area>(areas)}
             };
 
             Armor[] armors =
@@ -238,21 +238,21 @@ namespace AdventureQuestGame.Contexts.Initializers
 
             Monster[] monsters =
             {
-                new Monster("Imp", "A mighty creature in its own right, it can nibble your bum. Small creature, barely a meter tall with a larger wingspan. Its limbs hang limp and spindly from its body. Horns curve out the top of it's head. It smile's, teeth sharp, menacing.", attributes[0], MonsterType.Monster),
+                new Monster("Imp", "A mighty creature in its own right, it can nibble my bum. It is small, barely a meter tall with a larger wingspan. It's limbs hang limp and spindly from its body. Horns curve out the top of it's head. It smiles, showing sharp menacing teeth, dropping chunks of flesh from it's mouth.", attributes[0], MonsterType.Monster),
                 new Monster("Golem", "Its a mountian, its a rock, no, wait... Its coming right at me! In all seriousness though, this creature looks like a rather muscular human. The main difference is that where joints and limbs should be are boulders.", attributes[1], MonsterType.Monster),
-                new Monster("Tiny Mouse", "*ROAR!!!!*", attributes[2], MonsterType.Creature),
-                new Monster("Skeleton Ghost", "Spooky, Scary, Skeleton Ghost, out to haunt you.", attributes[3], MonsterType.Monster),
+                new Monster("Tiny Mouse", "ROAR!!!!", attributes[2], MonsterType.Creature),
+                new Monster("Skeleton Ghost", "Spooky, Scary, Skeleton Ghost, out to haunt me.", attributes[3], MonsterType.Monster),
                 new Monster("Goblin", "Like a child with green skin... and just as annoying!", attributes[4], MonsterType.Monster),
                 new Monster("Engraged Geezer", "'Get off my LAWN and off my PROPERTY!'", attributes[5], MonsterType.Person),
-                new Monster("Dragon", "Unfortunately, I must tell you that you will die. Its just plain HUGE. The wings darken the ground for miles and the scales blind you. Nothing you can say or do will assist you.", attributes[6], MonsterType.Monster),
-                new Monster("Medusa", "She is just abosolutely gorgeous. Except that she has the lower body of a snake. But I can dig that. Her hair freaks me out a bit, all writhing in slithering silliness. She stares at you and you can't help but feel... immobilized.", attributes[7], MonsterType.Monster),
-                new Monster("Unicorn", "Not the little pony you have expected. After being hunted for years, the dark mane on this creature glistens with blood. A sheen covers its horn as it is lowered and begins to charge you.", attributes[8], MonsterType.Monster),
-                new Monster("Orc", "The purple skin of this three meter tall creature ripples from the muscle and sinew beneath. Perhaps it was a bad idea to explore at this time. Or perhaps it will be a grand duel. You both grin at each other for the coming blood-letting, mutual agreement of combat.", attributes[9], MonsterType.Monster),
+                new Monster("Dragon", "Unfortunately, it seems I will die. It is just plain HUGE. The wings darken the ground for miles and the scales blind me. Nothing I can say or do will assist me in victory, but try I must.", attributes[6], MonsterType.Monster),
+                new Monster("Medusa", "She is just abosolutely gorgeous. Except that she has the lower body of a snake. But I can dig that. Her hair freaks me out a bit, all writhing in slithering silliness. She stares at me and I can't help but feel... immobilized.", attributes[7], MonsterType.Monster),
+                new Monster("Unicorn", "Not the little pony I would have expected. After being hunted for years, the dark mane on this creature glistens with blood. A sheen covers it's horn as it is lowered and begins to charge me.", attributes[8], MonsterType.Monster),
+                new Monster("Orc", "The purple skin of this three meter tall creature ripples from the muscle and sinew beneath. Perhaps it was a bad idea to explore at this time. Or perhaps it will be a grand duel. We both grin at each other for the coming blood-letting, mutual agreement of combat.", attributes[9], MonsterType.Monster),
                 new Monster("Vengeful Soul", "Not sure how this happened, but the power from this creature is overwhelming. I best dispatch this soul with swiftness!", attributes[10], MonsterType.Monster),
-                new Monster("Giant Rat", "Alas, old foe, we meet again. I have been expecting you... You words seem to fall short on this gray dim-wit. What a waste of time. Why is he always so big too?", attributes[11], MonsterType.Creature),
-                new Monster("Giant Centipede", "I hope my strength and blade are enough to pierce the armor of this monstrosity. It crawls towards you, hundreds of feet moving in unison - ECK!", attributes[12], MonsterType.Creature),
-                new Monster("Elder Dragon", "Large, angry, and full of muscle. He, or she, is a sight to behold. Stronger than most dragons of it's Warren, it commands dominance from every creature it sees. You will assert yours, or die trying.", attributes[13], MonsterType.Monster),
-                new Monster("Guard", "This guard feels you have done something wrong. He approaches you with a maniacal grin, raising his halbred - he swings. Looks like there is only one way out of this one.", attributes[14], MonsterType.Person)
+                new Monster("Giant Rat", "\"Alas, old foe, we meet again. I have been expecting you...\" My words seem to fall short on this gray dim-wit. What a waste of time. Why is he always so big too?", attributes[11], MonsterType.Creature),
+                new Monster("Giant Centipede", "I hope my strength and blade are enough to pierce the armor of this monstrosity. It crawls towards me, hundreds of feet moving in unison - ECK!", attributes[12], MonsterType.Creature),
+                new Monster("Elder Dragon", "Large, angry, and full of muscle. He, or she, is a sight to behold. Stronger than most dragons of it's Warren, it commands dominance from every creature it sees. I will assert mine, or die trying.", attributes[13], MonsterType.Monster),
+                new Monster("Guard", "This guard feels I have done something wrong. He approaches me with a maniacal grin, raising his halbred - he swings. Looks like there is only one way out of this one.", attributes[14], MonsterType.Person)
             };
 
             context.areas.AddRange(areas);

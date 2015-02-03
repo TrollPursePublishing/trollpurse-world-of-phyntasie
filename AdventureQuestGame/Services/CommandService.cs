@@ -24,7 +24,8 @@ namespace AdventureQuestGame.Services
         map,
         explore,
         rest,
-        quest
+        quest,
+        whereami
     }
 
     public class GameResponse
