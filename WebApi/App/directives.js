@@ -22,4 +22,10 @@ angular.module('app.directives', [])
         return function (scope, elm, attrs) {
             elm.text(version);
         };
+    }])
+
+    .directive('gameName', ['gamename', function (gamename) {
+        return function (scope, elm, attrs) {
+            elm.text(gamename);
+        };
     }]);

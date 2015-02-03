@@ -1,0 +1,18 @@
+﻿    <center><h2>{{enterResult.msg}}</h2></center>
+    <div ng-if="enterResult.success">
+        <form class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4" ng-submit="resetPassword(password, confirmpassword)">
+            <div ng-show="result.success" class="alert alert-warning">{{result.msg}}</div>
+            <div class="form-box">
+                <div class="form-group">
+                    <input ng-model="password" type="password" class="form-control" placeholder="Password" required />
+                </div>
+                <div class="form-group">
+                    <input ng-model="confirmpassword" type="password" class="form-control" placeholder="Password Again" required />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit" ng-click="submitClick(password, confirmPassword)" ng-disabled="password != confirmpassword">Reset Password</button>
+                </div>
+            </div>
+            <div class="alert alert-info" ng-show="showClick">Please wailt while we reset your password.</div>
+        </form>
+    </div>

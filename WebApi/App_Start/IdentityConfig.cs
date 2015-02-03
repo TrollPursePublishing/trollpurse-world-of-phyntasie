@@ -43,11 +43,11 @@ namespace WebApi
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator()
             {
-                RequiredLength = 8,
-                RequireNonLetterOrDigit = true,
+                RequiredLength = 6,
+                RequireNonLetterOrDigit = false,
                 RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true
+                RequireLowercase = false,
+                RequireUppercase = false
             };
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
