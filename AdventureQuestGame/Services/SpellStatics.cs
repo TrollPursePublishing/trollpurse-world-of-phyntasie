@@ -20,7 +20,7 @@ namespace AdventureQuestGame.Services
             int damage = theSpell.damage;
             p.engaging.attribute.currentHealth -= damage;
             p.attributes.currentMana -= theSpell.manaCost;
-            return String.Format("{0} casts {1} against {2}, causing {3} damage! {2} has {4} health remaining.", p.FullName, theSpell.name, p.engaging.name, damage, Math.Max(0, p.engaging.attribute.currentHealth));
+            return String.Format("I cast {0} against {1}, causing {2} damage! {1} has {3} health remaining.", theSpell.name, p.engaging.name, damage, Math.Max(0, p.engaging.attribute.currentHealth));
         }
 
         public static string Heal(Player p, Spell theSpell)
@@ -43,7 +43,7 @@ namespace AdventureQuestGame.Services
 
             int value = theSpell.damage;
             p.attributes.currentStrength += value;
-            return String.Format("Your Strength has been increased by {0}.", value);
+            return String.Format("My Strength has been increased by {0}.", value);
         }
 
         public static string BuffToughness(Player p, Spell theSpell)
@@ -53,7 +53,7 @@ namespace AdventureQuestGame.Services
 
             int value = theSpell.damage;
             p.attributes.currentToughness += value;
-            return String.Format("Your Toughness has been increased by {0}.", value);
+            return String.Format("My Toughness has been increased by {0}.", value);
         }
 
         public static string DebuffStrength(Player p, Spell theSpell)

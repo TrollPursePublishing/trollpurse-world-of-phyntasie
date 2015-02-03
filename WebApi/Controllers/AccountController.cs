@@ -34,6 +34,18 @@ namespace WebApplication1.Controllers
         public bool success { get; private set; }
     }
 
+    class PasswordResetViewModel
+    {
+        public PasswordResetViewModel(string msg, bool success)
+        {
+            this.msg = msg;
+            this.success = success;
+        }
+        public string msg { get; private set; }
+        public bool success { get; private set; }
+        public string additionalData { get; set; }
+    }
+
     class RegisterViewModel
     {
         public RegisterViewModel(string username, string password, string confirmpassword, string email, string gender)
@@ -80,7 +92,7 @@ namespace WebApplication1.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager = null;
         private PlayerService service = new PlayerService();
-        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net";
+        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net" /*"http://localhost:61191/"*/;
 
         public ApplicationUserManager UserManager
         {
@@ -108,6 +120,68 @@ namespace WebApplication1.Controllers
                 }
             }
             return user;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("api/account/password/reset")]
+        public IHttpActionResult PasswordResetRequested()
+        {
+            Dictionary<string, string> content = Request.Content.ReadAsAsync<Dictionary<string, string>>().Result;
+            string email = content["email"];
+            try
+            {
+                var user = UserManager.FindByEmail(email);
+                string link = String.Format("{0}#/api/account/password/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), user.SecurityStamp);
+                UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Password Reset", String.Format("You are receiving this email because a password reset has been request for your account with this email address.\r\n If you did not request this information, please contact support and do not continue. If you did, please follow the link below or copy and pasted it into your URL bar.\r\n\r\n<a href=\"{0}\">{0}</a>\r\n{0}", link));
+            }
+            catch (Exception e) { }
+            return Ok(new PasswordResetViewModel(String.Format("Your Password reset confirmation was sent to {0}", email), true));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/account/password/{hash}/{securityStamp}")]
+        public IHttpActionResult ConfirmPasswordReset(string hash, string securityStamp)
+        {
+            var user = GetUserFromHash(hash);
+            if (user == null)
+                return BadRequest();
+
+            if (user.SecurityStamp == securityStamp)
+            {
+                return Ok(new PasswordResetViewModel("Please Enter and Confirm your new password.", true) { additionalData = user.Id });
+            }
+            else
+                return BadRequest();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/account/password/reset/{id}/{password}/{confirmPassword}")]
+        public IHttpActionResult ResetPassword(string id, string password, string confirmPassword)
+        {
+            try{
+                var user = UserManager.FindById(id);
+                if(password == confirmPassword)
+                {
+                    var token = UserManager.GeneratePasswordResetToken(id);
+                    var result = UserManager.ResetPassword(user.Id, token, password );
+                    if (result.Succeeded)
+                        return Ok(new PasswordResetViewModel("Your password has been reset, please try logging in.", true) );
+                    else
+                    {
+                        string errors = String.Empty;
+                        foreach (var e in result.Errors)
+                            errors += e + " ";
+                        return Ok(new PasswordResetViewModel(errors, false) );
+                    }
+                }                    
+                else
+                    return Ok(new PasswordResetViewModel("Passwords do not match, please try again.", false));
+            }catch(Exception e){
+                return BadRequest();
+            }            
         }
 
         [HttpGet]
@@ -256,7 +330,7 @@ namespace WebApplication1.Controllers
             string link = String.Format("{0}/#/external/account/register/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
             try
             {
-                await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{1}</a>\n If you cannot see the link, copy and paste this to your address bar: {2}", link, link, link));
+                await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{0}</a>\n If you cannot see the link, copy and paste this to your address bar: {0}", link));
             }
             catch (Exception e)
             {

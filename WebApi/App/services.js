@@ -156,6 +156,15 @@ angular.module('app.services', [])
             return getAsync('api/account/sendmail/' + playerId, $q, $http);
         };
 
+        acc.resetPassword = function (id, password, confirmPassword) {
+            console.log('Hit endpoint');
+            return getAsync('api/account/password/reset/' + id + '/' + password + '/' + confirmPassword, $q, $http);
+        };
+
+        acc.resetConfirm = function (hash, securityStamp) {
+            return getAsync('api/account/password/' + hash + '/' + securityStamp, $q, $http);
+        };
+
         return acc;
     }])
 
@@ -190,7 +199,13 @@ angular.module('app.services', [])
             return getAsync('api/player/' + playerId, $q, $http);
         };
 
+        user.reset = function (email) {
+            var data = { email: email };
+            return postAsync('api/account/password/reset', data, $q, $http);
+        };
+
         return user;
     }])
 
-    .value('version', '0.0.4.2');
+    .value('version', '0.0.5.4')
+    .value('gamename', 'AdventureQuestGame');

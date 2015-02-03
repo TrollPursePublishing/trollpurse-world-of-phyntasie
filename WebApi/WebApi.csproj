@@ -150,7 +150,10 @@
     <Content Include="Content\hint.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\public\adventure.png" />
+    <Content Include="Images\public\emotion.jpg" />
     <Content Include="Images\public\Untitled.png" />
+    <Content Include="Images\public\worldcompetition.png" />
     <Content Include="Index.html" />
     <Content Include="Index.min.html">
       <DependentUpon>Index.html</DependentUpon>
@@ -972,6 +975,10 @@
     <Content Include="View\Register.html" />
     <Content Include="View\Register.min.html">
       <DependentUpon>Register.html</DependentUpon>
+    </Content>
+    <Content Include="View\Reset.html" />
+    <Content Include="View\Reset.min.html">
+      <DependentUpon>Reset.html</DependentUpon>
     </Content>
     <Content Include="View\SignUp.min.html">
       <DependentUpon>SignUp.html</DependentUpon>

@@ -56,6 +56,10 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/register.min.html',
             controller: 'RegisterCtrl'
         })
+        .when('/api/account/password/:hash/:securityStamp', {
+            templateUrl: 'view/reset.min.html',
+            controller: 'ResetCtrl'
+        })
         .when('/404', {
             templateUrl: 'view/404.html'
         })
