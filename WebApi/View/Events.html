@@ -6,6 +6,7 @@
         <h2>Big Events</h2>
         <div ng-repeat="event in events track by $index">
             <h3>{{event.name}}</h3>
+            <p>{{event.whenString}}</p>
             <p>{{event.description}}</p>
         </div>
     </div>

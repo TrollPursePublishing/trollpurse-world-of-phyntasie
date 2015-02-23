@@ -50,7 +50,7 @@ namespace AdventureQuestGame.Services.Private
                 result.Add(String.Format("{0} is not a room I may go to.", additionalParams));
                 return result;
             }
-            else if (player.navigation.currentRoom == null && !player.isInside)
+            else if (player.navigation.currentRoom == null)
             {
                 if (player.navigation.currentLocation.rooms != null)
                 {

@@ -13,7 +13,10 @@ namespace AdventureQuestGame.Services
     {
         public IList<Player> GetTopTen()
         {
-            return GameCtx.players.OrderBy(p => -p.stats.score).ToList().GetRange(0, 10).ToList();
+            if (GameCtx.players.Count() >= 10)
+                return GameCtx.players.OrderBy(p => -p.stats.score).ToList().GetRange(0, 10).ToList();
+            else
+                return GameCtx.players.OrderBy(p => -p.stats.score).ToList();
         }
 
         public IList<Player> GetAllOrdered()

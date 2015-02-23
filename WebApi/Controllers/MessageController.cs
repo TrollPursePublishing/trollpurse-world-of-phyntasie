@@ -14,10 +14,12 @@ namespace WebApi.Controllers
     {
         public string name {get; private set;}
         public string description {get; private set;}
-        public Event (string name, string description)
+        public string whenString { get; private set; }
+        public Event (string name, string description, string whenString)
         {
             this.name = name;
             this.description = description;
+            this.whenString = whenString;
         }
     }
 
@@ -44,7 +46,7 @@ namespace WebApi.Controllers
         public async Task<string> GetEvents()
         {
             EventViewModel vm = new EventViewModel();
-            service.GetAllEvents().ToList().ForEach(e => vm.events.Add(new Event(e.title, e.description)));
+            service.GetAllEvents().ToList().ForEach(e => vm.events.Add(new Event(e.title, e.description, e.when.ToString("MM.dd.yy"))));
             return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
         }
 
