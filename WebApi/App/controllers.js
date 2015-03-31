@@ -69,18 +69,20 @@ angular.module('app.controllers', ['app.services'])
         $scope.result = {};
         $scope.enterResult = {};
         $scope.showClick = false;
-
-        $scope.submitClick = function (password, confirmPassword) {
-            $scope.showClick = (password == confirmPassword);
-        };
+        $scope.errored = false;
 
         $scope.resetPassword = function (password, confirmPassword) {
+            $scope.showClick = true;
+            $scope.errored = false;
             AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword)
             .then(function (data) {
                 console.log(data.data);
                 $scope.showClick = false;
+                $scope.errored = false;
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
+                $scope.showClick = false;
+                $scope.errored = true;
                 $scope.result = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false, additionalData: $scope.enterResult.additionalData };
             });
         }

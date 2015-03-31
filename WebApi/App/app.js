@@ -22,9 +22,6 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
         .when('/manual', {
             templateUrl: 'view/manual.min.html'
         })
-        .when('/contest', {
-            templateUrl: 'view/contest.min.html'
-        })
         .when('/adventure', {
             templateUrl: 'view/game.min.html',
             controller: 'CommandCtrl',
