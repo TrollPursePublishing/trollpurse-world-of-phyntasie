@@ -8,9 +8,10 @@ namespace WebApi.Hubs
 {
     public class ChatHub : Hub
     {
-        public void JoinLocation(string locationId)
+        public void JoinLocation(string locationId, string playerName)
         {
             Groups.Add(Context.ConnectionId, locationId);
+            Clients.Group(locationId).broadcastJoin(playerName);
         }
 
         public void LeaveLocation(string locationId)

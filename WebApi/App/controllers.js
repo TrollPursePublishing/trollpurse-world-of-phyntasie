@@ -27,9 +27,18 @@ angular.module('app.controllers', ['app.services'])
             });
         });
 
+        $scope.$parent.$on('playerjoin', function (event, data) {
+            $scope.$apply(function () {
+                if(data.name != $scope.user.FullName)
+                {
+                    $scope.messages.push(data.name + ' has entered.');
+                }
+            });
+        });
+
         $scope.$parent.$on('chatready', function () {
             console.log('chatready', 'initialized');
-            MessageService.joinLocation(UserService.user.navigation.currentLocation.Id);
+            MessageService.joinLocation(UserService.user.navigation.currentLocation.Id, UserService.user.FullName);
         });
 
         $scope.submit = function (data) {
@@ -45,10 +54,10 @@ angular.module('app.controllers', ['app.services'])
                     }
                     $scope.user = d.player;
                     UserService.user = $scope.user;
-                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id);
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, UserService.user.FullName);
                 }, function (error) {
                     console.error('error', error);
-                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id);
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, UserService.user.FullName);
                 });
             }
         };
@@ -78,8 +87,8 @@ angular.module('app.controllers', ['app.services'])
             .then(function (data) {
                 console.log(data.data);
                 $scope.showClick = false;
-                $scope.errored = false;
                 $scope.result = angular.fromJson(data.data);
+                $scope.errored = !result.success;
             }, function (error) {
                 $scope.showClick = false;
                 $scope.errored = true;

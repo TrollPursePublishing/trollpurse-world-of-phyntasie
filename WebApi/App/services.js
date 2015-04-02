@@ -80,6 +80,11 @@ angular.module('app.services', [])
                         console.log('broadcast', playerName + ':' + msg);
                         $rootScope.$emit('chat', { name: playerName, msg: msg });
                     }
+
+                    message.ChatHub.client.broadcastJoin = function (playerName) {
+                        console.log('broadcast', playerName + ':' + 'join');
+                        $rootScope.$emit('playerjoin', { name: playerName });
+                    }
                     $.connection.hub.start()
                     .done(function () { message.chatConnected = true; console.log('signalR', 'Connected!'); q.resolve('success'); })
                     .fail(function () { message.chatConnected = false; console.log('signalR', 'Not Connected :('); q.reject('failure') });
@@ -92,8 +97,8 @@ angular.module('app.services', [])
             message.ChatHub.server.send(playerName, msg, locationId);
         };
 
-        message.joinLocation = function (locationId) {
-            message.ChatHub.server.joinLocation(locationId);
+        message.joinLocation = function (locationId, playerName) {
+            message.ChatHub.server.joinLocation(locationId, playerName);
         };
 
         message.leaveLocation = function (locationId) {
@@ -207,5 +212,5 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.5.6')
+    .value('version', '0.0.5.7')
     .value('gamename', 'AdventureQuestGame');
