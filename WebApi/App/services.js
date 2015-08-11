@@ -179,7 +179,6 @@ angular.module('app.services', [])
             return localStorage['aqg_token'] != undefined;
         }
 
-
         user.getUserData = function (userId) {
             return getAsync('api/player/' + userId, $q, $http);
         };
