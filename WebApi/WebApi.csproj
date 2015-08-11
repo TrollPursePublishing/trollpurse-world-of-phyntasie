@@ -152,7 +152,9 @@
     <Content Include="Global.asax" />
     <Content Include="Images\public\adventure.png" />
     <Content Include="Images\public\Badlands.png" />
+    <Content Include="Images\public\barrenwastes.png" />
     <Content Include="Images\public\emotion.png" />
+    <Content Include="Images\public\hauntedforest.png" />
     <Content Include="Images\public\Untitled.png" />
     <Content Include="Images\public\worldcompetition.png" />
     <Content Include="Index.html" />
@@ -1013,7 +1015,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

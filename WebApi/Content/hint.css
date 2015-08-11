@@ -9,3 +9,9 @@
 .exit{
     color:red;
 }
+
+.bg-location{
+    opacity: 0.65;
+    position: fixed;
+    display:!important;
+}

@@ -22,6 +22,7 @@ namespace AdventureQuestGame.Models
         public Guid Id { get; private set; } 
         public string name { get; set; }
         public string description { get; set; }
+        public string imagepath { get; set; }
         public virtual ICollection<Location> locations { get; set; }
     }
 }

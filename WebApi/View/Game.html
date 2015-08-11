@@ -7,8 +7,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="navbar-brand">{{user.FullName}}</div>
+            <div class="navbar-brand">
+                {{user.FullName}}
+            </div>
         </div>
+        <form class="navbar-form navbar-left" ng-submit="submit(data); data='';">
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="data" placeholder="Commands" data-autofocus required />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" ng-disabled="$invalid">Do</button>
+            </div>
+        </form>
         <div id="gamenavbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -30,22 +40,15 @@
         </div>
     </div>
 </nav>
-<div class="row" style="padding-top:50px;" ng-if="checkRerouteToUserpage()">
-    <div class="col-sm-8">
-        <data-gameview></data-gameview>
-        <form class="row" ng-submit="submit(data); data='';">
-            <input class="col-sm-9" type="text" ng-model="data" placeholder="Commands" data-autofocus required />
-            <button class="col-sm-offset-1 col-sm-2 btn btn-primary" type="submit" ng-disabled="$invalid">Do</button>
-        </form>
-    </div>
-    <div class="col-sm-4">
+<img class="img-responsive bg-location" data-ng-src="{{user.navigation.currentArea.imagepath}}" />
+<div class="row" style="padding-top:50px;height:100%;max-height:100%" ng-if="checkRerouteToUserpage()">
+    <div class="col-xs-4" style="padding-left:5%;opacity:0.75;">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <center>
                         <h4 class="panel-title">
                             <strong>Bag</strong>
-
                         </h4>
                     </center>
                 </div>
@@ -150,5 +153,9 @@
 
             </div>
         </div>
+    </div>
+    <div class="col-xs-8">
+        <data-gameview>
+        </data-gameview>
     </div>
 </div>
