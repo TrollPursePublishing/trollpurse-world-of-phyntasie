@@ -4,16 +4,17 @@ angular.module('app.controllers', ['app.services'])
 
     // Path: /
     .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService', 'MessageService', '$filter', function ($scope, $location, $window, UserService, CommandService, MessageService, $filter) {
-        $scope.checkRerouteToUserpage = function () {
-            if (!UserService.isLoggedIn) {
-                $location.path('/');
-                return false;
+        function activate() {
+            if (!UserService.isLoggedIn()) {
+                $location.path('/login');
+            } else {
+                MessageService.startupServices()
+                .then(function () { if (MessageService.chatConnected) { $scope.$parent.$emit('chatready'); } },
+                function (error) { console.log('error', error); });
             }
-            MessageService.startupServices()
-            .then(function () { if (MessageService.chatConnected) { $scope.$parent.$emit('chatready'); } },
-            function (error) { console.log('error', error); });
-            return true;
-        };
+        }
+
+        activate();
 
         $scope.user = UserService.user;
         $scope.messages = [];
@@ -239,48 +240,11 @@ angular.module('app.controllers', ['app.services'])
         $scope.login = function (entereduserName, password) {
             UserService.login(entereduserName, password)
             .then(function (data) {
-                var result = angular.fromJson(data.data);
-                var msg = result.message;
-                var b = !result.isError;
-                $scope.bAuthError = result.isError;
-
-                if (b) {
-                    UserService.getPlayerData(msg)
-                    .then(function (data) {
-                        $scope.user = angular.fromJson(data.data);
-                        UserService.user = $scope.user;
-                        UserService.isLoggedIn = true;
-                    }, function (error) {
-                        $scope.user = {};
-                        UserService.user = $scope.user;
-                        UserService.isLoggedIn = false;
-                    });
-                }
-                else {
-                    $scope.authError = msg;
-                }
+                console.log(data);
             }, function (error) {
-                $scope.user = {};
-                UserService.user = $scope.user;
-                UserService.isLoggedIn = false;
+                console.log(error);
             });
         };
-
-        $scope.checkRerouteToUserpage = function () {
-            if (UserService.isLoggedIn) {
-                $location.path('/userwelcome');
-                return true;
-            }
-            return false;
-        };
-
-        $scope.$watch($scope.user, function (newValue, oldValue, scope) {
-            if ($scope.user.Id !== undefined && UserService.isLoggedIn) {
-                $location.path('/userwelcome');
-            } else {
-                $location.path('/login');
-            }
-        });
     }])
 
     // Path: /userwelcome
@@ -294,6 +258,12 @@ angular.module('app.controllers', ['app.services'])
         $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
         $scope.registerClicked = false;
+
+        function activate() {
+            $scope.getData();
+        }
+
+        activate();
 
         $scope.registerToGetEmail = function () {
             AccountService.registerForUpdates($scope.user.Id)
@@ -345,41 +315,39 @@ angular.module('app.controllers', ['app.services'])
             });
 
             $scope.user = UserService.user;
-            //console.log('user', $scope.user);
         };
-
-        $scope.$on('$viewContentLoaded', function () {
-            $scope.getData();
-        });
-
     }])
 
     .controller('AccountCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
         $scope.$root.title = 'External Portal';
         $scope.result = {}
 
-        $scope.$on('$viewContentLoaded', function () {
+        function activate() {
             AccountService.doNotDisturb($routeParams.hash)
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
                 $scope.result = { msg: 'Action not successful. I\'m Sorry', success: false };
             });
-        });
+        }
+
+        activate();
     }])
 
     .controller('RegisterCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
         $scope.$root.title = 'External Portal';
         $scope.result = {}
 
-        $scope.$on('$viewContentLoaded', function () {
+        function activate() {
             AccountService.confirmEmail($routeParams.hash, $routeParams.confirmationCode)
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
                 $scope.result = { msg: 'Registration not successful, please contact support. I\'m Sorry', success: false };
             });
-        });
+        }
+
+        activate();
     }])
 
     // Path: /error/404

@@ -158,12 +158,11 @@ angular.module('app.services', [])
         };
 
         acc.registerForUpdates = function (playerId) {
-            return getAsync('api/account/sendmail/' + playerId, $q, $http);
+            return postAsync('api/account/sendmail', {playerId: playerId}, $q, $http);
         };
 
         acc.resetPassword = function (id, password, confirmPassword) {
-            console.log('Hit endpoint');
-            return getAsync('api/account/password/reset/' + id + '/' + password + '/' + confirmPassword, $q, $http);
+            return postAsync('api/account/password/reset', { id: id, password: password, confirmPassword: confirmPassword }, $q, $http);
         };
 
         acc.resetConfirm = function (hash, securityStamp) {
@@ -175,24 +174,31 @@ angular.module('app.services', [])
 
     .factory('UserService', ['$http', '$q', function ($http, $q) {
         var user = {};
-        user.isLoggedIn = false;
         user.user;
+        user.isLoggedIn = function () {
+            return localStorage['aqg_token'] != undefined;
+        }
+
 
         user.getUserData = function (userId) {
             return getAsync('api/player/' + userId, $q, $http);
         };
 
-        user.getUserImage = function (userId) {
-            return '/Images/userprofileimages/' + userId + '.svg';
-        };
-
         user.login = function (enteredusername, password) {
-            var data = { username: enteredusername, password: password };
-            return postAsync('api/account/login', data, $q, $http);
+            return $http.post(
+                '/token',
+                $.param({ grant_type: 'password', username: enteredusername, password: password }),
+                {
+                    headers:
+                      {
+                          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                      }
+                }
+            );
         };
 
         user.logout = function (playerId) {
-            return getAsync('api/account/logout/' + playerId, $q, $http);
+            return postAsync('api/account/logout', { playerId: playerId }, $q, $http);
         };
 
         user.register = function (username, password, confirmpassword, email, gender) {
