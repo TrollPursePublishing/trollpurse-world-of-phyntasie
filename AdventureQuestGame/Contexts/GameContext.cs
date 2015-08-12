@@ -16,7 +16,6 @@ namespace AdventureQuestGame.Contexts
         public GameContext() : base("name=Game")
         {
             Configuration.LazyLoadingEnabled = true;
-            
         }
 
         public DbSet<World> worlds { get; set; }

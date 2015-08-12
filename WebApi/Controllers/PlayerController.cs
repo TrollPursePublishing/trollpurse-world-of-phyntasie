@@ -17,21 +17,24 @@ namespace WebApi.Controllers
         [HttpGet]
         [Authorize(Roles="Player")]
         [Route("api/player/{playerId}")]
-        public async Task<string> Get(string playerId)
+        public Task<string> Get(string playerId)
         {
             try
             {
-                var ctx = Request.GetOwinContext();
-                var user = ctx.Authentication.User;
-                var claims = user.Claims;
-                if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
-                    return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(service.GetPlayer(Guid.Parse(playerId))));
-                else
-                    return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject("null"));
+                return Task.Run(() =>
+                {
+                    var ctx = Request.GetOwinContext();
+                    var user = ctx.Authentication.User;
+                    var claims = user.Claims;
+                    if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
+                        return JsonConvert.SerializeObject(service.GetPlayer(Guid.Parse(playerId)));
+                    else
+                        return JsonConvert.SerializeObject("null");
+                });
             }
-            catch(Exception e)
+            catch(Exception)
             {
-                return JsonConvert.SerializeObject("null");
+                return Task.Run(() => JsonConvert.SerializeObject("null"));
             }
         }
     }

@@ -23,30 +23,30 @@ using System.Linq;
 
 namespace WebApplication1.Controllers
 {
-    class EmailViewModel
+    public class EmailViewModel
     {
         public EmailViewModel(string msg, bool success)
         {
             this.msg = msg;
             this.success = success;
         }
-        public string msg { get; private set; }
-        public bool success { get; private set; }
+        public string msg { get; set; }
+        public bool success { get; set; }
     }
 
-    class PasswordResetViewModel
+    public class PasswordResetViewModel
     {
         public PasswordResetViewModel(string msg, bool success)
         {
             this.msg = msg;
             this.success = success;
         }
-        public string msg { get; private set; }
-        public bool success { get; private set; }
+        public string msg { get; set; }
+        public bool success { get; set; }
         public string additionalData { get; set; }
     }
 
-    class RegisterViewModel
+    public class RegisterViewModel
     {
         public RegisterViewModel(string username, string password, string confirmpassword, string email, string gender)
         {
@@ -56,35 +56,11 @@ namespace WebApplication1.Controllers
             this.email = email;
             this.gender = gender;
         }
-        public string username { get; private set; }
-        public string password { get; private set; }
-        public string confirmpassword { get; private set; }
-        public string email { get; private set; }
-        public string gender { get; private set; }
-    }
-
-    class LoginViewModel
-    {
-        public LoginViewModel(string username, string password)
-        {
-            this.username = username;
-            this.password = password;
-        }
-
-        public string username { get; private set; }
-        public string password { get; private set; }
-    }
-
-    class LoginReponseViewModel
-    {
-        public LoginReponseViewModel(string message, bool isError)
-        {
-            this.message = message;
-            this.isError = isError;
-        }
-
-        public string message {get; private set;}
-        public bool isError{get; private set;}
+        public string username { get; set; }
+        public string password { get; set; }
+        public string confirmpassword { get; set; }
+        public string email { get; set; }
+        public string gender { get; set; }
     }
 
     public class AccountController : ApiController
@@ -92,7 +68,7 @@ namespace WebApplication1.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager = null;
         private PlayerService service = new PlayerService();
-        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net" /*"http://localhost:61191/"*/;
+        private static readonly string Website = @"http://adventuregamequest.azurewebsites.net";
 
         public ApplicationUserManager UserManager
         {
@@ -105,8 +81,6 @@ namespace WebApplication1.Controllers
                 _userManager = value;
             }
         }
-
-        public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         private ApplicationUser GetUserFromHash(string hash)
         {
@@ -125,17 +99,15 @@ namespace WebApplication1.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/account/password/reset")]
-        public IHttpActionResult PasswordResetRequested()
+        public IHttpActionResult PasswordResetRequested([FromBody]string email)
         {
-            Dictionary<string, string> content = Request.Content.ReadAsAsync<Dictionary<string, string>>().Result;
-            string email = content["email"];
             try
             {
                 var user = UserManager.FindByEmail(email);
                 string link = String.Format("{0}#/api/account/password/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), user.SecurityStamp);
                 UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Password Reset", String.Format("You are receiving this email because a password reset has been request for your account with this email address.\r\n If you did not request this information, please contact support and do not continue. If you did, please follow the link below or copy and pasted it into your URL bar.\r\n\r\n<a href=\"{0}\">{0}</a>\r\n{0}", link));
             }
-            catch (Exception e) { }
+            catch (Exception) { }
             return Ok(new PasswordResetViewModel(String.Format("Your Password reset confirmation was sent to {0}", email), true));
         }
 
@@ -156,32 +128,39 @@ namespace WebApplication1.Controllers
                 return BadRequest();
         }
 
-        [HttpGet]
+        public class PasswordResetViewModelRequest
+        {
+            public string id { get; set; }
+            public string password { get; set; }
+            public string confirmPassword { get; set; }
+        }
+
+        [HttpPost]
         [AllowAnonymous]
         [Route("api/account/password/reset/{id}/{password}/{confirmPassword}")]
-        public IHttpActionResult ResetPassword(string id, string password, string confirmPassword)
+        public IHttpActionResult ResetPassword([FromBody]PasswordResetViewModelRequest model)
         {
-            try{
-                var user = UserManager.FindById(id);
-                if(password == confirmPassword)
+            try
+            {
+                var user = UserManager.FindById(model.id);
+                if (model.password == model.confirmPassword)
                 {
-                    var token = UserManager.GeneratePasswordResetToken(id);
-                    var result = UserManager.ResetPassword(user.Id, token, password );
+                    var token = UserManager.GeneratePasswordResetToken(model.id);
+                    var result = UserManager.ResetPassword(user.Id, token, model.password);
                     if (result.Succeeded)
-                        return Ok(new PasswordResetViewModel("Your password has been reset, please try logging in.", true) );
+                        return Ok(new PasswordResetViewModel("Your password has been reset, please try logging in.", true));
                     else
                     {
-                        string errors = String.Empty;
-                        foreach (var e in result.Errors)
-                            errors += e + " ";
-                        return Ok(new PasswordResetViewModel(errors, false) );
+                        return Ok(new PasswordResetViewModel(String.Join(", ", result.Errors), false));
                     }
-                }                    
+                }
                 else
                     return Ok(new PasswordResetViewModel("Passwords do not match, please try again.", false));
-            }catch(Exception e){
+            }
+            catch (Exception)
+            {
                 return BadRequest();
-            }            
+            }
         }
 
         [HttpGet]
@@ -226,10 +205,10 @@ namespace WebApplication1.Controllers
             return Ok(new EmailViewModel("You have been removed from the mailing list.", true));
         }
 
-        [HttpGet]
-        [Authorize(Roles="Player")]
-        [Route("api/account/sendmail/{playerId}")]
-        public IHttpActionResult SendMeUpdates(string playerId)
+        [HttpPost]
+        [Authorize(Roles = "Player")]
+        [Route("api/account/sendmail")]
+        public IHttpActionResult SendMeUpdates([FromBody]string playerId)
         {
             var ctx = Request.GetOwinContext();
             var user = ctx.Authentication.User;
@@ -244,10 +223,10 @@ namespace WebApplication1.Controllers
             else return BadRequest();
         }
 
-        [HttpGet]
-        [Authorize(Roles="Player")]
-        [Route("api/account/logout/{playerId}")]
-        public IHttpActionResult Logout(string playerId)
+        [HttpPost]
+        [Authorize(Roles = "Player")]
+        [Route("api/account/logout")]
+        public IHttpActionResult Logout([FromBody]string playerId)
         {
             Request.GetOwinContext().Authentication.SignOut();
             return Ok();
@@ -255,35 +234,9 @@ namespace WebApplication1.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/account/login")]
-        [ResponseType(typeof(string))]
-        public async Task<string> Login()
-        {
-            Dictionary<string, string> content = await Request.Content.ReadAsAsync<Dictionary<string, string>>();
-            LoginViewModel model = new LoginViewModel(content["username"], content["password"]);
-
-            var user = await UserManager.FindAsync(model.username, model.password);
-            if (user == null)
-                return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(new LoginReponseViewModel("Username and password pair not found", true)));
-            if (String.IsNullOrWhiteSpace(user.Email) || !user.EmailConfirmed)
-                return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(new LoginReponseViewModel("You have not confirmed your e-mail address. If you have not received the e-mail, please check your junk folder.", true)));
-
-            var id = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var ctx = Request.GetOwinContext();
-            var auth = ctx.Authentication;
-            auth.SignIn(new AuthenticationProperties() {IsPersistent = true }, id);
-
-            return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(new LoginReponseViewModel(user.PlayerId.ToString(), false)));
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
         [Route("api/account/register")]
-        public async Task<IHttpActionResult> Register()
+        public async Task<IHttpActionResult> Register([FromBody]RegisterViewModel model)
         {
-            Dictionary<string, string> content = await Request.Content.ReadAsAsync<Dictionary<string, string>>();
-            RegisterViewModel model = new RegisterViewModel(content["username"], content["password"], content["confirmpassword"], content["email"], content["gender"]);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -295,7 +248,7 @@ namespace WebApplication1.Controllers
             }
 
             var p = service.Create(model.username, model.gender);
-            var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.email};
+            var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.password);
 
@@ -306,15 +259,11 @@ namespace WebApplication1.Controllers
             }
 
             string token = Guid.NewGuid().ToString();
-            var claims = new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()), new Claim(ClaimTypes.Email, token)};
-
-            result = await UserManager.AddToRoleAsync(user.Id, "Player");
-            if (!result.Succeeded)
-            {
-                service.Delete(service.GetPlayer(p.Id));
-                UserManager.Delete(user);
-                return GetErrorResult(result);
-            }
+            var claims = new Claim[] { 
+                new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()),
+                new Claim(ClaimTypes.Email, token),
+                new Claim(ClaimTypes.Role, "Player")
+            };
 
             foreach (var claim in claims)
             {
@@ -332,7 +281,7 @@ namespace WebApplication1.Controllers
             {
                 await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{0}</a>\n If you cannot see the link, copy and paste this to your address bar: {0}", link));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ModelState.AddModelError("d", "Could not send e-mail for confirmation.");
                 service.Delete(p);
@@ -346,7 +295,7 @@ namespace WebApplication1.Controllers
         {
             if (disposing)
             {
-                if(UserManager != null)
+                if (UserManager != null)
                     UserManager.Dispose();
             }
 
@@ -364,13 +313,6 @@ namespace WebApplication1.Controllers
                 }
                 return result;
             }
-        }
-
-        #region Helpers
-
-        private IAuthenticationManager Authentication
-        {
-            get { return Request.GetOwinContext().Authentication; }
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
@@ -401,76 +343,5 @@ namespace WebApplication1.Controllers
 
             return null;
         }
-
-        private class ExternalLoginData
-        {
-            public string LoginProvider { get; set; }
-            public string ProviderKey { get; set; }
-            public string UserName { get; set; }
-
-            public IList<Claim> GetClaims()
-            {
-                IList<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, ProviderKey, null, LoginProvider));
-
-                if (UserName != null)
-                {
-                    claims.Add(new Claim(ClaimTypes.Name, UserName, null, LoginProvider));
-                }
-
-                return claims;
-            }
-
-            public static ExternalLoginData FromIdentity(ClaimsIdentity identity)
-            {
-                if (identity == null)
-                {
-                    return null;
-                }
-
-                Claim providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (providerKeyClaim == null || String.IsNullOrEmpty(providerKeyClaim.Issuer)
-                    || String.IsNullOrEmpty(providerKeyClaim.Value))
-                {
-                    return null;
-                }
-
-                if (providerKeyClaim.Issuer == ClaimsIdentity.DefaultIssuer)
-                {
-                    return null;
-                }
-
-                return new ExternalLoginData
-                {
-                    LoginProvider = providerKeyClaim.Issuer,
-                    ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name)
-                };
-            }
-        }
-
-        private static class RandomOAuthStateGenerator
-        {
-            private static RandomNumberGenerator _random = new RNGCryptoServiceProvider();
-
-            public static string Generate(int strengthInBits)
-            {
-                const int bitsPerByte = 8;
-
-                if (strengthInBits % bitsPerByte != 0)
-                {
-                    throw new ArgumentException("strengthInBits must be evenly divisible by 8.", "strengthInBits");
-                }
-
-                int strengthInBytes = strengthInBits / bitsPerByte;
-
-                byte[] data = new byte[strengthInBytes];
-                _random.GetBytes(data);
-                return HttpServerUtility.UrlTokenEncode(data);
-            }
-        }
-
-        #endregion
     }
 }
