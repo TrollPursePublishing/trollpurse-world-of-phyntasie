@@ -9,9 +9,6 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider
-        .when('/about', {
-            templateUrl: 'view/about.min.html',
-        })
         .when('/credits', {
             templateUrl: 'view/credits.min.html'
         })
@@ -38,8 +35,8 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             controller: 'RanksCtrl'
         })
         .when('/signup', {
-            templateUrl: 'view/signup.min.html',
-            controller: 'SignUpCtrl'
+            templateUrl: 'view/login.min.html',
+            controller: 'LoginCtrl'
         })
         .when('/userwelcome', {
             templateUrl: 'view/userwelcome.min.html',

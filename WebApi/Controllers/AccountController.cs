@@ -103,6 +103,9 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                if (String.IsNullOrWhiteSpace(email))
+                    return BadRequest("Valid email must be supplied");
+
                 var user = UserManager.FindByEmail(email);
                 string link = String.Format("{0}#/api/account/password/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), user.SecurityStamp);
                 UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Password Reset", String.Format("You are receiving this email because a password reset has been request for your account with this email address.\r\n If you did not request this information, please contact support and do not continue. If you did, please follow the link below or copy and pasted it into your URL bar.\r\n\r\n<a href=\"{0}\">{0}</a>\r\n{0}", link));

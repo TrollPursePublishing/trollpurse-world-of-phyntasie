@@ -36,21 +36,27 @@ namespace WebApi.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/ach/{playerId}")]
-        public async Task<string> Get(string playerId)
+        public async Task<IHttpActionResult> Get(string playerId)
         {
-            AchievementsViewModel vm = new AchievementsViewModel();
-            service.GetPlayerAcheivements(playerId).ToList().ForEach(a => vm.pairs.Add(new NameAchPair(a.player.name, a.name, a.description)));
-            return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
+            return await Task.Run(() =>
+            {
+                AchievementsViewModel vm = new AchievementsViewModel();
+                service.GetPlayerAcheivements(playerId).ToList().ForEach(a => vm.pairs.Add(new NameAchPair(a.player.name, a.name, a.description)));
+                return Ok(JsonConvert.SerializeObject(vm));
+            });
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("api/ach/latest")]
-        public async Task<string> Get()
+        public async Task<IHttpActionResult> Get()
         {
-            AchievementsViewModel vm = new AchievementsViewModel();
-            service.GetPlayerAcheivementsOrdered().ToList().ForEach(a => vm.pairs.Add(new NameAchPair(a.player.name, a.name, a.description)));
-            return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
+            return await Task.Run(() =>
+            {
+                AchievementsViewModel vm = new AchievementsViewModel();
+                service.GetPlayerAcheivementsOrdered().ToList().ForEach(a => vm.pairs.Add(new NameAchPair(a.player.name, a.name, a.description)));
+                return Ok(JsonConvert.SerializeObject(vm));
+            });
         }
     }
 }

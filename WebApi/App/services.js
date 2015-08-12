@@ -214,8 +214,7 @@ angular.module('app.services', [])
         };
 
         user.reset = function (email) {
-            var data = { email: email };
-            return postAsync('api/account/password/reset', data, $q, $http);
+            return postAsync('api/account/password/reset', email, $q, $http);
         };
 
         user.onLoginSuccess = function () {
@@ -225,5 +224,5 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.5.8')
+    .value('version', '0.0.6.8')
     .value('gamename', 'AdventureQuestGame')

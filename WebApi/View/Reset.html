@@ -1,4 +1,5 @@
-﻿    <center><h2>{{enterResult.msg}}</h2></center>
+﻿<div class="container">
+    <center><h2>{{enterResult.msg}}</h2></center>
     <div ng-if="enterResult.success">
         <form class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4" ng-submit="resetPassword(password, confirmpassword)">
             <div ng-show="result.success" class="alert alert-warning">{{result.msg}}</div>
@@ -17,3 +18,4 @@
             <div class="alert alert-info" ng-show="showClick">Please wait while we reset your password.</div>
         </form>
     </div>
+</div>

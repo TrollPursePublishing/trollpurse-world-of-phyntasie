@@ -7,7 +7,7 @@ angular.module('app.directives', [])
             scope: true,
             restrict: 'EA',
             replace: true,
-            template: '<div id="gamebody" style="overflow-y:auto;height:80%;max-height:80%;position:fixed;width:50%;max-width:50%;z-index:40000">' +
+            template: '<div id="gamebody" class="message-box">' +
                           '<p ng-repeat="message in messages track by $index">{{message}}</p>' +
                       '</div>',
             link: function (scope, element, attrs, controller) {

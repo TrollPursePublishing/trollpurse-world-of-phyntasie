@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SQL\addimages.sql" />
+    <Content Include="SQL\update8122015.sql" />
     <Content Include="SQL\vastdesert.sql" />
   </ItemGroup>
   <ItemGroup>
