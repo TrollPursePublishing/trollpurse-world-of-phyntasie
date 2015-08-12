@@ -91,30 +91,29 @@ angular.module('app.controllers', ['app.services'])
         $scope.showClick = false;
         $scope.errored = false;
 
-        $scope.resetPassword = function (password, confirmPassword) {
-            $scope.showClick = true;
-            $scope.errored = false;
-            AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword)
-            .then(function (data) {
-                console.log(data.data);
-                $scope.showClick = false;
-                $scope.result = angular.fromJson(data.data);
-                $scope.errored = !result.success;
-            }, function (error) {
-                $scope.showClick = false;
-                $scope.errored = true;
-                $scope.result = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false, additionalData: $scope.enterResult.additionalData };
-            });
-        }
-
-        $scope.$on('$viewContentLoaded', function () {
-            AccountService.resetConfirm($routeParams.hash, $routeParams.securityStamp)
-            .then(function (data) {
+        function activate() {
+            AccountService.resetConfirm($routeParams.hash, $routeParams.securityStamp).then(function (data) {
                 $scope.enterResult = angular.fromJson(data.data);
             }, function (error) {
                 $scope.enterResult = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false };
             });
-        });
+        }
+
+        activate();
+
+        $scope.resetPassword = function (password, confirmPassword) {
+            $scope.showClick = true;
+            $scope.errored = false;
+            AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword).then(function (data) {
+                $scope.showClick = false;
+                $scope.result = data.data;
+                $scope.errored = !$scope.result.success;
+            }, function (error) {
+                $scope.showClick = false;
+                $scope.errored = true;
+                $scope.result = { msg: 'Reset not successful. Please contact support.', success: false, additionalData: $scope.enterResult.additionalData };
+            });
+        }
     }])
 
     .controller('HomeCtrl', ['$scope', '$location', '$window', 'RanksService', 'NotificationService', 'gamename', function ($scope, $location, $window, RankService, NotificationService, gamename) {
@@ -198,6 +197,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.authError = '';
         $scope.result = {};
         $scope.bAuthError = false;
+        $scope.bResetError = false;
         $scope.pleasewait = '';
 
         function activate() {
@@ -212,10 +212,12 @@ angular.module('app.controllers', ['app.services'])
             $scope.pleasewait = 'Sending reset. Please wait.';
             $scope.hasClicked = true;
             UserService.reset(email).then(function (data) {
+                $scope.bResetError = false;
                 $scope.result = angular.fromJson(data.data);
                 $scope.hasClicked = false;
             }, function (error) {
-                $scope.result = { msg: 'Sorry, an error occured.', success: false };
+                $scope.bResetError = true;
+                $scope.result = { msg: angular.isDefined(error.Message) ? error.Message : 'Sorry, an error occured. Please contact support', success: false };
                 $scope.hasClicked = false;
             });
         };
@@ -232,7 +234,6 @@ angular.module('app.controllers', ['app.services'])
                 $scope.hasClicked = false;
                 $location.path('/userwelcome');
             }, function (error) {
-                console.log(error);
                 $scope.authError = error.data.error === 'invalid_grant' ? 'Incorrect username or password' : error.data.error;
                 $scope.bAuthError = true;
                 $scope.hasClicked = false;

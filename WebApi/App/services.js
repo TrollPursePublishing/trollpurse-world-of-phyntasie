@@ -162,7 +162,7 @@ angular.module('app.services', [])
         };
 
         acc.resetPassword = function (id, password, confirmPassword) {
-            return postAsync('api/account/password/reset', { id: id, password: password, confirmPassword: confirmPassword }, $q, $http);
+            return postAsync('api/account/password/confirm', { id: id, password: password, confirmPassword: confirmPassword }, $q, $http);
         };
 
         acc.resetConfirm = function (hash, securityStamp) {
@@ -214,7 +214,7 @@ angular.module('app.services', [])
         };
 
         user.reset = function (email) {
-            return postAsync('api/account/password/reset', email, $q, $http);
+            return postAsync('api/account/password/reset', '"'+email+'"', $q, $http);
         };
 
         user.onLoginSuccess = function () {

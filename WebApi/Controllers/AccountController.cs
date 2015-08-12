@@ -140,7 +140,7 @@ namespace WebApplication1.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/account/password/reset/{id}/{password}/{confirmPassword}")]
+        [Route("api/account/password/confirm")]
         public IHttpActionResult ResetPassword([FromBody]PasswordResetViewModelRequest model)
         {
             try

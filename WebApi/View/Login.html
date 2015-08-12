@@ -51,8 +51,8 @@
 
         <form class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4" ng-submit="reset(email)">
             <h2 class="text-center">Forgot Your Password?</h2>
-            <h4 class="alert alert-danger" ng-show="result.success && result.success == false">{{result.msg}}</h4>
-            <h4 class="alert alert-info" ng-show="result.success  && result.success == true">{{result.msg}}</h4>
+            <h4 class="alert alert-danger" ng-show="bResetError">{{result.msg}}</h4>
+            <h4 class="alert alert-info" ng-show="result.success">{{result.msg}}</h4>
             <div class="form-box">
                 <div class="form-group">
                     <input ng-model="email" type="email" class="form-control" placeholder="Email" required />
