@@ -22,14 +22,9 @@ namespace WebApi
                 ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             };
 
-            //Migrations
-            //var authmigration = new WebApi.Migrations.Configuration();
-            //var migrator = new DbMigrator(authmigration);
-            //migrator.Update();
-
-           // var gamemigration = new AdventureQuestGame.Migrations.Configuration();
-           // migrator = new DbMigrator(gamemigration);
-           // migrator.Update();
+            var configuration = new AdventureQuestGame.Migrations.Configuration();
+            var migrator = new DbMigrator(configuration);
+            migrator.Update();
 
             //Initiailizers
             Database.SetInitializer(new GameInit());
