@@ -70,9 +70,14 @@ namespace UpdateService.WebApi.Authorization.Auth
                     var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
                     identity.AddClaims(await clientManager.GetClaimsAsync(response.Id));
+                    if (!identity.HasClaim(ClaimTypes.Role, "Player"))
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, "Player"));
+                    }// retrofit old accounts
 
                     IDictionary<string, string> properties = new Dictionary<string, string>
                     {
+                        {"id", response.PlayerId.ToString()}
                     };
 
                     var ticket = new AuthenticationTicket(identity, new AuthenticationProperties(properties));

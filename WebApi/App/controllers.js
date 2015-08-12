@@ -8,9 +8,18 @@ angular.module('app.controllers', ['app.services'])
             if (!UserService.isLoggedIn()) {
                 $location.path('/login');
             } else {
-                MessageService.startupServices()
-                .then(function () { if (MessageService.chatConnected) { $scope.$parent.$emit('chatready'); } },
-                function (error) { console.log('error', error); });
+                UserService.getPlayerData().then(function (data) {
+                    $scope.user = angular.fromJson(data);
+                    MessageService.startupServices().then(function () {
+                        if (MessageService.chatConnected) {
+                            $scope.$parent.$emit('chatready');
+                        }
+                    }, function (error) {
+                        console.log('error', error);
+                    });
+                }, function (error) {
+                    $location.path('/login');
+                });
             }
         }
 
@@ -186,32 +195,33 @@ angular.module('app.controllers', ['app.services'])
         $scope.rank = '';
         $scope.user = {};
 
+        function activate() {
+            $scope.getData();
+        }
+
+        activate();
+
         $scope.getData = function () {
             RanksService.getAll()
             .then(function (data) {
                 $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
                 if (UserService.isLoggedIn()) {
-                    for (var i = 0; i < $scope.items.length; ++i) {
-                        if ($scope.items[i].name === $scope.user.FullName) {
-                            $scope.rank = i + 1;
-                            break;
+                    UserService.getPlayerData().then(function (data) {
+                        $scope.user = angular.fromJson(data);
+                        RanksService.getById($scope.user.Id)
+                        .then(function (data) {
+                            $scope.rankuser = angular.fromJson(data.data);
+                        });
+                        for (var i = 0; i < $scope.items.length; ++i) {
+                            if ($scope.items[i].name === $scope.user.FullName) {
+                                $scope.rank = i + 1;
+                                break;
+                            }
                         }
-                    }
+                    });
                 }
             });
-
-            if (UserService.isLoggedIn()) {
-                RanksService.getById($scope.user.Id)
-                .then(function (data) {
-                    $scope.rankuser = angular.fromJson(data.data);
-                    //console.log($scope.rankuser);
-                });
-            }
         };
-
-        $scope.$on('$viewContentLoaded', function () {
-            $scope.getData();
-        });
     }])
 
     // Path: /about
@@ -222,11 +232,17 @@ angular.module('app.controllers', ['app.services'])
     // Path: /login
     .controller('LoginCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
         $scope.$root.title = gamename+' | Sign In';
-        $scope.user = {};
-        $scope.isLoggedIn = false;
         $scope.authError = '';
         $scope.result = {};
         $scope.bAuthError = false;
+
+        function activate() {
+            if (UserService.isLoggedIn()) {
+                $location.path('/userwelcome');
+            }
+        }
+
+        activate();
 
         $scope.reset = function (email) {
             UserService.reset(email).then(function (data) {
@@ -237,19 +253,16 @@ angular.module('app.controllers', ['app.services'])
         };
 
         $scope.login = function (entereduserName, password) {
-            UserService.login(entereduserName, password)
-            .then(function (data) {
-                bAuthError = false;
+            UserService.login(entereduserName, password).then(function (data) {
+                $scope.bAuthError = false;
                 $scope.authError = '';
                 var tk = angular.fromJson(data.data);
-                localStorage.setItem['aqg_token'] = tk;
-
-                UserService.getPlayerData()
-
+                localStorage.setItem('aqg_token', angular.toJson(data.data));
+                UserService.onLoginSuccess();
                 $location.path('/userwelcome');
             }, function (error) {
                 scope.authError = angular.fromJson(error.data).error;
-                bAuthError = true;
+                $scope.bAuthError = true;
             });
         };
     }])
@@ -257,16 +270,26 @@ angular.module('app.controllers', ['app.services'])
     // Path: /userwelcome
     .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', 'AccountService', 'gamename', function ($scope, $location, $window, UserService, NotificationService, AccountService, gamename) {
         $scope.$root.title = gamename;
-        $scope.username = '';
-        $scope.userImageUrl = '';
         $scope.user = {};
         $scope.acheivements = {};
         $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
-        $scope.registerClicked = false;
 
         function activate() {
-            $scope.getData();
+            if (!UserService.isLoggedIn()) {
+                $location.path('/login')
+            }
+
+            UserService.getPlayerData().then(function (data) {
+                $scope.user = angular.fromJson(data);
+                NotificationService.getPlayerAcheivements($scope.user.Id).then(function (data) {
+                    $scope.acheivements = angular.fromJson(data.data);
+                }, function (error) {
+                    console.error('error', error);
+                });
+            }, function (error) {
+                $location.path('/login');
+            });
         }
 
         activate();
@@ -280,28 +303,16 @@ angular.module('app.controllers', ['app.services'])
                 $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
                 $scope.registerSuccess = false;
             });
-            $scope.registerClicked = true;
         };
 
         $scope.logout = function () {
-            UserService.logout($scope.user.Id)
-            .then(function (data) {
-                localStorage.removeItem('aqg_token');
-                $location.path('/');
-            });
+            UserService.logout()
+            localStorage.removeItem('aqg_token');
+            $location.path('/');
         };
 
         $scope.adventure = function () {
             $location.path('/adventure');
-        };
-
-        $scope.getData = function () {
-            NotificationService.getPlayerAcheivements($scope.user.Id)
-            .then(function (data) {
-                $scope.acheivements = angular.fromJson(data.data);
-            }, function (error) {
-                console.error('error', error);
-            });
         };
     }])
 
@@ -330,7 +341,7 @@ angular.module('app.controllers', ['app.services'])
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
-                $scope.result = { msg: 'Registration not successful, please contact support. I\'m Sorry', success: false };
+                $scope.result = { msg: 'Registration not successful, please contact support.', success: false };
             });
         }
 
@@ -339,5 +350,5 @@ angular.module('app.controllers', ['app.services'])
 
     // Path: /error/404
     .controller('Error404Ctrl', ['$scope', '$location', '$window', function ($scope, $location, $window) {
-        $scope.$root.title = 'Error 404: Page Not Found';
+        $scope.$root.title = 'Page Not Found';
     }]);

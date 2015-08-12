@@ -259,15 +259,11 @@ namespace WebApplication1.Controllers
             }
 
             string token = Guid.NewGuid().ToString();
-            var claims = new Claim[] { new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()), new Claim(ClaimTypes.Email, token) };
-
-            result = await UserManager.AddToRoleAsync(user.Id, "Player");
-            if (!result.Succeeded)
-            {
-                service.Delete(service.GetPlayer(p.Id));
-                UserManager.Delete(user);
-                return GetErrorResult(result);
-            }
+            var claims = new Claim[] { 
+                new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()),
+                new Claim(ClaimTypes.Email, token),
+                new Claim(ClaimTypes.Role, "Player")
+            };
 
             foreach (var claim in claims)
             {

@@ -176,11 +176,15 @@ angular.module('app.services', [])
         var user = {};
         user.user;
         user.isLoggedIn = function () {
-            return localStorage['aqg_token'] != undefined;
+            return angular.fromJson(localStorage['aqg_token']) != undefined;
         }
 
-        user.getUserData = function (userId) {
-            return getAsync('api/player/' + userId, $q, $http);
+        user.getId = function () {
+            return angular.fromJson(localStorage['aqg_token']).id;
+        }
+
+        user.getUserData = function () {
+            return getAsync('api/player/' + user.getId(), $q, $http);
         };
 
         user.login = function (enteredusername, password) {
@@ -196,8 +200,8 @@ angular.module('app.services', [])
             );
         };
 
-        user.logout = function (playerId) {
-            return postAsync('api/account/logout', { playerId: playerId }, $q, $http);
+        user.logout = function () {
+            return postAsync('api/account/logout', { playerId: user.getId() }, $q, $http);
         };
 
         user.register = function (username, password, confirmpassword, email, gender) {
@@ -205,13 +209,17 @@ angular.module('app.services', [])
             return postAsync('api/account/register', data, $q, $http);
         };
 
-        user.getPlayerData = function (playerId) {
-            return getAsync('api/player/' + playerId, $q, $http);
+        user.getPlayerData = function () {
+            return getAsync('api/player/' + user.getId(), $q, $http);
         };
 
         user.reset = function (email) {
             var data = { email: email };
             return postAsync('api/account/password/reset', data, $q, $http);
+        };
+
+        user.onLoginSuccess = function () {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + angular.fromJson(localStorage.getItem('aqg_token')).access_token;
         };
 
         return user;

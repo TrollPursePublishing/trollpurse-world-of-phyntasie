@@ -64,4 +64,10 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             redirectTo: '/404'
         })
 
+    }])
+
+    .run(['$http', function ($http) {
+        var token = angular.fromJson(localStorage.getItem('aqg_token'));
+        if (token != undefined)
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token.access_token;
     }]);
