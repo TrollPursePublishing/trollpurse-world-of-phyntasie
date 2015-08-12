@@ -152,7 +152,9 @@
     <Content Include="Global.asax" />
     <Content Include="Images\public\adventure.png" />
     <Content Include="Images\public\Badlands.png" />
+    <Content Include="Images\public\barrenwastes.png" />
     <Content Include="Images\public\emotion.png" />
+    <Content Include="Images\public\hauntedforest.png" />
     <Content Include="Images\public\Untitled.png" />
     <Content Include="Images\public\worldcompetition.png" />
     <Content Include="Index.html" />
@@ -938,13 +940,6 @@
     <Content Include="View\404.min.html">
       <DependentUpon>404.html</DependentUpon>
     </Content>
-    <Content Include="View\About.min.html">
-      <DependentUpon>About.html</DependentUpon>
-    </Content>
-    <Content Include="View\Contest.html" />
-    <Content Include="View\Contest.min.html">
-      <DependentUpon>Contest.html</DependentUpon>
-    </Content>
     <Content Include="View\Credits.html" />
     <Content Include="View\Credits.min.html">
       <DependentUpon>Credits.html</DependentUpon>
@@ -981,20 +976,15 @@
     <Content Include="View\Reset.min.html">
       <DependentUpon>Reset.html</DependentUpon>
     </Content>
-    <Content Include="View\SignUp.min.html">
-      <DependentUpon>SignUp.html</DependentUpon>
-    </Content>
     <Content Include="View\UserWelcome.min.html">
       <DependentUpon>UserWelcome.html</DependentUpon>
     </Content>
     <Content Include="Web.config" />
     <Content Include="View\404.html" />
-    <Content Include="View\About.html" />
     <Content Include="View\Game.html" />
     <Content Include="View\Index.html" />
     <Content Include="View\Login.html" />
     <Content Include="View\Ranks.html" />
-    <Content Include="View\SignUp.html" />
     <Content Include="View\UserWelcome.html" />
     <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
@@ -1003,6 +993,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\RequireHttpsAttribute.cs" />
+    <Compile Include="Auth\APIAuthorizationServerProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\CommandController.cs" />
@@ -1013,7 +1004,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

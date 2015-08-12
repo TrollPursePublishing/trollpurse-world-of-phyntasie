@@ -9,9 +9,6 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider
-        .when('/about', {
-            templateUrl: 'view/about.min.html',
-        })
         .when('/credits', {
             templateUrl: 'view/credits.min.html'
         })
@@ -38,8 +35,8 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             controller: 'RanksCtrl'
         })
         .when('/signup', {
-            templateUrl: 'view/signup.min.html',
-            controller: 'SignUpCtrl'
+            templateUrl: 'view/login.min.html',
+            controller: 'LoginCtrl'
         })
         .when('/userwelcome', {
             templateUrl: 'view/userwelcome.min.html',
@@ -64,4 +61,10 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             redirectTo: '/404'
         })
 
+    }])
+
+    .run(['$http', function ($http) {
+        var token = angular.fromJson(localStorage.getItem('aqg_token'));
+        if (token != undefined)
+            $http.defaults.headers.common.Authorization = 'Bearer ' + token.access_token;
     }]);

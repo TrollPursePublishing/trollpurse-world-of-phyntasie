@@ -4,21 +4,33 @@ angular.module('app.controllers', ['app.services'])
 
     // Path: /
     .controller('CommandCtrl', ['$scope', '$location', '$window', 'UserService', 'CommandService', 'MessageService', '$filter', function ($scope, $location, $window, UserService, CommandService, MessageService, $filter) {
-        $scope.checkRerouteToUserpage = function () {
-            if (!UserService.isLoggedIn) {
-                $location.path('/');
-                return false;
-            }
-            MessageService.startupServices()
-            .then(function () { if (MessageService.chatConnected) { $scope.$parent.$emit('chatready'); } },
-            function (error) { console.log('error', error); });
-            return true;
-        };
-
-        $scope.user = UserService.user;
-        $scope.messages = [];
+        $scope.user;
         $scope.currentDescription = {};
         $scope.navigation = {};
+
+        function activate() {
+            if (!UserService.isLoggedIn()) {
+                $location.path('/login');
+            } else {
+                UserService.getPlayerData().then(function (data) {
+                    $scope.user = angular.fromJson(data.data);
+                    $scope.navigation = $scope.user.navigation;
+                    MessageService.startupServices().then(function () {
+                        if (MessageService.chatConnected) {
+                            $scope.$parent.$emit('chatready');
+                        }
+                    }, function (error) {
+                        console.log('error', error);
+                    });
+                }, function (error) {
+                    $location.path('/login');
+                });
+            }
+        }
+
+        activate();
+
+        $scope.messages = [];
 
         $scope.$parent.$on('chat', function (event, data) {
             console.log('chat', data.name + ':' + data.msg);
@@ -38,7 +50,7 @@ angular.module('app.controllers', ['app.services'])
 
         $scope.$parent.$on('chatready', function () {
             console.log('chatready', 'initialized');
-            MessageService.joinLocation(UserService.user.navigation.currentLocation.Id, UserService.user.FullName);
+            MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
         });
 
         $scope.submit = function (data) {
@@ -53,11 +65,10 @@ angular.module('app.controllers', ['app.services'])
                         $scope.messages.push(d.messages[i]);
                     }
                     $scope.user = d.player;
-                    UserService.user = $scope.user;
-                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, UserService.user.FullName);
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
                 }, function (error) {
                     console.error('error', error);
-                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, UserService.user.FullName);
+                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
                 });
             }
         };
@@ -80,30 +91,29 @@ angular.module('app.controllers', ['app.services'])
         $scope.showClick = false;
         $scope.errored = false;
 
-        $scope.resetPassword = function (password, confirmPassword) {
-            $scope.showClick = true;
-            $scope.errored = false;
-            AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword)
-            .then(function (data) {
-                console.log(data.data);
-                $scope.showClick = false;
-                $scope.result = angular.fromJson(data.data);
-                $scope.errored = !result.success;
-            }, function (error) {
-                $scope.showClick = false;
-                $scope.errored = true;
-                $scope.result = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false, additionalData: $scope.enterResult.additionalData };
-            });
-        }
-
-        $scope.$on('$viewContentLoaded', function () {
-            AccountService.resetConfirm($routeParams.hash, $routeParams.securityStamp)
-            .then(function (data) {
+        function activate() {
+            AccountService.resetConfirm($routeParams.hash, $routeParams.securityStamp).then(function (data) {
                 $scope.enterResult = angular.fromJson(data.data);
             }, function (error) {
                 $scope.enterResult = { msg: 'Reset not successful, please contact support. I\'m Sorry', success: false };
             });
-        });
+        }
+
+        activate();
+
+        $scope.resetPassword = function (password, confirmPassword) {
+            $scope.showClick = true;
+            $scope.errored = false;
+            AccountService.resetPassword($scope.enterResult.additionalData, password, confirmPassword).then(function (data) {
+                $scope.showClick = false;
+                $scope.result = data.data;
+                $scope.errored = !$scope.result.success;
+            }, function (error) {
+                $scope.showClick = false;
+                $scope.errored = true;
+                $scope.result = { msg: 'Reset not successful. Please contact support.', success: false, additionalData: $scope.enterResult.additionalData };
+            });
+        }
     }])
 
     .controller('HomeCtrl', ['$scope', '$location', '$window', 'RanksService', 'NotificationService', 'gamename', function ($scope, $location, $window, RankService, NotificationService, gamename) {
@@ -112,7 +122,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.events = {};
         $scope.acheivements = {};
 
-        $scope.getData = function () {
+        function activate() {
             NotificationService.getEvents()
             .then(function (data) {
                 $scope.events = angular.fromJson(data.data).events;
@@ -133,24 +143,113 @@ angular.module('app.controllers', ['app.services'])
             }, function (error) {
                 console.error('error', error);
             });
-        };
+        }
 
-        $scope.$on('$viewContentLoaded', function () {
-            $scope.getData();
-        });
+        activate();
     }])
 
     .controller('SignUpCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
-        $scope.$root.title = gamename + ' | Join Now!';
+        
+    }])
+
+    // Path: /ranks
+    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', '$filter', 'gamename', function ($scope, $location, $window, RanksService, UserService, $filter, gamename) {
+        $scope.$root.title = gamename +' | Ranks';
+        $scope.items = {};
+        $scope.rankuser = {};
+        $scope.rank = '';
+        $scope.user = {};
+        $scope.isLoggedIn = UserService.isLoggedIn;
+
+        function activate() {
+            RanksService.getAll()
+            .then(function (data) {
+                $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
+                if (UserService.isLoggedIn()) {
+                    UserService.getPlayerData().then(function (data) {
+                        $scope.user = angular.fromJson(data.data);
+                        RanksService.getById($scope.user.Id)
+                        .then(function (data) {
+                            $scope.rankuser = angular.fromJson(data.data);
+                        });
+                        for (var i = 0; i < $scope.items.length; ++i) {
+                            if ($scope.items[i].name === $scope.user.FullName) {
+                                $scope.rank = i + 1;
+                                break;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        activate();
+    }])
+
+    // Path: /about
+    .controller('AboutCtrl', ['$scope', '$location', '$window', 'gamename', function ($scope, $location, $window, gamename) {
+        $scope.$root.title = gamename+' | About';
+    }])
+
+    // Path: /login
+    .controller('LoginCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
+        $scope.$root.title = gamename+' | Login';
+        $scope.authError = '';
+        $scope.result = {};
+        $scope.bAuthError = false;
+        $scope.bResetError = false;
+        $scope.pleasewait = '';
+
+        function activate() {
+            if (UserService.isLoggedIn()) {
+                $location.path('/userwelcome');
+            }
+        }
+
+        activate();
+
+        $scope.reset = function (email) {
+            $scope.pleasewait = 'Sending reset. Please wait.';
+            $scope.hasClicked = true;
+            UserService.reset(email).then(function (data) {
+                $scope.bResetError = false;
+                $scope.result = angular.fromJson(data.data);
+                $scope.hasClicked = false;
+            }, function (error) {
+                $scope.bResetError = true;
+                $scope.result = { msg: angular.isDefined(error.Message) ? error.Message : 'Sorry, an error occured. Please contact support', success: false };
+                $scope.hasClicked = false;
+            });
+        };
+
+        $scope.login = function (entereduserName, password) {
+            $scope.pleasewait = 'Logging in. Please wait.';
+            $scope.hasClicked = true;
+            UserService.login(entereduserName, password).then(function (data) {
+                $scope.bAuthError = false;
+                $scope.authError = '';
+                var tk = angular.fromJson(data.data);
+                localStorage.setItem('aqg_token', angular.toJson(data.data));
+                UserService.onLoginSuccess();
+                $scope.hasClicked = false;
+                $location.path('/userwelcome');
+            }, function (error) {
+                $scope.authError = error.data.error === 'invalid_grant' ? 'Incorrect username or password' : error.data.error;
+                $scope.bAuthError = true;
+                $scope.hasClicked = false;
+            });
+        };
+
         $scope.error = {};
         $scope.hasError = false;
         $scope.registered = false;
         $scope.notification = '';
         $scope.hasClicked = false;
-        $scope.pleasewait = 'Trying to register, please wait :D';
 
         $scope.signup = function (username, password, confirmpassword, email, gender) {
+            $scope.pleasewait = 'Registering. Please wait.';
             $scope.hasClicked = true;
+            $scope.registered = false;
             UserService.register(username, password, confirmpassword, email, gender)
             .then(function (data) {
                 console.log(data);
@@ -168,132 +267,34 @@ angular.module('app.controllers', ['app.services'])
             });
             return $scope.success;
         };
-
-        $scope.checkRerouteToUserpage = function () {
-            if (UserService.isLoggedIn) {
-                $location.path('/userwelcome');
-                return true;
-            }
-            return false;
-        };
-    }])
-
-    // Path: /ranks
-    .controller('RanksCtrl', ['$scope', '$location', '$window', 'RanksService', 'UserService', '$filter', 'gamename', function ($scope, $location, $window, RanksService, UserService, $filter, gamename) {
-        $scope.$root.title = gamename +' | Ranks';
-        $scope.items = {};
-        $scope.rankuser = {};
-        $scope.isLoggedIn = UserService.isLoggedIn;
-        $scope.rank = '';
-
-        $scope.getData = function () {
-            RanksService.getAll()
-            .then(function (data) {
-                $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
-                if ($scope.isLoggedIn) {
-                    for (var i = 0; i < $scope.items.length; ++i) {
-                        if ($scope.items[i].name === UserService.user.FullName) {
-                            $scope.rank = i + 1;
-                            break;
-                        }
-                    }
-                }
-            });
-
-            if (UserService.isLoggedIn) {
-                RanksService.getById(UserService.user.Id)
-                .then(function (data) {
-                    $scope.rankuser = angular.fromJson(data.data);
-                    //console.log($scope.rankuser);
-                });
-            }
-        };
-
-        $scope.$on('$viewContentLoaded', function () {
-            $scope.getData();
-        });
-    }])
-
-    // Path: /about
-    .controller('AboutCtrl', ['$scope', '$location', '$window', 'gamename', function ($scope, $location, $window, gamename) {
-        $scope.$root.title = gamename+' | About';
-    }])
-
-    // Path: /login
-    .controller('LoginCtrl', ['$scope', '$location', '$window', 'UserService', 'gamename', function ($scope, $location, $window, UserService, gamename) {
-        $scope.$root.title = gamename+' | Sign In';
-        $scope.user = {};
-        $scope.isLoggedIn = false;
-        $scope.authError = '';
-        $scope.result = {};
-        $scope.bAuthError = false;
-
-        $scope.reset = function (email) {
-            UserService.reset(email).then(function (data) {
-                $scope.result = angular.fromJson(data.data);
-            }, function (error) {
-                $scope.result = { msg: 'Sorry, an error occured.', success: false };
-            });
-        };
-
-        $scope.login = function (entereduserName, password) {
-            UserService.login(entereduserName, password)
-            .then(function (data) {
-                var result = angular.fromJson(data.data);
-                var msg = result.message;
-                var b = !result.isError;
-                $scope.bAuthError = result.isError;
-
-                if (b) {
-                    UserService.getPlayerData(msg)
-                    .then(function (data) {
-                        $scope.user = angular.fromJson(data.data);
-                        UserService.user = $scope.user;
-                        UserService.isLoggedIn = true;
-                    }, function (error) {
-                        $scope.user = {};
-                        UserService.user = $scope.user;
-                        UserService.isLoggedIn = false;
-                    });
-                }
-                else {
-                    $scope.authError = msg;
-                }
-            }, function (error) {
-                $scope.user = {};
-                UserService.user = $scope.user;
-                UserService.isLoggedIn = false;
-            });
-        };
-
-        $scope.checkRerouteToUserpage = function () {
-            if (UserService.isLoggedIn) {
-                $location.path('/userwelcome');
-                return true;
-            }
-            return false;
-        };
-
-        $scope.$watch($scope.user, function (newValue, oldValue, scope) {
-            if ($scope.user.Id !== undefined && UserService.isLoggedIn) {
-                $location.path('/userwelcome');
-            } else {
-                $location.path('/login');
-            }
-        });
     }])
 
     // Path: /userwelcome
     .controller('UserCtrl', ['$scope', '$location', '$window', 'UserService', 'NotificationService', 'AccountService', 'gamename', function ($scope, $location, $window, UserService, NotificationService, AccountService, gamename) {
-        $scope.$root.title = gamename+' | ' + UserService.user.FullName;
-        $scope.username = '';
-        $scope.isLoggedIn = false;
-        $scope.userImageUrl = '';
+        $scope.$root.title = gamename;
         $scope.user = {};
         $scope.acheivements = {};
         $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
-        $scope.registerClicked = false;
+
+        function activate() {
+            if (!UserService.isLoggedIn()) {
+                $location.path('/login')
+            }
+
+            UserService.getPlayerData().then(function (data) {
+                $scope.user = angular.fromJson(data.data);
+                NotificationService.getPlayerAcheivements($scope.user.Id).then(function (data) {
+                    $scope.acheivements = angular.fromJson(data.data);
+                }, function (error) {
+                    console.error('error', error);
+                });
+            }, function (error) {
+                $location.path('/login');
+            });
+        }
+
+        activate();
 
         $scope.registerToGetEmail = function () {
             AccountService.registerForUpdates($scope.user.Id)
@@ -304,85 +305,52 @@ angular.module('app.controllers', ['app.services'])
                 $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
                 $scope.registerSuccess = false;
             });
-            $scope.registerClicked = true;
         };
 
         $scope.logout = function () {
-            UserService.logout(UserService.user.Id)
-            .then(function (data) {
-                UserService.isLoggedIn = false;
-                UserService.user = {};
-                $scope.isLoggedIn = false;
-                $scope.acheivements = {};
-                $scope.username = '';
-                $location.path('/');
-            });
+            UserService.logout()
+            localStorage.removeItem('aqg_token');
+            $location.path('/');
         };
 
         $scope.adventure = function () {
             $location.path('/adventure');
         };
-
-        $scope.checkRerouteToUserpage = function () {
-            if (!UserService.isLoggedIn) {
-                $location.path('/');
-                return false;
-            } else {
-                $scope.username = UserService.user.FullName;
-                $scope.isLoggedIn = UserService.isLoggedIn;
-                $scope.userImageUrl = UserService.getUserImage(UserService.user.Id);
-                return true;
-            }
-
-        };
-
-        $scope.getData = function () {
-            NotificationService.getPlayerAcheivements(UserService.user.Id)
-            .then(function (data) {
-                $scope.acheivements = angular.fromJson(data.data);
-            }, function (error) {
-                console.error('error', error);
-            });
-
-            $scope.user = UserService.user;
-            //console.log('user', $scope.user);
-        };
-
-        $scope.$on('$viewContentLoaded', function () {
-            $scope.getData();
-        });
-
     }])
 
     .controller('AccountCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
         $scope.$root.title = 'External Portal';
         $scope.result = {}
 
-        $scope.$on('$viewContentLoaded', function () {
+        function activate() {
             AccountService.doNotDisturb($routeParams.hash)
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
-                $scope.result = { msg: 'Action not successful. I\'m Sorry', success: false };
+                $scope.result = { msg: 'Action not successful.', success: false };
             });
-        });
+        }
+
+        activate();
     }])
 
     .controller('RegisterCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
         $scope.$root.title = 'External Portal';
         $scope.result = {}
 
-        $scope.$on('$viewContentLoaded', function () {
+        function activate() {
             AccountService.confirmEmail($routeParams.hash, $routeParams.confirmationCode)
             .then(function (data) {
                 $scope.result = angular.fromJson(data.data);
             }, function (error) {
-                $scope.result = { msg: 'Registration not successful, please contact support. I\'m Sorry', success: false };
+                $scope.result = { msg: 'Registration not successful, please contact support.', success: false };
             });
-        });
+        }
+
+        activate();
     }])
 
     // Path: /error/404
     .controller('Error404Ctrl', ['$scope', '$location', '$window', function ($scope, $location, $window) {
-        $scope.$root.title = 'Error 404: Page Not Found';
+        $scope.$root.title = 'Page Not Found';
     }]);
