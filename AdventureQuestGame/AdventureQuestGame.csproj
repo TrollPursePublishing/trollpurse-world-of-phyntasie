@@ -103,6 +103,7 @@
     <Compile Include="Services\Private\MapCommandWorker.cs" />
     <Compile Include="Services\Private\QuestCommandWorker.cs" />
     <Compile Include="Services\Private\RestCommandWorker.cs" />
+    <Compile Include="Services\Private\UnequipCommandWorker.cs" />
     <Compile Include="Services\Private\UseCommandWorker.cs" />
     <Compile Include="Services\Private\WhereAmICommandWorker.cs" />
     <Compile Include="Services\RankService.cs" />
