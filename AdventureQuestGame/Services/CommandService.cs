@@ -90,21 +90,22 @@ namespace AdventureQuestGame.Services
             additionalParams = additionalParams.ToLower();
             string command = ParseCommands(ref additionalParams);
             Commands ecommand;
-            bool success = Enum.TryParse<Commands>(command, true, out ecommand);
 
-            if (!success)
+            if(Enum.TryParse<Commands>(command, true, out ecommand))
+            {
+                result = workers.First(w => w.Handles().Equals(ecommand)).Process(player, additionalParams, GameCtx);
+
+                GameplayStatics.DetectOneToOneRemovals(GameCtx, player);
+                GameplayStatics.DetectLevelUpEvent(GameCtx, player);
+                (result as List<string>).AddRange(GameplayStatics.DetectCompletedQuests(GameCtx, player));
+                GameCtx.SaveChanges();
+
+                return new GameResponse(result, player);
+            }
+            else
             {
                 return new GameResponse(new List<string>(new[] { String.Format("I do not know how to {0}", command) }), player);
             }
-
-            result = workers.First(w => w.Handles().Equals(ecommand)).Process(player, additionalParams, GameCtx);
-
-            GameplayStatics.DetectOneToOneRemovals(GameCtx, player);
-            GameplayStatics.DetectLevelUpEvent(GameCtx, player);
-            (result as List<string>).AddRange(GameplayStatics.DetectCompletedQuests(GameCtx, player));
-            GameCtx.SaveChanges();
-
-            return new GameResponse(result, player);
         }
     }
 }
