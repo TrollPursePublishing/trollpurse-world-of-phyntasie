@@ -47,7 +47,7 @@ angular.module('app.services', [])
         command.submit = function (data, userId) {
             //console.log(data);
             var q = $q.defer();
-            $http.get('api/Command/' + userId + '/' + data)
+            $http.post('api/Command', {playerId: userId, parameters: data})
             .success(function (data) {
                 q.resolve({ data: data });
             })
