@@ -18,16 +18,33 @@ namespace AdventureQuestGame.Services.Private
         public IList<string> Process(Player player, string additionalParams, GameContext GameCtx)
         {
             IList<string> results = new List<string>();
-            Weapon unequipped = player.Equip((Weapon)null);
-            if(unequipped != null)
+            ArmorType tounequip;
+
+            if (player.equipment != null && player.equipment.TryGetArmorTypeFromName(additionalParams, out tounequip))
             {
-                player.AddInventoryItem(unequipped);
-                results.Add(String.Format("Unequipped {0}", unequipped.name));
+                Armor unequipped = player.Unequip(tounequip);
+                if (unequipped != null)
+                {
+                    player.AddInventoryItem(unequipped);
+                    results.Add(String.Format("Unequipped {0}", unequipped.name));
+                }
+
+            }
+            else if (player.equipment != null && player.equipment.weapon != null && player.equipment.weapon.name.ToLower().Equals(additionalParams))
+            {
+                Weapon unequipped = player.Equip((Weapon)null);
+                if (unequipped != null)
+                {
+                    player.AddInventoryItem(unequipped);
+                    results.Add(String.Format("Unequipped {0}", unequipped.name));
+                }
+
             }
             else
             {
-                results.Add("I have nothing to unequip.");
+                results.Add(String.Format("I do not have a(n) {0} to unequip.", additionalParams));
             }
+
             return results;
         }
     }

@@ -266,6 +266,41 @@ namespace AdventureQuestGame.Models
             return old;
         }
 
+        public Armor Unequip(ArmorType type)
+        {
+            Armor old;
+            switch (type)
+            {
+                case ArmorType.Arm:
+                    old = equipment.arm;
+                    equipment.arm = null;
+                    return old;
+
+                case ArmorType.Feet:
+                    old = equipment.feet;
+                    equipment.feet = null;
+                    return old;
+
+                case ArmorType.Head:
+                    old = equipment.head;
+                    equipment.head = null;
+                    return old;
+
+                case ArmorType.Legs:
+                    old = equipment.legs;
+                    equipment.legs = null;
+                    return old;
+
+                case ArmorType.Torso:
+                    old = equipment.torso;
+                    equipment.torso = null;
+                    return old;
+
+                default:
+                    return null;
+            }
+        }
+
         public Armor Equip(Armor a)
         {
             Armor old;
