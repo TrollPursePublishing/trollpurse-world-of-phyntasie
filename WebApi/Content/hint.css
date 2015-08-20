@@ -68,3 +68,43 @@
         padding-top:60px;
     }
 }
+
+.switch input {
+    display: none;
+    padding-top:5px;
+}
+
+.switch i {
+    display: inline-block;
+    cursor: pointer;
+    padding-right: 20px;
+    -moz-transition: all ease 0.2s;
+    -o-transition: all ease 0.2s;
+    transition: all ease 0.2s;
+    -webkit-transition: all ease 0.2s;
+    border-radius: 20px;
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.5);
+    box-shadow: inset 0 0 1px rgba(0,0,0,.5);
+}
+
+    .switch i:before {
+        display: block;
+        content: '';
+        width: 20px;
+        height: 20px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 1px 2px rgba(0,0,0,.5);
+    }
+
+.switch :checked + i {
+    padding-right: 0;
+    padding-left: 20px;
+    box-shadow: inset 0 0 1px rgba(0,0,0,.5), inset 0 0 40px limegreen;
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.5), inset 0 0 40px limegreen;
+}
+
+.switch.disabled :checked + i {
+    box-shadow: inset 0 0 1px rgba(0,0,0,.5), inset 0 0 40px darkseagreen;
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.5), inset 0 0 40px darkseagreen;
+}

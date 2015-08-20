@@ -245,19 +245,32 @@ angular.module('app.controllers', ['app.services'])
         $scope.registered = false;
         $scope.notification = '';
         $scope.hasClicked = false;
+        $scope.emailOptout = false;
 
         $scope.signup = function (username, password, confirmpassword, email, gender) {
             $scope.pleasewait = 'Registering. Please wait.';
             $scope.hasClicked = true;
             $scope.registered = false;
-            UserService.register(username, password, confirmpassword, email, gender)
+            UserService.register(username, password, confirmpassword, email, gender, $scope.emailOptout)
             .then(function (data) {
-                console.log(data);
                 $scope.error = {};
                 $scope.hasError = false;
                 $scope.registered = true;
-                $scope.notification = data.data.Errors[0];
+
+                if ($scope.emailOptout)
+                    $scope.notification = data.msg;
+                else
+                    $scope.notification = data.data.Errors[0];
+
                 $scope.hasClicked = false;
+
+                $scope.username = '';
+                $scope.password = '';
+                $scope.confirmpassword = '';
+                $scope.email = '';
+                $scope.gender = '';
+                $scope.emailOptout = false;
+
             }, function (error) {
                 $scope.hasError = true;
                 var result = angular.fromJson(error);

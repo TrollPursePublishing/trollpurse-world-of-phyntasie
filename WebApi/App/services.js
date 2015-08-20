@@ -218,8 +218,8 @@ angular.module('app.services', [])
             return postAsync('api/account/logout', { playerId: user.getId() }, $q, $http);
         };
 
-        user.register = function (username, password, confirmpassword, email, gender) {
-            var data = { username: username, password: password, confirmpassword: confirmpassword, email: email, gender: gender };
+        user.register = function (username, password, confirmpassword, email, gender, noemail) {
+            var data = { username: username, password: password, confirmpassword: confirmpassword, email: email, gender: gender, emailOptout: noemail };
             return postAsync('api/account/register', data, $q, $http);
         };
 

@@ -59,7 +59,7 @@ namespace UpdateService.WebApi.Authorization.Auth
 
             if(response != null)
             {
-                if (String.IsNullOrWhiteSpace(response.Email) || !response.EmailConfirmed)
+                if (!response.EmailConfirmed)
                 {
                     context.SetError("invalid_grant", "Email not verified");
                     context.Rejected();
