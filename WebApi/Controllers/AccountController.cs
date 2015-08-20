@@ -208,6 +208,27 @@ namespace WebApplication1.Controllers
             return Ok(new EmailViewModel("You have been removed from the mailing list.", true));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Player")]
+        [Route("api/account/sendmail/{playerid}")]
+        public IHttpActionResult GetSendMail(string playerId)
+        {
+            var ctx = Request.GetOwinContext();
+            var user = ctx.Authentication.User;
+            var claims = user.Claims;
+            if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
+            {
+                Guid id;
+                if (Guid.TryParse(playerId, out id))
+                {
+                    var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
+                    return Ok(us.SendMail);
+                }
+                else return BadRequest();
+            }
+            else return BadRequest();
+        }
+
         [HttpPost]
         [Authorize(Roles = "Player")]
         [Route("api/account/sendmail")]
@@ -218,10 +239,14 @@ namespace WebApplication1.Controllers
             var claims = user.Claims;
             if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
             {
-                Guid id = Guid.Parse(playerId);
-                var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
-                us.SendMail = true;
-                return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
+                Guid id;
+                if (Guid.TryParse(playerId, out id))
+                {
+                    var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
+                    us.SendMail = true;
+                    return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
+                }
+                else return BadRequest();
             }
             else return BadRequest();
         }

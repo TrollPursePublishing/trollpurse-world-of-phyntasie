@@ -276,6 +276,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.acheivements = {};
         $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
+        $scope.currentlySendMail = false;
 
         function activate() {
             if (!UserService.isLoggedIn()) {
@@ -289,7 +290,16 @@ angular.module('app.controllers', ['app.services'])
                 }, function (error) {
                     console.error('error', error);
                 });
+                AccountService.getSendMail($scope.user.Id).then(function (data) {
+                    $scope.currentlySendMail = true;
+                }, function (error) {
+                    console.error('error', error);
+                });
             }, function (error) {
+                if (error.code == 401)
+                {
+                    UserService.clearToken();
+                }
                 $location.path('/login');
             });
         }
@@ -297,19 +307,22 @@ angular.module('app.controllers', ['app.services'])
         activate();
 
         $scope.registerToGetEmail = function () {
-            AccountService.registerForUpdates($scope.user.Id)
-            .then(function (data) {
-                $scope.registerText = angular.fromJson(data.data).msg;
-                $scope.registerSuccess = true;
-            }, function (error) {
-                $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
-                $scope.registerSuccess = false;
-            });
+            if (!$scope.currentlySendMail) {
+                AccountService.registerForUpdates($scope.user.Id)
+                .then(function (data) {
+                    $scope.registerText = angular.fromJson(data.data).msg;
+                    $scope.registerSuccess = true;
+                    $scope.currentlySendMail = true;
+                }, function (error) {
+                    $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
+                    $scope.registerSuccess = false;
+                });
+            }
         };
 
         $scope.logout = function () {
             UserService.logout()
-            localStorage.removeItem('aqg_token');
+            UserService.clearToken();
             $location.path('/');
         };
 

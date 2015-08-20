@@ -169,14 +169,28 @@ angular.module('app.services', [])
             return getAsync('api/account/password/' + hash + '/' + securityStamp, $q, $http);
         };
 
+        acc.getSendMail = function (playerId) {
+            return getAsync('api/account/sendmail/' + playerId, $q, $http);
+        };
+
         return acc;
     }])
 
     .factory('UserService', ['$http', '$q', function ($http, $q) {
         var user = {};
         user.user;
+
+        user.clearToken = function () {
+            localStorage.removeItem('aqg_token');
+        }
+
         user.isLoggedIn = function () {
-            return angular.fromJson(localStorage['aqg_token']) != undefined;
+            var token = angular.fromJson(localStorage['aqg_token']);
+            var valid = token != undefined;
+            if (valid) {
+                valid = moment(token['.expires']).isAfter(new Date());
+            }
+            return valid;
         }
 
         user.getId = function () {
