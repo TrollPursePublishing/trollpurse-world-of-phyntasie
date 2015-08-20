@@ -48,19 +48,32 @@ namespace WebApplication1.Controllers
 
     public class RegisterViewModel
     {
-        public RegisterViewModel(string username, string password, string confirmpassword, string email, string gender)
+        public RegisterViewModel(string username, string password, string confirmpassword, string email, string gender, bool emailOptout = false)
         {
             this.username = username;
             this.password = password;
             this.confirmpassword = password;
             this.email = email;
             this.gender = gender;
+            this.emailOptout = emailOptout;
         }
         public string username { get; set; }
         public string password { get; set; }
         public string confirmpassword { get; set; }
         public string email { get; set; }
         public string gender { get; set; }
+        public bool emailOptout { get; set; }
+
+        public bool Valid()
+        {
+            return !String.IsNullOrWhiteSpace(username) &&
+                !String.IsNullOrWhiteSpace(password) &&
+                !String.IsNullOrWhiteSpace(confirmpassword) &&
+                password.Equals(confirmpassword) &&
+                ((!emailOptout && !String.IsNullOrWhiteSpace(email)) ||
+                emailOptout) &&
+                !String.IsNullOrWhiteSpace(gender);
+        }
     }
 
     public class AccountController : ApiController
@@ -208,6 +221,27 @@ namespace WebApplication1.Controllers
             return Ok(new EmailViewModel("You have been removed from the mailing list.", true));
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Player")]
+        [Route("api/account/sendmail/{playerid}")]
+        public IHttpActionResult GetSendMail(string playerId)
+        {
+            var ctx = Request.GetOwinContext();
+            var user = ctx.Authentication.User;
+            var claims = user.Claims;
+            if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
+            {
+                Guid id;
+                if (Guid.TryParse(playerId, out id))
+                {
+                    var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
+                    return Ok(us.SendMail);
+                }
+                else return BadRequest();
+            }
+            else return BadRequest();
+        }
+
         [HttpPost]
         [Authorize(Roles = "Player")]
         [Route("api/account/sendmail")]
@@ -218,10 +252,14 @@ namespace WebApplication1.Controllers
             var claims = user.Claims;
             if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
             {
-                Guid id = Guid.Parse(playerId);
-                var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
-                us.SendMail = true;
-                return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
+                Guid id;
+                if (Guid.TryParse(playerId, out id))
+                {
+                    var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
+                    us.SendMail = true;
+                    return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
+                }
+                else return BadRequest();
             }
             else return BadRequest();
         }
@@ -245,53 +283,64 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!model.password.Equals(model.confirmpassword))
+            if (model.Valid())
             {
-                return GetErrorResult(new IdentityResult("Passwords do not match!"));
-            }
 
-            var p = service.Create(model.username, model.gender);
-            var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.email };
+                var p = service.Create(model.username, model.gender);
+                var user = new ApplicationUser(p.Id) { UserName = model.username, Email = model.emailOptout ? String.Empty : model.email };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.password);
+                IdentityResult result = await UserManager.CreateAsync(user, model.password);
 
-            if (!result.Succeeded)
-            {
-                service.Delete(service.GetPlayer(p.Id));
-                return GetErrorResult(result);
-            }
-
-            string token = Guid.NewGuid().ToString();
-            var claims = new Claim[] { 
-                new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()),
-                new Claim(ClaimTypes.Email, token),
-                new Claim(ClaimTypes.Role, "Player")
-            };
-
-            foreach (var claim in claims)
-            {
-                result = await UserManager.AddClaimAsync(user.Id, claim);
                 if (!result.Succeeded)
                 {
-                    UserManager.Delete(user);
                     service.Delete(service.GetPlayer(p.Id));
                     return GetErrorResult(result);
                 }
-            }
 
-            string link = String.Format("{0}/#/external/account/register/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
-            try
-            {
-                await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{0}</a>\n If you cannot see the link, copy and paste this to your address bar: {0}", link));
+                string token = Guid.NewGuid().ToString();
+                var claims = new Claim[] 
+                { 
+                    new Claim(ClaimTypes.NameIdentifier, user.PlayerId.ToString()),
+                    new Claim(ClaimTypes.Email, token),
+                    new Claim(ClaimTypes.Role, "Player")
+                };
+
+                foreach (var claim in claims)
+                {
+                    result = await UserManager.AddClaimAsync(user.Id, claim);
+                    if (!result.Succeeded)
+                    {
+                        UserManager.Delete(user);
+                        service.Delete(service.GetPlayer(p.Id));
+                        return GetErrorResult(result);
+                    }
+                }
+
+                string link = String.Format("{0}/#/external/account/register/{1}/{2}", Website, GenerateHashString(user.Id, user.PlayerId.ToString()), token);
+                try
+                {
+                    if (!model.emailOptout)
+                    {
+                        await UserManager.SendEmailAsync(user.Id, "AdventureQuestGame Account Confirmation", String.Format("Please press this link or copy and paste it into the URL to complete registrations: <a href=\"{0}\">{0}</a>\n If you cannot see the link, copy and paste this to your address bar: {0}", link));
+                    }
+                    else
+                    {
+                        return ConfirmEmail(GenerateHashString(user.Id, user.PlayerId.ToString()), token);
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("d", "Could not send e-mail for confirmation.");
+                    service.Delete(p);
+                    UserManager.Delete(user);
+                    return BadRequest();
+                }
+                return Ok(new IdentityResult("Please check your e-mail for a confirmation link, then you will be all set to adventure!"));
             }
-            catch (Exception)
+            else
             {
-                ModelState.AddModelError("d", "Could not send e-mail for confirmation.");
-                service.Delete(p);
-                UserManager.Delete(user);
-                return BadRequest();
+                return GetErrorResult(new IdentityResult("Invalid data submitted"));
             }
-            return Ok(new IdentityResult("Please check your e-mail for a confirmation link, then you will be all set to adventure!"));
         }
 
         protected override void Dispose(bool disposing)

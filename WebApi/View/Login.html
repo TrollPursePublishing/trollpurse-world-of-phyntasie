@@ -16,7 +16,14 @@
                     <input ng-model="confirmpassword" type="password" class="form-control" placeholder="Password Again" required />
                 </div>
                 <div class="form-group">
-                    <input ng-model="semail" type="email" class="form-control" placeholder="Email" required />
+                    <input ng-model="semail" type="email" class="form-control" placeholder="Email" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Email Opt-Out?</label>
+                    <label class="switch"><input data-ng-model="emailOptout" type="checkbox" /><i></i></label>
+                    <div>
+                        <p class="text-warning" data-ng-show="emailOptout"><i class="glyphicon glyphicon-warning-sign"></i>You will not be able to recover your password or receive updates if you choose this option. Currently there is no option to add an email later.</p>
+                    </div>
                 </div>
                 <div class="form-group">
                     <p class="form-control-static">Character Gender:</p>
@@ -26,7 +33,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-block" type="submit" ng-disabled="(!(semail && userName && spassword && (spassword == confirmpassword) && gender)) || hasClicked" disabled>Join Now!</button>
+                    <button class="btn btn-primary btn-block" type="submit" ng-disabled="(!((semail || emailOptout) && userName && spassword && (spassword == confirmpassword) && gender)) || hasClicked" disabled>Join Now!</button>
                 </div>
             </div>
         </form>

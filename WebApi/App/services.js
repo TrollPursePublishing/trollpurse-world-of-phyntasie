@@ -10,6 +10,9 @@ var getAsync = function (url, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;
@@ -22,6 +25,9 @@ var getAsyncData = function (url, data, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;
@@ -34,6 +40,9 @@ var postAsync = function (url, data, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;
@@ -47,7 +56,7 @@ angular.module('app.services', [])
         command.submit = function (data, userId) {
             //console.log(data);
             var q = $q.defer();
-            $http.get('api/Command/' + userId + '/' + data)
+            $http.post('api/Command', {playerId: userId, parameters: data})
             .success(function (data) {
                 q.resolve({ data: data });
             })
@@ -169,14 +178,28 @@ angular.module('app.services', [])
             return getAsync('api/account/password/' + hash + '/' + securityStamp, $q, $http);
         };
 
+        acc.getSendMail = function (playerId) {
+            return getAsync('api/account/sendmail/' + playerId, $q, $http);
+        };
+
         return acc;
     }])
 
     .factory('UserService', ['$http', '$q', function ($http, $q) {
         var user = {};
         user.user;
+
+        user.clearToken = function () {
+            localStorage.removeItem('aqg_token');
+        }
+
         user.isLoggedIn = function () {
-            return angular.fromJson(localStorage['aqg_token']) != undefined;
+            var token = angular.fromJson(localStorage['aqg_token']);
+            var valid = token != undefined;
+            if (valid) {
+                valid = moment(token['.expires']).isAfter(new Date());
+            }
+            return valid;
         }
 
         user.getId = function () {
@@ -204,8 +227,8 @@ angular.module('app.services', [])
             return postAsync('api/account/logout', { playerId: user.getId() }, $q, $http);
         };
 
-        user.register = function (username, password, confirmpassword, email, gender) {
-            var data = { username: username, password: password, confirmpassword: confirmpassword, email: email, gender: gender };
+        user.register = function (username, password, confirmpassword, email, gender, noemail) {
+            var data = { username: username, password: password, confirmpassword: confirmpassword, email: email, gender: gender, emailOptout: noemail };
             return postAsync('api/account/register', data, $q, $http);
         };
 

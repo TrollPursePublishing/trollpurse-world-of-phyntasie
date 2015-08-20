@@ -245,19 +245,32 @@ angular.module('app.controllers', ['app.services'])
         $scope.registered = false;
         $scope.notification = '';
         $scope.hasClicked = false;
+        $scope.emailOptout = false;
 
         $scope.signup = function (username, password, confirmpassword, email, gender) {
             $scope.pleasewait = 'Registering. Please wait.';
             $scope.hasClicked = true;
             $scope.registered = false;
-            UserService.register(username, password, confirmpassword, email, gender)
+            UserService.register(username, password, confirmpassword, email, gender, $scope.emailOptout)
             .then(function (data) {
-                console.log(data);
                 $scope.error = {};
                 $scope.hasError = false;
                 $scope.registered = true;
-                $scope.notification = data.data.Errors[0];
+
+                if ($scope.emailOptout)
+                    $scope.notification = data.data.msg;
+                else
+                    $scope.notification = data.data.Errors[0];
+
                 $scope.hasClicked = false;
+
+                $scope.userName = '';
+                $scope.spassword = '';
+                $scope.confirmpassword = '';
+                $scope.email = '';
+                $scope.gender = '';
+                $scope.emailOptout = false;
+
             }, function (error) {
                 $scope.hasError = true;
                 var result = angular.fromJson(error);
@@ -276,6 +289,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.acheivements = {};
         $scope.registerText = 'Register To Get Email';
         $scope.registerSuccess = false;
+        $scope.currentlySendMail = false;
 
         function activate() {
             if (!UserService.isLoggedIn()) {
@@ -289,6 +303,11 @@ angular.module('app.controllers', ['app.services'])
                 }, function (error) {
                     console.error('error', error);
                 });
+                AccountService.getSendMail($scope.user.Id).then(function (data) {
+                    $scope.currentlySendMail = true;
+                }, function (error) {
+                    console.error('error', error);
+                });
             }, function (error) {
                 $location.path('/login');
             });
@@ -297,19 +316,22 @@ angular.module('app.controllers', ['app.services'])
         activate();
 
         $scope.registerToGetEmail = function () {
-            AccountService.registerForUpdates($scope.user.Id)
-            .then(function (data) {
-                $scope.registerText = angular.fromJson(data.data).msg;
-                $scope.registerSuccess = true;
-            }, function (error) {
-                $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
-                $scope.registerSuccess = false;
-            });
+            if (!$scope.currentlySendMail) {
+                AccountService.registerForUpdates($scope.user.Id)
+                .then(function (data) {
+                    $scope.registerText = angular.fromJson(data.data).msg;
+                    $scope.registerSuccess = true;
+                    $scope.currentlySendMail = true;
+                }, function (error) {
+                    $scope.registerText = 'Unfortunately, we could not register you to get updates :(';
+                    $scope.registerSuccess = false;
+                });
+            }
         };
 
         $scope.logout = function () {
             UserService.logout()
-            localStorage.removeItem('aqg_token');
+            UserService.clearToken();
             $location.path('/');
         };
 

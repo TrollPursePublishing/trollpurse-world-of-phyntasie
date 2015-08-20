@@ -31,13 +31,13 @@
 
             <tr>
                 <td>use "PotionName"</td>
-                <td>When not in combat or not, healing, mana restor, and stanima restore potions will restore the appropiate fields. When in combat, if the potion is a poison, it will poison the monster you are fighting. As always, no need for the quotation marks and replace "PotionName" with the name of a potion in your inventory.</td>
+                <td>Whether in combat or not, healing, mana restore, and stamina restore potions will restore the appropiate fields. When in combat, if the potion is a poison, it will poison the monster you are fighting. As always, no need for the quotation marks and replace "PotionName" with the name of a potion in your inventory.</td>
                 <td>use The Magical Rememdy of Liquid Courage</td>
             </tr>
 
             <tr>
                 <td>buy "ItemName"</td>
-                <td>This will allow you to buy "ItemName" (again, no quotation marks need and replace "ItemName" with the name of the item) from the market. If not in a market, you will be informed thus so.If you forget to type in a parameter, it will list all the items in the current market available for purchase. You may only buy in a market. Indicated by the <i class="market">blue text</i> in the area graph map</td>
+                <td>This will allow you to buy "ItemName" (again, no quotation marks need and replace "ItemName" with the name of the item) from the market. If not in a market, you will be informed thus so. If you forget to type in a parameter, it will list all the items in the current market available for purchase. You may only buy in a market. Indicated by the <i class="market">blue text</i> in the area graph map</td>
                 <td>buy Muddy Boots</td>
             </tr>
 
@@ -90,6 +90,12 @@
             </tr>
 
             <tr>
+                <td>unequip "ItemName"</td>
+                <td>This command will let you unequip the given "ItemName" that you wish to unequip, if applicable. It will then put that item back into your inventory.</td>
+                <td>unequip Hide Cuirass</td>
+            </tr>
+
+            <tr>
                 <td>""</td>
                 <td>If you start and end a group of letters or numbers (or anything that is on the keyboard at that matter) with quotation marks, you are chatting. Chatting allows you to speak with players in your current Location. They may chat with you as well.</td>
                 <td>"This is a chat message."</td>
@@ -101,11 +107,7 @@
         <img src="../Images/public/Untitled.png" class="img-responsive" />
         <p>The game viewport is your glasses into the world of AdventureQuestGame. It contains several sections that will assist you in your adventures. Currently, the image above is broken up into several sections by colored boxes. The below list will give you vital information pertaining to those boxes and thier content.</p>
         <ol>
-            <li>
-                The <i style="color:green">green</i> box contains all of your core gameplay information. It contains your command input box and gaming view. Nested are some sections that you will find very useful or may need.
-            </li>
             <br />
-            <ol>
                 <li>
                     The <i style="color:orangered">orange</i> box contains all of your stats information. It shows iconographs of the stat it represents.
                     <table class="table table-striped">
@@ -125,7 +127,7 @@
                         </tr>
                         <tr>
                             <td><span class="glyphicon glyphicon-flash"></span></td>
-                            <td>This is your Stanima. It shows your current stanima and your maximum stanima. When your stanima reaches zero or a value below the stanima cost of your equipped weapon, you will not be able to use your weapon until you restore your stanima. The alternative is to cast a spell, use a poison, or unequip your current weapon.</td>
+                            <td>This is your Stamina. It shows your current stamina and your maximum stamina. When your stamina reaches zero or a value below the stamina cost of your equipped weapon, you will not be able to use your weapon until you restore your stamina. The alternative is to cast a spell, use a poison, or unequip your current weapon.</td>
                         </tr>
                         <tr>
                             <td><span class="glyphicon glyphicon-user"></span></td>
@@ -146,7 +148,6 @@
                     The <i style="color:red">red</i> box is your command input section. Simply type your commands here and press <kbr>Enter</kbr> or the <i class="text-info">blue</i> "Do" button to execute commands and receive feedback.
                 </li>
                 <br />
-            </ol>
             <li>
                 The <i style="color:blue">blue</i> box shows you some basic information about the current Area you are exploring, equipment, inventory, and item details. This is seperated by a few different panels which are opened by clicking on the category. Going from top to bottom:
                 <ol>
