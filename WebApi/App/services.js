@@ -10,6 +10,9 @@ var getAsync = function (url, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;
@@ -22,6 +25,9 @@ var getAsyncData = function (url, data, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;
@@ -34,6 +40,9 @@ var postAsync = function (url, data, $q, $http) {
         q.resolve({ data: data });
     })
     .error(function (msg, code) {
+        if (code == 401) {
+            localStorage.removeItem('aqg_token');
+        }
         q.reject(msg);
     });
     return q.promise;

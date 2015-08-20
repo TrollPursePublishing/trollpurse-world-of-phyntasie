@@ -258,14 +258,14 @@ angular.module('app.controllers', ['app.services'])
                 $scope.registered = true;
 
                 if ($scope.emailOptout)
-                    $scope.notification = data.msg;
+                    $scope.notification = data.data.msg;
                 else
                     $scope.notification = data.data.Errors[0];
 
                 $scope.hasClicked = false;
 
-                $scope.username = '';
-                $scope.password = '';
+                $scope.userName = '';
+                $scope.spassword = '';
                 $scope.confirmpassword = '';
                 $scope.email = '';
                 $scope.gender = '';
@@ -309,10 +309,6 @@ angular.module('app.controllers', ['app.services'])
                     console.error('error', error);
                 });
             }, function (error) {
-                if (error.code == 401)
-                {
-                    UserService.clearToken();
-                }
                 $location.path('/login');
             });
         }
