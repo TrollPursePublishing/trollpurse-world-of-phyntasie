@@ -35,8 +35,9 @@ namespace WebApi.Models
     public class AuthenticationDbContext : IdentityDbContext<ApplicationUser>
     {
         public AuthenticationDbContext()
-            : base("name=Game")
+            : base("Game")
         {
+            Database.SetInitializer(new AuthInit());
         }
 
         public static AuthenticationDbContext Create()
@@ -50,6 +51,7 @@ namespace WebApi.Models
         protected override void Seed(AuthenticationDbContext context)
         {
             context.Roles.Add(new IdentityRole("Player"));
+            context.Roles.Add(new IdentityRole("Admin"));
             context.SaveChanges();
         }
     }

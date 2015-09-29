@@ -22,14 +22,6 @@ namespace WebApi
                 ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             };
 
-            var configuration = new AdventureQuestGame.Migrations.Configuration();
-            var migrator = new DbMigrator(configuration);
-            migrator.Update();
-
-            //Initiailizers
-            Database.SetInitializer(new GameInit());
-            Database.SetInitializer(new AuthInit());
-
             //Web Configurations
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }

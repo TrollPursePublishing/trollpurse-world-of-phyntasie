@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum QuestType
     {
         Slay,
@@ -14,7 +14,7 @@ namespace AdventureQuestGame.Models
         GoTo
     }
 
-    [Serializable]
+    
     public class Quest
     {
         protected Quest() { }

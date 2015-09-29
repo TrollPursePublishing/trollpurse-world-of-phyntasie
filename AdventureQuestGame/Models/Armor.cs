@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum ArmorType : int
     {
         Head,
@@ -16,7 +16,7 @@ namespace AdventureQuestGame.Models
         Feet
     }
 
-    [Serializable]
+    
     public class Armor
     {
         protected Armor() { }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum MonsterType : int
     {
         Monster,
@@ -15,7 +15,7 @@ namespace AdventureQuestGame.Models
     }
 
 
-    [Serializable]
+    
     public class Monster
     {
         protected Monster() { }

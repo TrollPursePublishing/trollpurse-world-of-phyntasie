@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum CardinalPoints : int
     {
         North,
@@ -15,7 +15,7 @@ namespace AdventureQuestGame.Models
         West
     }
 
-    [Serializable]
+    
     public class Room
     {
         protected Room() { }

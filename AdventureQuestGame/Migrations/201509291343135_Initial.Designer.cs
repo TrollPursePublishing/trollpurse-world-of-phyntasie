@@ -7,13 +7,13 @@ namespace AdventureQuestGame.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class ImagePath : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ImagePath));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201508111653477_ImagePath"; }
+            get { return "201509291343135_Initial"; }
         }
         
         string IMigrationMetadata.Source
