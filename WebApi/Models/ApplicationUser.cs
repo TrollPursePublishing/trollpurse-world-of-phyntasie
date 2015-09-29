@@ -51,6 +51,7 @@ namespace WebApi.Models
         protected override void Seed(AuthenticationDbContext context)
         {
             context.Roles.Add(new IdentityRole("Player"));
+            context.Roles.Add(new IdentityRole("Admin"));
             context.SaveChanges();
         }
     }

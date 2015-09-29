@@ -1,5 +1,6 @@
 namespace WebApi.Migrations
 {
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -26,6 +27,9 @@ namespace WebApi.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+            if(context.Roles.FirstOrDefault(r => r.Name.Equals("Admin")) == null)
+                context.Roles.Add(new IdentityRole("Admin"));
         }
     }
 }
