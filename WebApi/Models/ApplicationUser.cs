@@ -35,8 +35,9 @@ namespace WebApi.Models
     public class AuthenticationDbContext : IdentityDbContext<ApplicationUser>
     {
         public AuthenticationDbContext()
-            : base("name=Game")
+            : base("Game")
         {
+            Database.SetInitializer(new AuthInit());
         }
 
         public static AuthenticationDbContext Create()

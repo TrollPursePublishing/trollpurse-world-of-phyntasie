@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum Gender : int
     {
         Male,
         Female
     }
     
-    [Serializable]
+    
     public class Player
     {
         protected Player() { }

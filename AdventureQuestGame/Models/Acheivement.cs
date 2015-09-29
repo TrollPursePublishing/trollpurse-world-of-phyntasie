@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
     public class Acheivement
     {
         protected Acheivement() { }

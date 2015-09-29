@@ -993,11 +993,14 @@
     <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201509291343200_Initial.cs" />
+    <Compile Include="Migrations\201509291343200_Initial.Designer.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Attributes\RequireHttpsAttribute.cs" />
     <Compile Include="Auth\APIAuthorizationServerProvider.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\CommandController.cs" />
@@ -1041,6 +1044,9 @@
       <Project>{4e4cd7ea-8d57-411e-b235-fab8d7f89710}</Project>
       <Name>AdventureQuestGame</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201509291343200_Initial.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

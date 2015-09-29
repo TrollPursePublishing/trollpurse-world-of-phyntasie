@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Models
 {
-    [Serializable]
+    
     public enum PlayerState : int
     {
         Alive,
         Dead
     }
 
-    [Serializable]
+    
     public class PlayerAttributes
     {
         public PlayerAttributes()

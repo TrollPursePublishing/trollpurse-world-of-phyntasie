@@ -13,8 +13,9 @@ namespace AdventureQuestGame.Contexts
 {
     public class GameContext : DbContext
     {
-        public GameContext() : base("name=Game")
+        public GameContext() : base("Game")
         {
+            Database.SetInitializer(new GameInit());
             Configuration.LazyLoadingEnabled = true;
         }
 
