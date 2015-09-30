@@ -1,0 +1,365 @@
+﻿<div>
+    <h1>Quick Edit Panel</h1>
+    <p style="color:red">{{error}}</p>
+    <div>
+        <button data-ng-click="ch_context(monster.id)">Monsters</button>
+        <button data-ng-click="ch_context(area.id)">Areas</button>
+        <button data-ng-click="ch_context(location.id)">Locations</button>
+        <button data-ng-click="ch_context(room.id)">Rooms</button>
+        <button data-ng-click="ch_context(relic.id)">Relics</button>
+        <button data-ng-click="ch_context(questgiver.id)">Quest Givers</button>
+        <button data-ng-click="ch_context(quest.id)">Quests</button>
+    </div>
+    <h2>{{context.title}}</h2>
+    <div data-ng-switch="context.id">
+        <table border="1" data-ng-switch-when="0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th>Gold Loot</th>
+                    <th>Score</th>
+                    <th>
+                        Attribute
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="m in monsters">
+                    <td>{{ m.Id }}</td>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.description }}</td>
+                    <td>{{ m.type }}</td>
+                    <td>{{ m.GoldLoot }}</td>
+                    <td>{{ m.GetScore }}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Strength</th>
+                                    <th>Mana</th>
+                                    <th>Stanima</th>
+                                    <th>Toughness</th>
+                                    <th>Health</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ m.attribute.Id }}</td>
+                                    <td>{{ m.attribute.strength }}</td>
+                                    <td>{{ m.attribute.mana }}</td>
+                                    <td>{{ m.attribute.stanima }}</td>
+                                    <td>{{ m.attribute.toughness }}</td>
+                                    <td>{{ m.attribute.health }}</td>
+                                    <td>{{ m.attribute.level }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="1">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Image Path</th>
+                    <th>Locations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="a in areas">
+                    <td>{{a.Id}}</td>
+                    <td>{{a.name}}</td>
+                    <td>{{a.description}}</td>
+                    <td>{{a.imagepath}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="l in a.locations">
+                                    <td>{{l.Id}}</td>
+                                    <td>{{l.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="2">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quest Giver</th>
+                    <th>Has Market?</th>
+                    <th>Is Exit?</th>
+                    <th>Monster Type</th>
+                    <th>Rooms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="l in locations">
+                    <td>{{l.Id}}</td>
+                    <td>{{l.name}}</td>
+                    <td>{{l.description}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{l.QuestGiver.Id}}</td>
+                                    <td>{{l.QuestGiver.Name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>{{l.hasMarket}}</td>
+                    <td>{{l.isExit}}</td>
+                    <td>{{l.monsterTypeHere}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="r in l.rooms">
+                                    <td>{{r.Id}}</td>
+                                    <td>{{r.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="3">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Is Exit?</th>
+                    <th>Chance for Relic</th>
+                    <th>Linked Rooms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="r in rooms">
+                    <td>{{r.Id}}</td>
+                    <td>{{r.name}}</td>
+                    <td>{{r.description}}</td>
+                    <td>{{r.isExit}}</td>
+                    <td>{{r.chanceForRelic}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="rr in r.linkedRoom">
+                                    <td>{{rr.Id}}</td>
+                                    <td>{{rr.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="4">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="r in relics">
+                    <td>{{r.Id}}</td>
+                    <td>{{r.name}}</td>
+                    <td>{{r.description}}</td>
+                    <td>{{r.value}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="5">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Quest</th>
+                    <th>Required Completed Quests</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <button data-ng-click="createQuestGiver()">Add</button>
+                        <button data-ng-click="resetQuestGiver()">Clear</button>
+                    </td>
+                    <td>AUTO GENERATED</td>
+                    <td>
+                        <select data-ng-model="currentQuestGiver.QuestId">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in quests" value="{{q.Id}}">q.Title</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button data-ng-click="currentQuestGiver.QuestIdsToComplete.push(working)"></button>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in quests" value="{{q.Id}}">q.Title</option>
+                        </select>
+                        <p data-ng-repeat="q in currentQuestGiver.QuestIdsToComplete">{{q.Id}}</p>
+                    </td>
+                </tr>
+                <tr data-ng-repeat="qg in questGivers">
+                    <td><button data-ng-click="deleteQuestGiver(qg.Id)">Delete</button></td>
+                    <td>{{qg.Id}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Title</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{qg.Quest.Id}}</td>
+                                    <td>{{qg.Quest.Title}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td><p data-ng-repeat="q in qg.QuestsToUnlockThisQuestGiver">{{q.Id}}</p></td>
+                    <td>{{qg.Name}}</td>
+                    <td>{{qg.Description}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="6">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Instructions</th>
+                    <th>Count Needed</th>
+                    <th>Type</th>
+                    <th>Name Of Object</th>
+                    <th>Score</th>
+                    <th>Experience</th>
+                    <th>Gold</th>
+                    <th>Next Quest</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <button data-ng-click="createQuest()">Add</button>
+                        <button data-ng-click="resetQuest()">Clear</button>
+                    </td>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentQuest.Title"></textarea></td>
+                    <td><textarea data-ng-model="currentQuest.Description"></textarea></td>
+                    <td><textarea data-ng-model="currentQuest.Instructions"></textarea></td>
+                    <td><input type="number" data-ng-model="currentQuest.CountNeeded" /></td>
+                    <td>
+                        <select data-ng-model="currentQuest.QuestType">
+                            <option value="0">Slay</option>
+                            <option value="1">Collect</option>
+                            <option value="2">GoTo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <div data-ng-switch="currentQuest.QuestType">
+                            <select data-ng-switch-when="0" data-ng-model="currentQuest.NameOfObject">
+                                <option value="None">None</option>
+                                <option data-ng-repeat="m in monsters" value="{{m.name}}">{{m.name}}</option>
+                            </select>
+                            <select data-ng-switch-when="1" data-ng-model="currentQuest.NameOfObject">
+                                <option value="None">None</option>
+                                <option data-ng-repeat="re in relics" value="{{re.name}}">{{re.name}}</option>
+                            </select>
+                            <select data-ng-switch-when="2" data-ng-model="currentQuest.NameOfObject">
+                                <option value="None">None</option>
+                                <option data-ng-repeat="a in areas" value="{{a.name}}">{{a.name}}</option>
+                                <option data-ng-repeat="l in locations" value="{{l.name}}">{{l.name}}</option>
+                                <option data-ng-repeat="r in rooms" value="{{r.name}}">{{r.name}}</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td><input type="number" data-ng-model="currentQuest.ScoreReward"/></td>
+                    <td><input type="number" data-ng-model="currentQuest.ExperienceReward" /></td>
+                    <td><input type="number" data-ng-model="currentQuest.GoldReward" /></td>
+                    <td>
+                        <select data-ng-model="currentQuest.NextQuestId">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in quests" value="{{q.Id}}">{{q.Title}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr data-ng-repeat="q in quests">
+                    <td><button data-ng-click="deleteQuest(q.Id)">Delete</button></td>
+                    <td>{{q.Id}}</td>
+                    <td>{{q.Title}}</td>
+                    <td>{{q.Description}}</td>
+                    <td>{{q.Instructions}}</td>
+                    <td>{{q.CountNeeded}}</td>
+                    <td>{{q.Type}}</td>
+                    <td>{{q.NameOfObject}}</td>
+                    <td>{{q.Score}}</td>
+                    <td>{{q.Experience}}</td>
+                    <td>{{q.Gold}}</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Title</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{q.NextQuest.Id}}</td>
+                                    <td>{{q.NextQuest.Title}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
