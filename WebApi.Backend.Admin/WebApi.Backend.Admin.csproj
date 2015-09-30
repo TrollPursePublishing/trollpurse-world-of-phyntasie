@@ -126,6 +126,7 @@
   <ItemGroup>
     <Content Include="App\app.js" />
     <Content Include="App\authService.js" />
+    <Content Include="App\locationService.js" />
     <Content Include="App\loginController.js" />
     <Content Include="App\editController.js" />
     <Content Include="App\editService.js" />
@@ -935,12 +936,14 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\LocationAdminController.cs" />
     <Compile Include="Controllers\QuestAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\APIAuthorizationServerProvider.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\LocationViewModel.cs" />
     <Compile Include="Models\QuestViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -102,6 +102,7 @@
         <table border="1" data-ng-switch-when="2">
             <thead>
                 <tr>
+                    <th>Action</th>
                     <th>Id</th>
                     <th>Name</th>
                     <th>Description</th>
@@ -113,11 +114,63 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="l in locations">
-                    <td>{{l.Id}}</td>
-                    <td>{{l.name}}</td>
-                    <td>{{l.description}}</td>
+                <tr>
+                    <th>
+                        <button data-ng-click="createLocation()">Add</button>
+                        <button data-ng-click="resetLocation()">Clear</button>
+                    </th>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentLocation.Name"></textarea></td>
+                    <td><textarea data-ng-model="currentLocation.Description"></textarea></td>
                     <td>
+                        <select data-ng-model="currentLocation.QuestGiverId">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in questGivers" value="{{q.Id}}">{{q.Name}}</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" data-ng-model="currentLocation.HasMarket" /></td>
+                    <td><input type="checkbox" data-ng-model="currentLocation.IsExit" /></td>
+                    <td>
+                        <select data-ng-model="currentLocation.MonsterType">
+                            <option value="0">Monster</option>
+                            <option value="1">Person</option>
+                            <option value="2">Creature</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in rooms" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="currentLocation.RoomIds.push(working)">Add</button>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="r in currentLocation.RoomIds">
+                                    <td>{{r}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr data-ng-repeat="l in locations">
+                    <th>
+                        <button data-ng-click="updateLocation(l)">Update</button>
+                        <button data-ng-click="deleteLocation(l.Id)">Delete</button>
+                    </th>
+                    <td>{{l.Id}}</td>
+                    <td><textarea data-ng-model="l.name"></textarea></td>
+                    <td><textarea data-ng-model="l.description"></textarea></td>
+                    <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in questGivers" value="{{q.Id}}">{{q.Name}}</option>
+                        </select>
+                        <button data-ng-click="updateLocationQuestGiver(working, l)">Apply</button>
                         <table border="1">
                             <thead>
                                 <tr>
@@ -133,10 +186,28 @@
                             </tbody>
                         </table>
                     </td>
-                    <td>{{l.hasMarket}}</td>
-                    <td>{{l.isExit}}</td>
-                    <td>{{l.monsterTypeHere}}</td>
+                    <td><input type="checkbox" data-ng-model="l.hasMarket" /></td>
+                    <td><input type="checkbox" data-ng-model="l.isExit" /></td>
                     <td>
+                        <select data-ng-model="l.monsterTypeHere">
+                            <option value="0">Monster</option>
+                            <option value="1">Person</option>
+                            <option value="2">Creature</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in rooms" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="updateLocationRoom(working, l)">Add</button>
+
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in l.rooms" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="removeLocationRoom(working, l)">Remove</button>
+
                         <table border="1">
                             <thead>
                                 <tr>
@@ -349,7 +420,7 @@
                             </select>
                         </div>
                     </td>
-                    <td><input type="number" data-ng-model="currentQuest.ScoreReward"/></td>
+                    <td><input type="number" data-ng-model="currentQuest.ScoreReward" /></td>
                     <td><input type="number" data-ng-model="currentQuest.ExperienceReward" /></td>
                     <td><input type="number" data-ng-model="currentQuest.GoldReward" /></td>
                     <td>

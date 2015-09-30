@@ -5,9 +5,9 @@
         .module('app')
         .controller('editController', editController);
 
-    editController.$inject = ['$scope', 'editService', 'authService']; 
+    editController.$inject = ['$scope', 'editService', 'authService', 'locationService']; 
 
-    function editController($scope, editService, authService) {
+    function editController($scope, editService, authService, locationService) {
         $scope.title = 'editController';
 
         $scope.error = '';
@@ -28,7 +28,7 @@
         $scope.working = editService.zeroGUID;
 
         function loadLocations() {
-            editService.getLocations().then(function (good) {
+            locationService.get().then(function (good) {
                 $scope.locations = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
@@ -99,6 +99,9 @@
                     loadAreas();
                     break;
                 case editService.location.id:
+                    $scope.resetLocation();
+                    loadRooms();
+                    loadQuestGivers();
                     loadLocations();
                     break;
                 case editService.room.id:
@@ -180,14 +183,21 @@
 
         $scope.currentQuest;
         $scope.currentQuestGiver;
+        $scope.currentLocation;
 
         $scope.resetQuest = function () {
+            $scope.working = editService.zeroGUID;
             $scope.currentQuest = angular.copy(defaultQuest);
         }
 
         $scope.resetGiver = function () {
             $scope.working = editService.zeroGUID;
             $scope.currentQuestGiver = angular.copy(defaultGiver);
+        }
+
+        $scope.resetLocation = function () {
+            $scope.working = editService.zeroGUID;
+            $scope.currentLocation = locationService.defaultLocation();
         }
 
         activate();
@@ -213,6 +223,15 @@
             });
         }
 
+        $scope.deleteLocation = function (id) {
+            $scope.error = '';
+            locationService.delete(id).then(function (good) {
+                loadLocations();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
         $scope.createQuest = function () {
             $scope.error = '';
             editService.createQuest($scope.currentQuest).then(function (good) {
@@ -228,6 +247,53 @@
             editService.createQuestGiver($scope.currentQuestGiver).then(function (good) {
                 loadQuestGivers();
                 $scope.resetGiver();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.createLocation = function () {
+            $scope.error = '';
+            locationService.create($scope.currentLocation).then(function (good) {
+                loadLocations();
+                $scope.resetLocation();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.updateLocationRoom = function (id, location) {
+            if (!angular.isDefined(location.rooms)) {
+                location.rooms = [];
+            }
+            angular.forEach($scope.rooms, function (room) {
+                if (room.Id == id) {
+                    location.rooms.push(room);
+                }
+            });
+        }
+
+        $scope.updateLocationQuestGiver = function (id, location) {
+            angular.forEach($scope.questGivers, function (questGiver) {
+                if (questGiver.Id == id) {
+                    location.QuestGiver = questGiver;
+                }
+            });
+        }
+
+        $scope.removeLocationRoom = function (id, location) {
+            angular.forEach(location.rooms, function (room) {
+                if (room.Id == id) {
+                    location.rooms.splice(room, 1);
+                }
+            });
+        }
+
+        $scope.updateLocation = function (location) {
+            $scope.error = '';
+            locationService.update(location).then(function (good) {
+                loadLocations();
+                $scope.resetLocation();
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });

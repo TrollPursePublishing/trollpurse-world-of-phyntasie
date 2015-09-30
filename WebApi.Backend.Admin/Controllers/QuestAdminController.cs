@@ -36,13 +36,6 @@ namespace WebApi.Backend.Admin.Controllers
         }
 
         [HttpGet]
-        [Route("GetLocations")]
-        public IHttpActionResult GetLocations()
-        {
-            return Ok(adminService.GetLocations());
-        }
-
-        [HttpGet]
         [Route("GetRooms")]
         public IHttpActionResult GetRooms()
         {
