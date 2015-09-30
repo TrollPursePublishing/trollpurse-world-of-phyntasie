@@ -19,6 +19,10 @@ namespace AdventureQuestGame.Admin
         public List<Monster> GetMonsters()
         {
             return GameCtx.monsters
+                .Where(m =>
+                    GameCtx.players
+                    .FirstOrDefault(p => p.engaging.Id == m.Id) == null
+                )
                 .Include(m => m.attribute)
                 .ToList();
         }

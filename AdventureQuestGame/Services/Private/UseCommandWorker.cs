@@ -23,7 +23,9 @@ namespace AdventureQuestGame.Services.Private
 
                 if (player.engaging.attribute.currentHealth < 0)
                 {
+                    var engaged = player.engaging;
                     result.Add(player.Disengage());
+                    GameCtx.monsters.Remove(engaged);
                     return result;
                 }
 

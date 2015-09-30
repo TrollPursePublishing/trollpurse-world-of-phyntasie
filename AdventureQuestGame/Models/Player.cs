@@ -499,6 +499,7 @@ namespace AdventureQuestGame.Models
             attributes.currentToughness = attributes.toughness;
 
             engaging = null;
+
             isInCombat = false;
             stats.monstersKilled++;
             return String.Format("{0}! {1} has defeated the {2}! I have also looted {3} gold and gained {4} points of wisdom!", RandomCheer(), FullName, name, gold, exp);

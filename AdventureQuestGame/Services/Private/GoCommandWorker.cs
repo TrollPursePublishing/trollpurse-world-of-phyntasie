@@ -39,7 +39,12 @@ namespace AdventureQuestGame.Services.Private
                         Random r = new Random();
                         if(r.Next(5) > 1)
                         {
-                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
+                            IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && 
+                                mm.type == player.navigation.currentLocation.monsterTypeHere && 
+                                mm.attribute.currentHealth > 0 &&
+                                GameCtx.players.FirstOrDefault(p => p.engaging.Id == mm.Id) == null)
+                                .ToList();
+
                             int index = r.Next(monsters.Count);
                             Monster m = monsters[index];
                             result.Add(player.Engage(m.Copy()));
@@ -83,7 +88,12 @@ namespace AdventureQuestGame.Services.Private
                     Random r = new Random();
                     if (r.Next(5) > 3)
                     {
-                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
+                        IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level &&
+                            mm.type == player.navigation.currentLocation.monsterTypeHere &&
+                            mm.attribute.currentHealth > 0 &&
+                            GameCtx.players.FirstOrDefault(p => p.engaging.Id == mm.Id) == null)
+                            .ToList();
+
                         int index = r.Next(monsters.Count);
                         Monster m = monsters[index];
                         result.Add(player.Engage(m.Copy()));

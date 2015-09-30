@@ -20,7 +20,13 @@ namespace AdventureQuestGame.Services.Private
                 Random r = new Random();
                 if (r.Next(100) > player.navigation.currentRoom.chanceForRelic)
                 {
-                    IList<Monster> monsters = GameCtx.monsters.Where(mm => mm.attribute.level <= player.attributes.level && mm.type == player.navigation.currentLocation.monsterTypeHere && mm.attribute.currentHealth > 0).ToList();
+                    IList<Monster> monsters = GameCtx.monsters.Where(mm => 
+                        mm.attribute.level <= player.attributes.level && 
+                        mm.type == player.navigation.currentLocation.monsterTypeHere && 
+                        mm.attribute.currentHealth > 0 &&
+                        GameCtx.players.FirstOrDefault(p => p.engaging.Id == mm.Id) == null)
+                        .ToList();
+
                     int index = r.Next(monsters.Count);
                     Monster m = monsters[index];
                     result.Add(player.Engage(m.Copy()));
@@ -30,14 +36,17 @@ namespace AdventureQuestGame.Services.Private
                     int index = r.Next(rsize);
 
                     int rarity = r.Next(5);
-                    Relic relic;
+                    Relic relic = null;
                     if (rarity > 3)
                         relic = GameCtx.relics.Take(rsize).ToArray()[index];
                     else
                         relic = GameCtx.relics.Take(rsize).ToArray()[(rsize - (int)(rsize / 3.0f))];
 
-                    result.Add(String.Format("I have discoverd a(n) {0}. {1}", relic.name, relic.description));
-                    result.Add(player.AddInventoryItem(relic.Copy()));
+                    if(relic != null)
+                    { 
+                        result.Add(String.Format("I have discoverd a(n) {0}. {1}", relic.name, relic.description));
+                        result.Add(player.AddInventoryItem(relic.Copy()));
+                    }
                 }
             }
             else

@@ -36,7 +36,9 @@ namespace AdventureQuestGame.Services.Private
                 }
                 else
                 {
+                    var engaged = player.engaging;
                     result.Add(player.Disengage());
+                    GameCtx.monsters.Remove(engaged);
                 }
                 return result;
             }
