@@ -39,14 +39,6 @@ namespace AdventureQuestGame.Admin
                 .ToList();
         }
 
-        public List<Location> GetLocations()
-        {
-            return GameCtx.locations
-                .Include(l => l.QuestGiver)
-                .Include(l => l.rooms)
-                .ToList();
-        }
-
         public List<Room> GetRooms()
         {
             var res = GameCtx.rooms
