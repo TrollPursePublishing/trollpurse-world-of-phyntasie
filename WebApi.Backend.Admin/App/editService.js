@@ -45,7 +45,12 @@
             title: 'Quests'
         };
 
-        this.contexts = [this.monster, this.area, this.location, this.room, this.relic, this.questgiver, this.quest];
+        this.event = {
+            id: 7,
+            title: 'Events'
+        };
+
+        this.contexts = [this.monster, this.area, this.location, this.room, this.relic, this.questgiver, this.quest, this.event];
 
 
         this.getMonsters = function () {

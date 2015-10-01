@@ -6,13 +6,14 @@
         <button data-ng-click="logout()">Logout</button>
         <p style="background-color: yellow; color:red">{{error}}</p>
         <div>
-            <button data-ng-click="ch_context(monster.id)">Monsters</button>
-            <button data-ng-click="ch_context(area.id)">Areas</button>
-            <button data-ng-click="ch_context(location.id)">Locations</button>
-            <button data-ng-click="ch_context(room.id)">Rooms</button>
-            <button data-ng-click="ch_context(relic.id)">Relics</button>
-            <button data-ng-click="ch_context(questgiver.id)">Quest Givers</button>
-            <button data-ng-click="ch_context(quest.id)">Quests</button>
+            <button data-ng-click="ch_context(monster.id)">{{monster.title}}</button>
+            <button data-ng-click="ch_context(area.id)">{{area.title}}</button>
+            <button data-ng-click="ch_context(location.id)">{{location.title}}</button>
+            <button data-ng-click="ch_context(room.id)">{{room.title}}</button>
+            <button data-ng-click="ch_context(relic.id)">{{relic.title}}</button>
+            <button data-ng-click="ch_context(questgiver.id)">{{questgiver.title}}</button>
+            <button data-ng-click="ch_context(quest.id)">{{quest.title}}</button>
+            <button data-ng-click="ch_context(event.id)">{{event.title}}</button>
         </div>
     </div>
 
@@ -483,6 +484,36 @@
                             </tbody>
                         </table>
                     </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" data-ng-switch-when="7">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <button data-ng-click="createEvent()">Add</button>
+                        <button data-ng-click="resetEvent()">Clear</button>
+                    </td>
+                    <td>AUTO GENERATED</td>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentEvent.Title"></textarea></td>
+                    <td><textarea data-ng-model="currentEvent.Description"></textarea></td>
+                </tr>
+                <tr data-ng-repeat="e in events | orderBy: '-when'">
+                    <td></td>
+                    <td>{{e.Id}}</td>
+                    <td>{{e.when | date}}</td>
+                    <td>{{e.title}}</td>
+                    <td>{{e.description}}</td>
                 </tr>
             </tbody>
         </table>
