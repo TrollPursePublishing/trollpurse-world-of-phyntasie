@@ -51,7 +51,7 @@ namespace AdventureQuestGame.Admin
             return result;
         }
 
-        public Location UpdateLocation(Guid Id, Location location)
+        public Location UpdateLocation(Guid Id, string name, string description, MonsterType monsterType, bool hasMarket, bool isExit, Guid questGiverId, List<Guid> roomIds)
         {
             var updated = GameCtx.locations
                 .Include(l => l.rooms)
@@ -60,24 +60,28 @@ namespace AdventureQuestGame.Admin
 
             if(updated != null)
             {
-                updated.description = location.description;
-                updated.hasMarket = location.hasMarket;
-                updated.isExit = location.isExit;
-                updated.monsterTypeHere = location.monsterTypeHere;
-                updated.name = location.name;
-                updated.QuestGiver = location.QuestGiver;
+                updated.description = description;
+                updated.hasMarket = hasMarket;
+                updated.isExit = isExit;
+                updated.monsterTypeHere = monsterType;
+                updated.name = name;
 
-                updated.rooms.Clear();
+                updated.QuestGiver = GameCtx.questGivers.SingleOrDefault(q => q.Id == questGiverId);
 
-                foreach(var room in location.rooms)
+                if (roomIds != null)
                 {
-                    var add = GameCtx.rooms.Single(r => r.Id == room.Id);
-                    updated.rooms.Add(add);
+                    updated.rooms.Clear();
+
+                    foreach (var room in roomIds)
+                    {
+                        var add = GameCtx.rooms.Single(r => r.Id == room);
+                        updated.rooms.Add(add);
+                    }
                 }
 
                 GameCtx.SaveChanges();
             }
-            return updated ?? location;
+            return updated;
         }
 
         public void DeleteLocation(Guid Id)

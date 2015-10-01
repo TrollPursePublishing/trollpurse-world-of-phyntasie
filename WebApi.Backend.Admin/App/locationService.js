@@ -29,7 +29,21 @@
         }
 
         this.update = function (model) {
-            return $http.post('location/UpdateLocation/' + model.Id, model);
+            var roomIds = [];
+            if (model.rooms != null) {
+                angular.forEach(model.rooms, function (room) {
+                    roomIds.push(room.Id);
+                });
+            }
+            return $http.post('location/UpdateLocation/' + model.Id, {
+                Name: model.name,
+                Description: model.description,
+                MonsterType: model.monsterTypeHere,
+                HasMarket: model.HasMarket,
+                IsExit: model.isExit,
+                QuestGiverId: model.QuestGiver == null ? '00000000-0000-0000-0000-000000000000' : model.QuestGiver.Id,
+                RoomIds: roomIds
+            });
         }
 
         this.get = function () {

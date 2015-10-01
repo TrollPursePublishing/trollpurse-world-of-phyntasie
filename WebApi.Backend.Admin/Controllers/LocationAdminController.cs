@@ -24,9 +24,15 @@ namespace WebApi.Backend.Admin.Controllers
 
         [HttpPost]
         [Route("UpdateLocation/{Id}")]
-        public IHttpActionResult UpdateLocation(Guid Id, [FromBody]Location model)
+        public IHttpActionResult UpdateLocation(Guid Id, [FromBody]LocationViewModel model)
         {
-            return Ok(adminService.UpdateLocation(Id, model));
+            return Ok(adminService.UpdateLocation(Id, model.Name,
+                model.Description,
+                model.MonsterType,
+                model.HasMarket,
+                model.IsExit,
+                model.QuestGiverId, 
+                model.RoomIds));
         }
 
         [HttpPut]
