@@ -120,6 +120,16 @@ namespace AdventureQuestGame.Admin
 
         public void DeleteQuest(Guid Id)
         {
+            var players = GameCtx.players
+                .Include(p => p.quests.Quests);
+
+            foreach(var p in players.Where(p => p.quests.Quests.Any(qq => qq.Id == Id)))
+            {
+                var pqq = p.quests.Quests.Single(qq => qq.Id == Id);
+                p.quests.Quests.Remove(pqq);
+            }
+            GameCtx.SaveChanges();
+
             GameCtx.quests.Remove(GameCtx.quests.First(q => q.Id == Id));
             GameCtx.SaveChanges();
         }
@@ -138,7 +148,7 @@ namespace AdventureQuestGame.Admin
             return giver;            
         }
 
-        public QuestGiver UpdateQuestGiver(Guid Id, QuestGiver update)
+        public QuestGiver UpdateQuestGiver(Guid Id, string name, string description, Guid questId, List<Guid> questIdsCompletedToUnlock)
         {
             var giver = GameCtx.questGivers
                 .Include(q => q.Quest)
@@ -147,15 +157,16 @@ namespace AdventureQuestGame.Admin
 
             if(giver != null)
             {
-                giver.Update(update.Name,
-                    update.Description,
-                    update.Quest == null ? null : GameCtx.quests.FirstOrDefault(q => q.Id == update.Quest.Id),
-                    update.QuestsToUnlockThisQuestGiver == null ? null : GameCtx.quests.Where(q => update.QuestsToUnlockThisQuestGiver.Any(qq => qq.Id == q.Id)).ToArray()
-                    );
+                Quest[] toUnlock = questIdsCompletedToUnlock == null ? null : GameCtx.quests.Where(q => questIdsCompletedToUnlock.Contains(q.Id)).ToArray();
+
+                giver.Update(name,
+                    description,
+                    GameCtx.quests.SingleOrDefault(q => q.Id == questId),
+                    (toUnlock == null || toUnlock.Count() == 0) ? null : toUnlock);
 
                 GameCtx.SaveChanges();
             }
-            return giver ?? update;
+            return giver;
         }
 
         public void DeleteQuestGiver(Guid Id)

@@ -98,7 +98,18 @@
         }
 
         this.update = function (model) {
-            return $http.post('/quest/UpdateQuestGiver/' + model.Id, model);
+            var ids = [];
+            if (model.QuestsToUnlockThisQuestGiver != null) {
+                angular.forEach(model.QuestsToUnlockThisQuestGiver, function (quest) {
+                    ids.push(quest.Id);
+                });
+            }
+            return $http.post('/quest/UpdateQuestGiver/' + model.Id, {
+                Name: model.Name,
+                Description: model.Description,
+                QuestId: model.Quest.Id,
+                QuestIdsToComplete: ids
+            });
         }
     }
 })();

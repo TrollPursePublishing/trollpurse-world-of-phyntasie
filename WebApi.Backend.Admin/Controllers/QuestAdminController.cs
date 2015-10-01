@@ -99,9 +99,12 @@ namespace WebApi.Backend.Admin.Controllers
 
         [HttpPost]
         [Route("UpdateQuestGiver/{Id}")]
-        public IHttpActionResult UpdateQuestGiver(Guid Id, [FromBody]QuestGiver model)
+        public IHttpActionResult UpdateQuestGiver(Guid Id, [FromBody]QuestGiverViewModel model)
         {
-            return Ok(adminService.UpdateQuestGiver(Id, model));
+            return Ok(adminService.UpdateQuestGiver(Id, model.Name,
+                model.Description,
+                model.QuestId,
+                model.QuestIdsToComplete));
         }
     }
 }
