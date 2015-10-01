@@ -91,5 +91,9 @@
         this.createQuestGiver = function (model) {
             return $http.put('/quest/CreateQuestGiver', model);
         }
+
+        this.update = function (model) {
+            return $http.post('/quest/UpdateQuestGiver/' + model.Id, model);
+        }
     }
 })();

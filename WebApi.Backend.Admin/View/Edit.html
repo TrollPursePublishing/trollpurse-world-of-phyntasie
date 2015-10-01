@@ -1,16 +1,21 @@
 ﻿<div>
-    <h1>Quick Edit Panel</h1>
-    <button data-ng-click="logout()">Logout</button>
-    <p style="color:red">{{error}}</p>
-    <div>
-        <button data-ng-click="ch_context(monster.id)">Monsters</button>
-        <button data-ng-click="ch_context(area.id)">Areas</button>
-        <button data-ng-click="ch_context(location.id)">Locations</button>
-        <button data-ng-click="ch_context(room.id)">Rooms</button>
-        <button data-ng-click="ch_context(relic.id)">Relics</button>
-        <button data-ng-click="ch_context(questgiver.id)">Quest Givers</button>
-        <button data-ng-click="ch_context(quest.id)">Quests</button>
+    <div style="background-color: orangered">
+        <center>
+            <h1 style="color:white">Quick Edit Panel</h1>
+        </center>
+        <button data-ng-click="logout()">Logout</button>
+        <p style="background-color: yellow; color:red">{{error}}</p>
+        <div>
+            <button data-ng-click="ch_context(monster.id)">Monsters</button>
+            <button data-ng-click="ch_context(area.id)">Areas</button>
+            <button data-ng-click="ch_context(location.id)">Locations</button>
+            <button data-ng-click="ch_context(room.id)">Rooms</button>
+            <button data-ng-click="ch_context(relic.id)">Relics</button>
+            <button data-ng-click="ch_context(questgiver.id)">Quest Givers</button>
+            <button data-ng-click="ch_context(quest.id)">Quests</button>
+        </div>
     </div>
+
     <h2>{{context.title}}</h2>
     <div data-ng-switch="context.id">
         <table border="1" data-ng-switch-when="0">
@@ -328,9 +333,17 @@
                     <td><textarea data-ng-model="currentQuestGiver.Description"></textarea></td>
                 </tr>
                 <tr data-ng-repeat="qg in questGivers">
-                    <td><button data-ng-click="deleteQuestGiver(qg.Id)">Delete</button></td>
+                    <td>
+                        <button data-ng-click="updateQuestGiver(qg)">Update</button>
+                        <button data-ng-click="deleteQuestGiver(qg.Id)">Delete</button>
+                    </td>
                     <td>{{qg.Id}}</td>
                     <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in quests" value="{{q.Id}}">{{q.Title}}</option>
+                        </select>
+                        <button data-ng-click="updateQuestGiverQuest(working, qg)">Apply</button>
                         <table border="1">
                             <thead>
                                 <tr>
@@ -347,6 +360,18 @@
                         </table>
                     </td>
                     <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in quests" value="{{q.Id}}">{{q.Title}}</option>
+                        </select>
+                        <button data-ng-click="updateQuestGiverRequiredQuest(working, qg)">Add</button>
+
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="q in qg.QuestsToUnlockThisQuestGiver" value="{{q.Id}}">{{q.Title}}</option>
+                        </select>
+                        <button data-ng-click="removeQuestGiverRequiredQuest(working, qg)">Remove</button>
+
                         <table border="1">
                             <thead>
                                 <tr>
@@ -362,8 +387,8 @@
                             </tbody>
                         </table>
                     </td>
-                    <td>{{qg.Name}}</td>
-                    <td>{{qg.Description}}</td>
+                    <td><textarea data-ng-model="qg.Name"></textarea></td>
+                    <td><textarea data-ng-model="qg.Description"></textarea></td>
                 </tr>
             </tbody>
         </table>

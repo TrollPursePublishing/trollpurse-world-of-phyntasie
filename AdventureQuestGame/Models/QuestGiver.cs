@@ -25,6 +25,22 @@ namespace AdventureQuestGame.Models
         public virtual Quest Quest { get; private set; }
         public virtual ICollection<Quest> QuestsToUnlockThisQuestGiver{ get; private set;}
 
+        public void Update(string Name, string Description, Quest quest, Quest[] unlocks = null)
+        {
+            this.Name = Name;
+            this.Description = Description;
+            this.Quest = quest;
+
+            if (unlocks != null)
+            {
+                QuestsToUnlockThisQuestGiver.Clear();
+                foreach (var q in unlocks)
+                {
+                    QuestsToUnlockThisQuestGiver.Add(q);
+                }
+            }
+        }
+
         public bool CanDoQuest(Player p)
         {
             if (QuestsToUnlockThisQuestGiver == null)

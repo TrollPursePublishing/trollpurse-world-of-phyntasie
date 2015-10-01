@@ -55,6 +55,7 @@ namespace AdventureQuestGame.Admin
         {
             var updated = GameCtx.locations
                 .Include(l => l.rooms)
+                .Include(l => l.QuestGiver)
                 .SingleOrDefault(l => l.Id == Id);
 
             if(updated != null)
