@@ -19,17 +19,25 @@ namespace AdventureQuestGame.Admin
         public List<Monster> GetMonsters()
         {
             return GameCtx.monsters
+                .Include(m => m.attribute)
                 .Where(m =>
                     GameCtx.players
-                    .FirstOrDefault(p => p.engaging.Id == m.Id) == null
-                )
-                .Include(m => m.attribute)
+                    .FirstOrDefault(p => p.engaging.Id == m.Id) == null 
+                    &&
+                    m.attribute.health == m.attribute.currentHealth
+                )                
                 .ToList();
         }
 
         public List<Relic> GetRelics()
         {
-            return GameCtx.relics.ToList();
+            var players = GameCtx.players
+                    .Include(p => p.inventory)
+                    .Include(p => p.inventory.relics);
+
+            return GameCtx.relics
+                .Where(r => players.FirstOrDefault(p => p.inventory.relics.Contains(r)) == null)
+                .ToList();
         }
 
         public List<Area> GetAreas()
@@ -100,6 +108,26 @@ namespace AdventureQuestGame.Admin
             GameCtx.questGivers.Add(giver);
             GameCtx.SaveChanges();
             return giver;            
+        }
+
+        public QuestGiver UpdateQuestGiver(Guid Id, QuestGiver update)
+        {
+            var giver = GameCtx.questGivers
+                .Include(q => q.Quest)
+                .Include(q => q.QuestsToUnlockThisQuestGiver)
+                .FirstOrDefault(q => q.Id == Id);
+
+            if(giver != null)
+            {
+                giver.Update(update.Name,
+                    update.Description,
+                    update.Quest == null ? null : GameCtx.quests.FirstOrDefault(q => q.Id == update.Quest.Id),
+                    update.QuestsToUnlockThisQuestGiver == null ? null : GameCtx.quests.Where(q => update.QuestsToUnlockThisQuestGiver.Any(qq => qq.Id == q.Id)).ToArray()
+                    );
+
+                GameCtx.SaveChanges();
+            }
+            return giver ?? update;
         }
 
         public void DeleteQuestGiver(Guid Id)

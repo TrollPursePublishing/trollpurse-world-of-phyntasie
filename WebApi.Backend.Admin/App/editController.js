@@ -274,11 +274,15 @@
         }
 
         $scope.updateLocationQuestGiver = function (id, location) {
-            angular.forEach($scope.questGivers, function (questGiver) {
-                if (questGiver.Id == id) {
-                    location.QuestGiver = questGiver;
-                }
-            });
+            if (id == editService.zeroGUID) {
+                location.QuestGiver = null;
+            } else {
+                angular.forEach($scope.questGivers, function (questGiver) {
+                    if (questGiver.Id == id) {
+                        location.QuestGiver = questGiver;
+                    }
+                });
+            }
         }
 
         $scope.removeLocationRoom = function (id, location) {
@@ -296,6 +300,44 @@
                 $scope.resetLocation();
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.updateQuestGiver = function (questGiver) {
+            $scope.error = '';
+            editService.update(questGiver).then(function (good) {
+                loadQuestGivers();
+                $scope.resetGiver();
+            }, function(bad){
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.updateQuestGiverQuest = function (id, questGiver) {
+            if (id == editService.zeroGUID) {
+                questGiver.Quest = null;
+            } else {
+                angular.forEach($scope.quests, function (quest) {
+                    if (quest.Id == id) {
+                        questGiver.Quest = quest;
+                    }
+                });
+            }
+        }
+
+        $scope.removeQuestGiverRequiredQuest = function (id, questGiver) {
+            angular.forEach(questGiver.QuestsToUnlockThisQuestGiver, function (quest) {
+                if (quest.Id == id) {
+                    questGiver.QuestsToUnlockThisQuestGiver.splice(quest, 1);
+                }
+            });
+        }
+
+        $scope.updateQuestGiverRequiredQuest = function (id, questGiver) {
+            angular.forEach($scope.quests, function (quest) {
+                if (quest.Id == id) {
+                    questGiver.QuestsToUnlockThisQuestGiver.push(quest);
+                }
             });
         }
     }

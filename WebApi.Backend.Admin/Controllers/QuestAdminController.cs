@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventureQuestGame.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -94,6 +95,13 @@ namespace WebApi.Backend.Admin.Controllers
         public void DeleteQuestGiver(Guid Id)
         {
             adminService.DeleteQuestGiver(Id);
+        }
+
+        [HttpPost]
+        [Route("UpdateQuestGiver/{Id}")]
+        public IHttpActionResult UpdateQuestGiver(Guid Id, [FromBody]QuestGiver model)
+        {
+            return Ok(adminService.UpdateQuestGiver(Id, model));
         }
     }
 }
