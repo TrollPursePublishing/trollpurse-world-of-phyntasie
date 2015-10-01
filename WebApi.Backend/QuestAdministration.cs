@@ -11,6 +11,30 @@ namespace AdventureQuestGame.Admin
 {
     public class QuestAdministration : AbstractService
     {
+        private class NameDistinct : IEqualityComparer<Relic>,
+            IEqualityComparer<Monster>
+        {
+            public bool Equals(Relic x, Relic y)
+            {
+                return x.name == y.name;
+            }
+
+            public int GetHashCode(Relic obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            public bool Equals(Monster x, Monster y)
+            {
+                return x.name == y.name;
+            }
+
+            public int GetHashCode(Monster obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
         public QuestAdministration()
         {
             GameCtx.Configuration.LazyLoadingEnabled = false;
@@ -25,7 +49,9 @@ namespace AdventureQuestGame.Admin
                     .FirstOrDefault(p => p.engaging.Id == m.Id) == null 
                     &&
                     m.attribute.health == m.attribute.currentHealth
-                )                
+                )
+                .ToArray()
+                .Distinct(new NameDistinct())
                 .ToList();
         }
 
@@ -37,6 +63,8 @@ namespace AdventureQuestGame.Admin
 
             return GameCtx.relics
                 .Where(r => players.FirstOrDefault(p => p.inventory.relics.Contains(r)) == null)
+                .ToArray()
+                .Distinct(new NameDistinct())
                 .ToList();
         }
 

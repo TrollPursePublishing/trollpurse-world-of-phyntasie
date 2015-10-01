@@ -5,9 +5,9 @@
         .module('app')
         .controller('editController', editController);
 
-    editController.$inject = ['$scope', 'editService', 'authService', 'locationService']; 
+    editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService']; 
 
-    function editController($scope, editService, authService, locationService) {
+    function editController($scope, editService, authService, locationService, eventService) {
         $scope.title = 'editController';
 
         $scope.error = '';
@@ -24,6 +24,7 @@
         $scope.relic = editService.relic;
         $scope.questgiver = editService.questgiver;
         $scope.quest = editService.quest;
+        $scope.event = editService.event;
 
         $scope.working = editService.zeroGUID;
 
@@ -75,6 +76,14 @@
             });
         }
 
+        function loadEvents() {
+            eventService.get().then(function (good) {
+                $scope.events = angular.fromJson(good).data;
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
         function loadQuestGivers() {
             $scope.working = editService.zeroGUID;
             editService.getQuestGivers().then(function (good) {
@@ -90,7 +99,7 @@
 
         $scope.ch_context = function (id) {
             $scope.context = editService.contexts[id];
-
+            $scope.error = '';
             switch ($scope.context.id) {
                 case editService.monster.id:
                     loadMonsters();
@@ -147,6 +156,10 @@
                         }
                     });
                     break;
+                case editService.event.id:
+                    $scope.resetEvent();
+                    loadEvents();
+                    break;
                 default:
                     console.error('Invalid context', $scope.context);
                     break;
@@ -160,6 +173,7 @@
         $scope.rooms;
         $scope.questGivers;
         $scope.quests;
+        $scope.events;
 
         var defaultQuest = {
             Title: '',
@@ -184,6 +198,7 @@
         $scope.currentQuest;
         $scope.currentQuestGiver;
         $scope.currentLocation;
+        $scope.currentEvent;
 
         $scope.resetQuest = function () {
             $scope.working = editService.zeroGUID;
@@ -198,6 +213,11 @@
         $scope.resetLocation = function () {
             $scope.working = editService.zeroGUID;
             $scope.currentLocation = locationService.defaultLocation();
+        }
+
+        $scope.resetEvent = function () {
+            $scope.working = editService.zeroGUID;
+            $scope.currentEvent = eventService.defaultEvent();
         }
 
         activate();
@@ -227,6 +247,16 @@
             $scope.error = '';
             locationService.delete(id).then(function (good) {
                 loadLocations();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.createEvent = function () {
+            $scope.error = '';
+            eventService.create($scope.currentEvent).then(function (good) {
+                loadEvents();
+                $scope.resetEvent();
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });
