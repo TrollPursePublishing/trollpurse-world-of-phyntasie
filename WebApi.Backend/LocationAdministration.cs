@@ -66,7 +66,11 @@ namespace AdventureQuestGame.Admin
                 updated.monsterTypeHere = monsterType;
                 updated.name = name;
 
-                updated.QuestGiver = GameCtx.questGivers.SingleOrDefault(q => q.Id == questGiverId);
+                updated.QuestGiver = GameCtx.questGivers
+                    .Include(q => q.Quest)
+                    .Include(q => q.QuestsToUnlockThisQuestGiver)
+                    .SingleOrDefault(q => q.Id == questGiverId);
+
 
                 if (roomIds != null)
                 {
