@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="EventAdministration.cs" />
     <Compile Include="LocationAdministration.cs" />
+    <Compile Include="MonsterAdministration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryHelpers.cs" />
     <Compile Include="QuestAdministration.cs" />
   </ItemGroup>
   <ItemGroup>

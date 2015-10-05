@@ -22,6 +22,7 @@
         <table border="1" data-ng-switch-when="0">
             <thead>
                 <tr>
+                    <th>Action</th>
                     <th>Id</th>
                     <th>Name</th>
                     <th>Description</th>
@@ -34,11 +35,65 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>
+                        <button data-ng-click="createMonster()">Add</button>
+                        <button data-ng-click="resetMonster()">Clear</button>
+                    </td>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentMonster.Name"></textarea></td>
+                    <td><textarea data-ng-model="currentMonster.Description"></textarea></td>
+                    <td>
+                        <select data-ng-model="currentMonster.Type">
+                            <option value="0">Monster</option>
+                            <option value="1">Person</option>
+                            <option value="2">Creature</option>
+                        </select>
+                    </td>
+                    <td>TODO: IMPLEMENT</td>
+                    <td>TODO: IMPLEMENT</td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Strength</th>
+                                    <th>Mana</th>
+                                    <th>Stanima</th>
+                                    <th>Toughness</th>
+                                    <th>Health</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>AUTO GENERATED</td>
+                                    <td><input type="number" data-ng-model="currentMonster.Strength" /></td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                    <td><input type="number" data-ng-model="currentMonster.Toughness" /></td>
+                                    <td><input type="number" data-ng-model="currentMonster.Health" /></td>
+                                    <td><input type="number" data-ng-model="currentMonster.Level" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
                 <tr data-ng-repeat="m in monsters">
+                    <td>
+                        <button data-ng-click="updateMonster(m)">Update</button>
+                        <button data-ng-click="deleteMonster(m.Id)">Delete</button>
+                    </td>
                     <td>{{ m.Id }}</td>
-                    <td>{{ m.name }}</td>
-                    <td>{{ m.description }}</td>
-                    <td>{{ m.type }}</td>
+                    <td><textarea data-ng-model="m.name"></textarea></td>
+                    <td><textarea data-ng-model="m.description"></textarea></td>
+                    <td>
+                        <select data-ng-model="m.type">
+                            <option value="0">Monster</option>
+                            <option value="1">Person</option>
+                            <option value="2">Creature</option>
+                        </select>
+                    </td>
                     <td>{{ m.GoldLoot }}</td>
                     <td>{{ m.GetScore }}</td>
                     <td>
@@ -57,12 +112,12 @@
                             <tbody>
                                 <tr>
                                     <td>{{ m.attribute.Id }}</td>
-                                    <td>{{ m.attribute.strength }}</td>
+                                    <td><input type="number" data-ng-model="m.attribute.strength" /></td>
                                     <td>{{ m.attribute.mana }}</td>
                                     <td>{{ m.attribute.stanima }}</td>
-                                    <td>{{ m.attribute.toughness }}</td>
-                                    <td>{{ m.attribute.health }}</td>
-                                    <td>{{ m.attribute.level }}</td>
+                                    <td><input type="number" data-ng-model="m.attribute.toughness" /></td>
+                                    <td><input type="number" data-ng-model="m.attribute.health" /></td>
+                                    <td><input type="number" data-ng-model="m.attribute.level" /></td>
                                 </tr>
                             </tbody>
                         </table>
