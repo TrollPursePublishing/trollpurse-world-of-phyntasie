@@ -5,9 +5,9 @@
         .module('app')
         .controller('editController', editController);
 
-    editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService']; 
+    editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService', 'monsterService']; 
 
-    function editController($scope, editService, authService, locationService, eventService) {
+    function editController($scope, editService, authService, locationService, eventService, monsterService) {
         $scope.title = 'editController';
 
         $scope.error = '';
@@ -53,7 +53,7 @@
         }
 
         function loadMonsters() {
-            editService.getMonsters().then(function (good) {
+            monsterService.get().then(function (good) {
                 $scope.monsters = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
@@ -102,6 +102,7 @@
             $scope.error = '';
             switch ($scope.context.id) {
                 case editService.monster.id:
+                    $scope.resetMonster();
                     loadMonsters();
                     break;
                 case editService.area.id:
@@ -199,6 +200,7 @@
         $scope.currentQuestGiver;
         $scope.currentLocation;
         $scope.currentEvent;
+        $scope.currentMonster;
 
         $scope.resetQuest = function () {
             $scope.working = editService.zeroGUID;
@@ -218,6 +220,11 @@
         $scope.resetEvent = function () {
             $scope.working = editService.zeroGUID;
             $scope.currentEvent = eventService.defaultEvent();
+        }
+
+        $scope.resetMonster = function () {
+            $scope.working = editService.zeroGUID;
+            $scope.currentMonster = monsterService.defaultMonster();
         }
 
         activate();
@@ -247,6 +254,15 @@
             $scope.error = '';
             locationService.delete(id).then(function (good) {
                 loadLocations();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.deleteMonster = function (id) {
+            $scope.error = '';
+            monsterService.delete(id).then(function (good) {
+                loadMonsters();
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });
@@ -287,6 +303,16 @@
             locationService.create($scope.currentLocation).then(function (good) {
                 loadLocations();
                 $scope.resetLocation();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.createMonster = function () {
+            $scope.error = '';
+            monsterService.create($scope.currentMonster).then(function (good) {
+                loadMonsters();
+                $scope.resetMonster();
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });
@@ -339,6 +365,16 @@
                 loadQuestGivers();
                 $scope.resetGiver();
             }, function(bad){
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
+        $scope.updateMonster = function (monster) {
+            $scope.error = '';
+            monsterService.update(monster).then(function (good) {
+                loadMonsters();
+                $scope.resetMonster();
+            }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });
         }
