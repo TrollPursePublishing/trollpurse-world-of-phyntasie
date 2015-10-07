@@ -79,7 +79,7 @@
                         </table>
                     </td>
                 </tr>
-                <tr data-ng-repeat="m in monsters | orderBy: 'm.attribute.level'">
+                <tr data-ng-repeat="m in monsters | orderBy: 'attribute.level'">
                     <td>
                         <button data-ng-click="updateMonster(m)">Update</button>
                         <button data-ng-click="deleteMonster(m.Id)">Delete</button>
