@@ -160,27 +160,53 @@ angular.module('app.controllers', ['app.services'])
         $scope.rank = '';
         $scope.user = {};
         $scope.isLoggedIn = UserService.isLoggedIn;
+        $scope.count = 0;
+        $scope.pages = 1;
+        $scope.pageArray = [];
+        $scope.currentPage = 0;
+        $scope.resultsPerPage = 50;
 
-        function activate() {
-            RanksService.getAll()
-            .then(function (data) {
-                $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
-                if (UserService.isLoggedIn()) {
-                    UserService.getPlayerData().then(function (data) {
-                        $scope.user = angular.fromJson(data.data);
-                        RanksService.getById($scope.user.Id)
-                        .then(function (data) {
-                            $scope.rankuser = angular.fromJson(data.data);
-                        });
-                        for (var i = 0; i < $scope.items.length; ++i) {
-                            if ($scope.items[i].name === $scope.user.FullName) {
-                                $scope.rank = i + 1;
-                                break;
-                            }
+        $scope.page = function (pageNum) {
+            if (pageNum != $scope.currentPage) {
+                $scope.currentPage = pageNum;
+                $scope.pages = [];
+                RanksService.Count()
+                .then(function (data) {
+                    data = angular.fromJson(data).data;
+                    $scope.count = data;
+                    $scope.pages = (data / $scope.resultsPerPage);
+
+                    if ($scope.pages > 0) {
+                        for (var i = 0; i < $scope.pages; ++i) {
+                            $scope.pageArray.push(i + 1);
+                        }
+                    }
+
+                    RanksService.getAll($scope.resultsPerPage * (pageNum - 1), $scope.resultsPerPage)
+                    .then(function (data) {
+                        $scope.items = $filter('orderBy')(angular.fromJson(data.data).pairs, '-score');
+                        if (UserService.isLoggedIn()) {
+                            UserService.getPlayerData().then(function (data) {
+                                $scope.user = angular.fromJson(data.data);
+                                RanksService.getById($scope.user.Id)
+                                .then(function (data) {
+                                    $scope.rankuser = angular.fromJson(data.data);
+                                });
+                                for (var i = 0; i < $scope.items.length; ++i) {
+                                    if ($scope.items[i].name === $scope.user.FullName) {
+                                        $scope.rank = i + 1;
+                                        break;
+                                    }
+                                }
+                            });
                         }
                     });
-                }
-            });
+                });
+            }
+        }
+
+        function activate() {
+            $scope.page(1);
         }
 
         activate();

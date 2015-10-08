@@ -24,6 +24,35 @@ namespace AdventureQuestGame.Services
             return GameCtx.players.OrderBy(p => -p.stats.score).ToList();
         }
 
+        public IList<Player> GetAllOrdered(int start, int count)
+        {
+            if(start < 0 || start > Count)
+            {
+                start = 0;
+            }
+
+            int boundary = Count;
+            boundary -= (start + count);
+            if(boundary < 0)
+            {
+                count = (count + boundary);
+            }
+
+            return GameCtx.players
+                .OrderBy(p => -p.stats.score)
+                .Skip(start)
+                .Take(count)
+                .ToList();
+        }
+
+        public int Count
+        {
+            get
+            {
+                return GameCtx.players.Count();
+            }
+        }
+
         public PlayerStats GetStatsById(Guid playerId)
         {
             return GameCtx.players.First(p => p.Id == playerId).stats;

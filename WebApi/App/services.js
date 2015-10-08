@@ -152,6 +152,14 @@ angular.module('app.services', [])
             return getAsync('api/ranks/all', $q, $http);
         };
 
+        ranks.Count = function () {
+            return getAsync('api/ranks/all/count', $q, $http);
+        }
+
+        ranks.getAll = function (start, count) {
+            return getAsync('api/ranks/all/' + start + '/' + count, $q, $http);
+        }
+
         return ranks;
     }])
 

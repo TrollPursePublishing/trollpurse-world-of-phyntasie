@@ -182,7 +182,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/account/confirm/{hash}/{confirmationCode}")]
-        public IHttpActionResult ConfirmEmail(string hash, string confirmationCode)
+        public async Task<IHttpActionResult> ConfirmEmail(string hash, string confirmationCode)
         {
             var users = UserManager.Users.Where(u => !u.EmailConfirmed);
             if (users == null)
@@ -202,7 +202,7 @@ namespace WebApplication1.Controllers
 
             if (user.Claims.FirstOrDefault(c => c.ClaimType.Equals(ClaimTypes.Email) && c.ClaimValue.Equals(confirmationCode)) != null)
             {
-                UserManager.RegisterUserEmail(user.Id);
+                await UserManager.RegisterUserEmail(user.Id);
                 return Ok(new EmailViewModel("Alright! you may now play!", true));
             }
             else
@@ -212,12 +212,13 @@ namespace WebApplication1.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/account/donotdisturb/{hash}")]
-        public IHttpActionResult DoNotDisturb(string hash)
+        public async Task<IHttpActionResult> DoNotDisturb(string hash)
         {
             var user = GetUserFromHash(hash);
             if (user == null)
                 return BadRequest();
-            user.SendMail = false;
+            await UserManager.SetUserSendMail(user, false);
+            
             return Ok(new EmailViewModel("You have been removed from the mailing list.", true));
         }
 
@@ -245,7 +246,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         [Authorize(Roles = "Player")]
         [Route("api/account/sendmail")]
-        public IHttpActionResult SendMeUpdates([FromBody]string playerId)
+        public async Task<IHttpActionResult> SendMeUpdates([FromBody]string playerId)
         {
             var ctx = Request.GetOwinContext();
             var user = ctx.Authentication.User;
@@ -256,7 +257,7 @@ namespace WebApplication1.Controllers
                 if (Guid.TryParse(playerId, out id))
                 {
                     var us = UserManager.Users.First(u => u.PlayerId.Equals(id));
-                    us.SendMail = true;
+                    await UserManager.SetUserSendMail(us, true);
                     return Ok(new EmailViewModel("Awesome! You will now receive updates!", true));
                 }
                 else return BadRequest();
@@ -325,7 +326,7 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        return ConfirmEmail(GenerateHashString(user.Id, user.PlayerId.ToString()), token);
+                        return Ok(ConfirmEmail(GenerateHashString(user.Id, user.PlayerId.ToString()), token));
                     }
                 }
                 catch (Exception)

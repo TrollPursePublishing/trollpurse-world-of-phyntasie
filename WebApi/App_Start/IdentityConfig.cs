@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using WebApi.Models;
 
@@ -23,11 +24,24 @@ namespace WebApi
         {
         }
 
-        public void RegisterUserEmail(string userId)
+        public async Task SetUserSendMail(string userId, bool newValue)
         {
-            var u = Store.FindByIdAsync(userId).Result;
+            var u = await Store.FindByIdAsync(userId);
+            u.SendMail = newValue;
+            await Store.UpdateAsync(u);
+        }
+
+        public async Task SetUserSendMail(ApplicationUser user, bool newValue)
+        {
+            user.SendMail = newValue;
+            await Store.UpdateAsync(user);
+        }
+
+        public async Task RegisterUserEmail(string userId)
+        {
+            var u = await Store.FindByIdAsync(userId);
             u.EmailConfirmed = true;
-            Store.UpdateAsync(u);
+            await Store.UpdateAsync(u);
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)

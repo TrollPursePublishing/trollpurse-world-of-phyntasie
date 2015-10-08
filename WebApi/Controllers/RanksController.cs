@@ -57,5 +57,23 @@ namespace WebApi.Controllers
             service.GetAllOrdered().ToList().ForEach(r => vm.pairs.Add(new RankNameScorePair(r.FullName, r.stats.score)));
             return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/ranks/all/count")]
+        public async Task<int> Count()
+        {
+            return await Task.FromResult(service.Count);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/ranks/all/{start}/{count}")]
+        public async Task<string> GetAll(int start, int count)
+        {
+            RanksViewModel vm = new RanksViewModel();
+            service.GetAllOrdered(start, count).ToList().ForEach(r => vm.pairs.Add(new RankNameScorePair(r.FullName, r.stats.score)));
+            return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(vm));
+        }
     }
 }
