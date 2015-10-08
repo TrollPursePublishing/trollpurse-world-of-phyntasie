@@ -15,8 +15,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in items" ng-class="{success: $index==0}">
-                        <td>{{($index + 1) * currentPage}}</td>
+                    <tr ng-repeat="item in items" ng-class="{success: $index==0 && currentPage==1}">
+                        <td>{{$index + ((currentPage - 1) * resultsPerPage) + 1}}</td>
                         <td>{{item.name}}</td>
                         <td>{{item.score}}</td>
                     </tr>
