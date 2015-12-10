@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 // Declares how the application should be bootstrapped. See: http://docs.angularjs.org/guide/module
-angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives', 'app.controllers'])
+angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives', 'app.controllers', 'ui.bootstrap'])
     .value('$', $)
 
     // Gets executed during the provider registrations and configuration phase. Only providers and constants can be
@@ -23,6 +23,10 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/game.min.html',
             controller: 'CommandCtrl',
         })
+        .when('/play', {
+            templateUrl: 'view/gamenew.min.html',
+            controller: 'CommandCtrl'
+        })
         .when('/', {
             templateUrl: 'view/index.min.html',
         })
@@ -30,13 +34,12 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/login.min.html',
             controller: 'LoginCtrl'
         })
+        .when('/signup', {
+            redirectTo: 'login'
+        })
         .when('/ranks', {
             templateUrl: 'view/ranks.min.html',
             controller: 'RanksCtrl'
-        })
-        .when('/signup', {
-            templateUrl: 'view/login.min.html',
-            controller: 'LoginCtrl'
         })
         .when('/userwelcome', {
             templateUrl: 'view/userwelcome.min.html',

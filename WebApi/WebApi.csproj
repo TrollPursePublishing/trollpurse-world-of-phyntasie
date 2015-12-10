@@ -15,8 +15,7 @@
     <AssemblyName>WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44301</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -164,6 +163,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\hint.css" />
     <Content Include="Content\hint.min.css" />
+    <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\public\adventure.png" />
@@ -213,6 +213,10 @@
     <Content Include="Scripts\angular-scenario.js" />
     <Content Include="Scripts\angular-touch.js" />
     <Content Include="Scripts\angular-touch.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -977,6 +981,10 @@
     <Content Include="View\Game.min.html">
       <DependentUpon>Game.html</DependentUpon>
     </Content>
+    <Content Include="View\GameNew.html" />
+    <Content Include="View\GameNew.min.html">
+      <DependentUpon>GameNew.html</DependentUpon>
+    </Content>
     <Content Include="View\Index.min.html">
       <DependentUpon>Index.html</DependentUpon>
     </Content>
@@ -1084,7 +1092,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>61191</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:61191/</IISUrl>
+          <IISUrl>https://localhost:44301/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

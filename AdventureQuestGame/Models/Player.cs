@@ -1,6 +1,8 @@
-﻿using System;
+﻿using AdventureQuestGame.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -338,18 +340,34 @@ namespace AdventureQuestGame.Models
 
         public string CastSpell(int index)
         {
-            Spell sp = spells.ElementAt(index);
-            if(sp != null)
+            try
             {
-                try{
-                    attributes.currentMana -= sp.manaCost;
-                    return typeof(AdventureQuestGame.Services.SpellStatics).GetMethod(sp.methodName).Invoke(null, new object[] { this, sp }).ToString();
-                }catch(Exception e)
+                Spell sp = spells.ElementAt(index);
+                if (sp != null)
                 {
-                    return "The winds of magic are a fickle mistress. I cannot cast the spell!";
+                    try
+                    {
+                        string result = typeof(AdventureQuestGame.Services.SpellStatics).GetMethod(sp.methodName).Invoke(null, new object[] { this, sp }).ToString();
+                        attributes.currentMana -= sp.manaCost;
+                        return result;
+                    }
+                    catch(TargetInvocationException refex)
+                    {
+                        if(refex.InnerException != null)
+                        {
+                            if(refex.InnerException is SpellException)
+                            {
+                                return refex.InnerException.Message;
+                            }
+                        }
+                    }
                 }
+                return "The spell fizzles out as I attempt to cast it.";
             }
-            return "The spell fizzles out as I attempt to cast it.";
+            catch (Exception)
+            {
+                return "The winds of magic are a fickle mistress. I cannot cast the spell!";
+            }
         }
 
         public string Attack()

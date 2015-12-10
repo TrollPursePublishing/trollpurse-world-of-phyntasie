@@ -20,19 +20,29 @@
         <div id="gamenavbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="" data-toggle="tooltip" data-placement="bottom" title="Health"><span class=" glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}} / {{user.attributes.health}}</a>
+                    <a href="" data-uib-tooltip="Health" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                        <span class="glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}}/{{user.attributes.health}}
+                    </a>
                 </li>
                 <li>
-                    <a href="" data-toggle="tooltip" data-placement="bottom" title="Mana"><span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}}</a>
+                    <a href="" data-uib-tooltip="Mana" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                        <span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}}
+                    </a>
                 </li>
                 <li>
-                    <a href="" data-toggle="tooltip" data-placement="bottom" title="Stamina"><span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stamina}}</a>
+                    <a href="" data-uib-tooltip="Stamina" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                        <span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}
+                    </a>
                 </li>
                 <li>
-                    <a href="" data-toggle="tooltip" data-placement="bottom" title="Strength"><span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</a>
+                    <a href="" data-uib-tooltip="Strength" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                        <span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}
+                    </a>
                 </li>
                 <li>
-                    <a href="" data-toggle="tooltip" data-placement="bottom" title="Toughness"><span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</a>
+                    <a href="" data-uib-tooltip="Toughness" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                        <span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}
+                    </a>
                 </li>
             </ul>
         </div>

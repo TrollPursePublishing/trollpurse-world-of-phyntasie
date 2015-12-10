@@ -7,6 +7,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.user;
         $scope.currentDescription = {};
         $scope.navigation = {};
+        $scope.showmenu = true;
 
         function activate() {
             if (!UserService.isLoggedIn()) {
@@ -61,6 +62,9 @@ angular.module('app.controllers', ['app.services'])
                 CommandService.submit(data, $scope.user.Id)
                 .then(function (data) {
                     var d = angular.fromJson(data.data);
+                    if ($location.path().indexOf('play') > -1 && d.messages != undefined) {
+                        d.messages.reverse();
+                    }
                     for (var i = 0; i < d.messages.length; i++) {
                         $scope.messages.push(d.messages[i]);
                     }
@@ -82,6 +86,36 @@ angular.module('app.controllers', ['app.services'])
                 }
             });
         };
+
+        //new stuff only
+        $scope.propertyList = function (item) {
+            var result = [];
+            delete item.Id;
+            angular.forEach(item, function (value, key) {
+                if (key.indexOf('$') < 0) {
+                    result.push($filter('property')(key) + ':   ' + value);
+                }
+            });
+            return result;
+        }
+
+        $scope.do = function (cmd, what) {
+            $scope.submit(cmd + ' ' + what);
+        }
+
+        $scope.reverse = function (arr) {
+            return angular.copy(arr).reverse();
+        }
+
+        $scope.togglemenu = function() {
+            $scope.showmenu = !$scope.showmenu;
+        }
+
+        $scope.chat = function (msg) {
+            $scope.submit('"' + msg + '"');
+        }
+
+        $scope.temphcodeareas = ['Haunted Forest', 'Vast Desert', 'Buttleberry', 'Reedton', 'The Barren Wastes'];
     }])
 
     .controller('ResetCtrl', ['$scope', '$routeParams', '$window', 'AccountService', function ($scope, $routeParams, $window, AccountService) {
@@ -363,6 +397,10 @@ angular.module('app.controllers', ['app.services'])
 
         $scope.adventure = function () {
             $location.path('/adventure');
+        };
+
+        $scope.adventurenew = function () {
+            $location.path('/play');
         };
     }])
 

@@ -77,10 +77,6 @@ angular.module('app.services', [])
 
 
         message.startupServices = function () {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
-                console.log('Enabling tooltips.');
-            });
             var q = $q.defer();
             if (!message.chatConnected) {
                 $(function () {

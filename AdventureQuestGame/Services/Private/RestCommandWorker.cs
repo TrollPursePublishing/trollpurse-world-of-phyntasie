@@ -19,7 +19,7 @@ namespace AdventureQuestGame.Services.Private
                 player.attributes.ResetStats();
             }
             else
-                result.Add(String.Format("{0} does not have an Inn. I must find a place with a Market to find and Inn and rest.", player.navigation.currentLocation.name));
+                result.Add(String.Format("{0} does not have an Inn. I must find a place with a Market to find an Inn and rest.", player.navigation.currentLocation.name));
             return result;
         }
 

@@ -7,15 +7,42 @@ using System.Threading.Tasks;
 
 namespace AdventureQuestGame.Services
 {
+    [Serializable]
+    public class SpellException : Exception
+    {
+        public SpellException() { }
+        public SpellException(string message) : base(message) { }
+        public SpellException(string message, Exception inner) : base(message, inner) { }
+        protected SpellException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }
+
+    [Serializable]
+    public class CombatOnlySpellException : SpellException
+    {
+        private static readonly string CombatOnlyMsg = "This spell can only be used in combat.";
+
+        public CombatOnlySpellException()
+            : base(CombatOnlyMsg)
+            {}
+        public CombatOnlySpellException(string message) : base(message) { }
+        public CombatOnlySpellException(string message, Exception inner) : base(message, inner) { }
+        protected CombatOnlySpellException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }
+
     //The action names that a spell can do
     static class SpellStatics
     {
-        private static readonly string CombatOnlyMsg = "This spell can only be used in combat.";
 
         public static string Damage(Player p, Spell theSpell)
         {
             if (!p.isInCombat)
-                return CombatOnlyMsg;
+                throw new CombatOnlySpellException();
 
             int damage = theSpell.damage;
             p.engaging.attribute.currentHealth -= damage;
@@ -39,7 +66,7 @@ namespace AdventureQuestGame.Services
         public static string BuffStrength(Player p, Spell theSpell)
         {
             if (!p.isInCombat)
-                return CombatOnlyMsg;
+                 throw new CombatOnlySpellException();
 
             int value = theSpell.damage;
             p.attributes.currentStrength += value;
@@ -49,7 +76,7 @@ namespace AdventureQuestGame.Services
         public static string BuffToughness(Player p, Spell theSpell)
         {
             if (!p.isInCombat)
-                return CombatOnlyMsg;
+                throw new CombatOnlySpellException();
 
             int value = theSpell.damage;
             p.attributes.currentToughness += value;
@@ -59,7 +86,7 @@ namespace AdventureQuestGame.Services
         public static string DebuffStrength(Player p, Spell theSpell)
         {
             if (!p.isInCombat)
-                return CombatOnlyMsg;
+                throw new CombatOnlySpellException();
 
             int value = theSpell.damage;
             value = Math.Max(0, p.engaging.attribute.currentStrength - value);
@@ -70,7 +97,7 @@ namespace AdventureQuestGame.Services
         public static string DebuffToughness(Player p, Spell theSpell)
         {
             if (!p.isInCombat)
-                return CombatOnlyMsg;
+                throw new CombatOnlySpellException();
 
             int value = theSpell.damage;
             value = Math.Max(0, p.engaging.attribute.currentToughness - value);

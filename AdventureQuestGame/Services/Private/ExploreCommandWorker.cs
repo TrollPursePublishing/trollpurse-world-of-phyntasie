@@ -27,9 +27,16 @@ namespace AdventureQuestGame.Services.Private
                         GameCtx.players.FirstOrDefault(p => p.engaging.Id == mm.Id) == null)
                         .ToList();
 
-                    int index = r.Next(monsters.Count);
-                    Monster m = monsters[index];
-                    result.Add(player.Engage(m.Copy()));
+                    if (monsters.Count > 0)
+                    {
+                        int index = r.Next(monsters.Count);
+                        Monster m = monsters[index];
+                        result.Add(player.Engage(m.Copy()));
+                    }
+                    else
+                    {
+                        result.Add("It is unusually quite right now... something does not seem right.");
+                    }
                 }
                 else
                 {

@@ -26,11 +26,8 @@ namespace WebApi
                 Provider = new APIAuthorizationServerProvider(),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(7),
                 AccessTokenFormat = new TicketDataFormat(new MachineKeyDataProtector()),
-                AccessTokenProvider = new AuthenticationTokenProvider()
-//#if DEBUG
-,
-                AllowInsecureHttp = true
-//#endif
+                AccessTokenProvider = new AuthenticationTokenProvider(),
+                AllowInsecureHttp = false
             };
         }
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
