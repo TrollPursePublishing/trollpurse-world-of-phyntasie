@@ -25,7 +25,7 @@ using WebApi.Backend.Admin.Models;
 
 namespace WebApi.Backend.Admin.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     [RoutePrefix("event")]
     public class EventAdminController : ApiController
     {
@@ -53,27 +53,31 @@ namespace WebApi.Backend.Admin.Controllers
 
         [HttpPut]
         [Route("CreateEvent")]
-        public IHttpActionResult CreateEvent([FromBody]EventViewModel model)
+        public async Task<IHttpActionResult> CreateEvent([FromBody]EventViewModel model)
         {
             try
             {
                 var result = service.CreateEvent(model.Title, model.Description);
-                Task.Run(async () =>
-                {
-                    foreach(var u in UserManager.Users.Where(u => u.EmailConfirmed &&
+                var mailableUsers = UserManager.Users
+                    .Where(u => u.EmailConfirmed &&
                         u.SendMail &&
-                        !String.IsNullOrEmpty(u.Email)))
-                    {
-                        await UserManager.SendEmailAsync(u.Id,
-                            String.Format("AdventureGameQuest: {0}", model.Title),
-                            String.Format("{0}\r\n<br /> Haven't played in a while? <a href=\"{1}\">Press to Play!</a><br />\r\n<br /> Don't want to receive these emails anymore? Log in to your account and disable Email Notifications.",
-                                model.Description,
-                               @"http://adventuregamequest.azurewebsites.net"));
-                    }
-                });
+                        !String.IsNullOrEmpty(u.Email))
+                    .Where(u => u.Claims
+                        .FirstOrDefault(c => c.ClaimValue == "Player") != null)
+                    .ToList();
+
+                foreach (var u in mailableUsers)
+                {
+                    await UserManager.SendEmailAsync(u.Id,
+                        String.Format("AdventureGameQuest: {0}", model.Title),
+                        String.Format("{0}<br /><br /> Haven't played in a while? <a href=\"{1}\">Press to Play!</a><br /><br /> Don't want to receive these emails anymore? Log in to your account and disable Email Notifications.",
+                            model.Description,
+                           @"https://adventuregamequest.azurewebsites.net"));
+                }
+
                 return Ok(result);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return InternalServerError();
             }

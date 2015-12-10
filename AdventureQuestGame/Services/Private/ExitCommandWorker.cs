@@ -31,7 +31,7 @@ namespace AdventureQuestGame.Services.Private
             }
             else
             {
-                return new List<string>(new[]{"There is not exit in this place."});
+                return new List<string>(new[]{"There is no exit in this place."});
             }
         }
 
