@@ -70,9 +70,8 @@ namespace WebApplication1.Controllers
                 !String.IsNullOrWhiteSpace(password) &&
                 !String.IsNullOrWhiteSpace(confirmpassword) &&
                 password.Equals(confirmpassword) &&
-                ((!emailOptout && !String.IsNullOrWhiteSpace(email)) ||
-                emailOptout) &&
-                !String.IsNullOrWhiteSpace(gender);
+                !String.IsNullOrWhiteSpace(gender) &&
+                emailOptout ? true : !String.IsNullOrWhiteSpace(email);
         }
     }
 
@@ -200,13 +199,23 @@ namespace WebApplication1.Controllers
             if (user == null)
                 return BadRequest();
 
-            if (user.Claims.FirstOrDefault(c => c.ClaimType.Equals(ClaimTypes.Email) && c.ClaimValue.Equals(confirmationCode)) != null)
+            if (!String.IsNullOrWhiteSpace(user.Email))
             {
-                await UserManager.RegisterUserEmail(user.Id);
+                if (user.Claims.FirstOrDefault(c => c.ClaimType.Equals(ClaimTypes.Email) && c.ClaimValue.Equals(confirmationCode)) != null)
+                {
+                    await UserManager.RegisterUserEmail(user.Id);
+                    return Ok(new EmailViewModel("Alright! you may now play!", true));
+                }
+                else
+                    return BadRequest();
+            }
+            //if it is null, it was opted out
+            else
+            {
+                user.EmailConfirmed = true;
+                UserManager.Update(user);
                 return Ok(new EmailViewModel("Alright! you may now play!", true));
             }
-            else
-                return BadRequest();
         }
 
         [HttpGet]
@@ -326,7 +335,7 @@ namespace WebApplication1.Controllers
                     }
                     else
                     {
-                        return Ok(ConfirmEmail(GenerateHashString(user.Id, user.PlayerId.ToString()), token));
+                        return await ConfirmEmail(GenerateHashString(user.Id, user.PlayerId.ToString()), token);
                     }
                 }
                 catch (Exception)

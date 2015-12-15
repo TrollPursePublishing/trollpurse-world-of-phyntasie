@@ -307,17 +307,17 @@ angular.module('app.controllers', ['app.services'])
         $scope.hasClicked = false;
         $scope.emailOptout = false;
 
-        $scope.signup = function (username, password, confirmpassword, email, gender) {
+        $scope.signup = function (username, password, confirmpassword, email, gender, emailOptout) {
             $scope.pleasewait = 'Registering. Please wait.';
             $scope.hasClicked = true;
             $scope.registered = false;
-            UserService.register(username, password, confirmpassword, email, gender, $scope.emailOptout)
+            UserService.register(username, password, confirmpassword, email, gender, emailOptout)
             .then(function (data) {
                 $scope.error = {};
                 $scope.hasError = false;
                 $scope.registered = true;
 
-                if ($scope.emailOptout)
+                if (emailOptout)
                     $scope.notification = data.data.msg;
                 else
                     $scope.notification = data.data.Errors[0];
