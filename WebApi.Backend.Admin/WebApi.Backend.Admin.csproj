@@ -132,6 +132,7 @@
     <Content Include="App\editController.js" />
     <Content Include="App\editService.js" />
     <Content Include="App\monsterService.js" />
+    <Content Include="App\relicService.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -940,6 +941,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\EventAdminController.cs" />
     <Compile Include="Controllers\LocationAdminController.cs" />
+    <Compile Include="Controllers\RelicAdminController.cs" />
     <Compile Include="Controllers\MonsterAdminController.cs" />
     <Compile Include="Controllers\QuestAdminController.cs" />
     <Compile Include="Global.asax.cs">
@@ -951,6 +953,7 @@
     <Compile Include="Models\LocationViewModel.cs" />
     <Compile Include="Models\MonsterViewModel.cs" />
     <Compile Include="Models\QuestViewModels.cs" />
+    <Compile Include="Models\RelicViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

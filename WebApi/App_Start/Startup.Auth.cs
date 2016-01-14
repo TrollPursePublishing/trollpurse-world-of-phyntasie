@@ -19,7 +19,6 @@ namespace WebApi
 
         static Startup()
         {
-
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 TokenEndpointPath = new PathString("/token"),

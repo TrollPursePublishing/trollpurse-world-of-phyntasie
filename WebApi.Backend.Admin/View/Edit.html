@@ -327,6 +327,7 @@
         <table border="1" data-ng-switch-when="4">
             <thead>
                 <tr>
+                    <th>Action</th>
                     <th>Id</th>
                     <th>Name</th>
                     <th>Description</th>
@@ -334,11 +335,25 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>
+                        <button data-ng-click="createRelic()">Add</button>
+                        <button data-ng-click="resetRelic()">Clear</button>
+                    </td>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentRelic.Name"></textarea></td>
+                    <td><textarea data-ng-model="currentRelic.Description"></textarea></td>
+                    <td><input type="number" data-ng-model="currentRelic.Value" /></td>
+                </tr>
                 <tr data-ng-repeat="r in relics">
+                    <td>
+                        <button data-ng-click="updateRelic(r)">Update</button>
+                        <button data-ng-click="deleteRelic(r.Id)">Delete</button>
+                    </td>
                     <td>{{r.Id}}</td>
-                    <td>{{r.name}}</td>
-                    <td>{{r.description}}</td>
-                    <td>{{r.value}}</td>
+                    <td><textarea data-ng-model="r.Name"></textarea></td>
+                    <td><textarea data-ng-model="r.Description"></textarea></td>
+                    <td><input type="number" data-ng-model="r.Value" /></td>
                 </tr>
             </tbody>
         </table>

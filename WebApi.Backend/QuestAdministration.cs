@@ -16,19 +16,6 @@ namespace AdventureQuestGame.Admin
             GameCtx.Configuration.LazyLoadingEnabled = false;
         }
 
-        public List<Relic> GetRelics()
-        {
-            var players = GameCtx.players
-                    .Include(p => p.inventory)
-                    .Include(p => p.inventory.relics);
-
-            return GameCtx.relics
-                .Where(r => players.FirstOrDefault(p => p.inventory.relics.Contains(r)) == null)
-                .ToArray()
-                .Distinct(new NameDistinct())
-                .ToList();
-        }
-
         public List<Area> GetAreas()
         {
             return GameCtx.areas

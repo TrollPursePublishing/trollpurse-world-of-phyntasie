@@ -16,13 +16,6 @@ namespace WebApi.Backend.Admin.Controllers
         private readonly AdventureQuestGame.Admin.QuestAdministration adminService = new AdventureQuestGame.Admin.QuestAdministration();
 
         [HttpGet]
-        [Route("GetRelics")]
-        public IHttpActionResult GetRelics()
-        {
-            return Ok(adminService.GetRelics());
-        }
-
-        [HttpGet]
         [Route("GetAreas")]
         public IHttpActionResult GetAreas()
         {

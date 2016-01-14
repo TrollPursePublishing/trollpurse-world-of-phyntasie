@@ -5,9 +5,11 @@
         .module('app')
         .controller('editController', editController);
 
-    editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService', 'monsterService']; 
+    editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService', 'monsterService',
+    'relicService'];
 
-    function editController($scope, editService, authService, locationService, eventService, monsterService) {
+    function editController($scope, editService, authService, locationService, eventService, monsterService,
+        relicService) {
         $scope.title = 'editController';
 
         $scope.error = '';
@@ -61,7 +63,7 @@
         }
 
         function loadRelics() {
-            editService.getRelics().then(function (good) {
+            relicService.getRelics().then(function (good) {
                 $scope.relics = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
@@ -118,6 +120,7 @@
                     loadRooms();
                     break;
                 case editService.relic.id:
+                    $scope.resetRelic();
                     loadRelics();
                     break;
                 case editService.questgiver.id:
@@ -201,6 +204,12 @@
         $scope.currentLocation;
         $scope.currentEvent;
         $scope.currentMonster;
+        $scope.currentRelic;
+
+        $scope.resetRelic = function() {
+            $scope.working = editService.zeroGUID;
+            $scope.currentRelic = relicService.defaultRelic();
+        }
 
         $scope.resetQuest = function () {
             $scope.working = editService.zeroGUID;
@@ -230,6 +239,15 @@
         activate();
 
         function activate() {
+        }
+
+        $scope.deleteRelic = function (id) {
+            $scope.error = '';
+            relicService.delete(id).then(function (good) {
+                loadRelics();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
         }
 
         $scope.deleteQuest = function(id) {
@@ -318,6 +336,16 @@
             });
         }
 
+        $scope.createRelic = function () {
+            $scope.error = '';
+            monsterService.create($scope.currentRelic).then(function (good) {
+                loadRelics();
+                $scope.resetRelic();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            });
+        }
+
         $scope.updateLocationRoom = function (id, location) {
             if (!angular.isDefined(location.rooms)) {
                 location.rooms = [];
@@ -346,6 +374,16 @@
                 if (room.Id == id) {
                     location.rooms.splice(room, 1);
                 }
+            });
+        }
+
+        $scope.updateRelic = function (relic) {
+            $scope.error = '';
+            relicService.update(relic.Id, relic).then(function (good) {
+                loadRelics();
+                $scope.resetRelic();
+            }, function (bad) {
+                var res = angular.fromJson(bad); $scope.error = bad.statusText;
             });
         }
 
