@@ -63,7 +63,7 @@
         }
 
         function loadRelics() {
-            relicService.getRelics().then(function (good) {
+            relicService.get().then(function (good) {
                 $scope.relics = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
@@ -338,7 +338,7 @@
 
         $scope.createRelic = function () {
             $scope.error = '';
-            monsterService.create($scope.currentRelic).then(function (good) {
+            relicService.create($scope.currentRelic).then(function (good) {
                 loadRelics();
                 $scope.resetRelic();
             }, function (bad) {
