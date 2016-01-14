@@ -38,6 +38,7 @@ namespace AdventureQuestGame.Admin
             relic.name = name;
             relic.description = description;
             relic.value = value;
+            GameCtx.SaveChanges();
             return relic;
         }
 
