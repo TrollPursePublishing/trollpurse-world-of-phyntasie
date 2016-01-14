@@ -17,11 +17,11 @@
         }
 
         this.create = function (model) {
-            return $http.put('/monster/CreateRelic', model);
+            return $http.put('/relic/CreateRelic', model);
         }
 
         this.update = function (model) {
-            return $http.post('/monster/UpdateRelic/' + model.Id, {
+            return $http.post('/relic/UpdateRelic/' + model.Id, {
                 Name: model.name,
                 Description: model.description,
                 Value: model.value
@@ -29,11 +29,11 @@
         }
 
         this.delete = function (id) {
-            return $http.delete('/monster/DeleteRelic/' + id);
+            return $http.delete('/relic/DeleteRelic/' + id);
         }
 
         this.get = function () {
-            return $http.get('/monster/GetRelics');
+            return $http.get('/relic/GetRelics');
         }
     }
 })();
