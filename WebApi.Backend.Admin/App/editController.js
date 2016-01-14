@@ -379,7 +379,7 @@
 
         $scope.updateRelic = function (relic) {
             $scope.error = '';
-            relicService.update(relic.Id, relic).then(function (good) {
+            relicService.update(relic).then(function (good) {
                 loadRelics();
                 $scope.resetRelic();
             }, function (bad) {
