@@ -7,7 +7,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.user;
         $scope.currentDescription = {};
         $scope.navigation = {};
-        $scope.chat = [];
+        $scope.chattext = [];
         $scope.chatlist = {};
         $scope.showmenu = true;
 
@@ -38,7 +38,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.$parent.$on('chat', function (event, data) {
             console.log('chat', data.name + ':' + data.msg);
             $scope.$apply(function () {
-                $scope.chat.push(data.name + ' said, ' + data.msg);
+                $scope.chattext.push(data.name + ' said, ' + data.msg);
             });
         });
 
@@ -46,7 +46,7 @@ angular.module('app.controllers', ['app.services'])
             $scope.$apply(function () {
                 if(data.name != $scope.user.FullName)
                 {
-                    $scope.chat.push(data.name + ' has entered.');
+                    $scope.chattext.push(data.name + ' has entered.');
                     $scope.chatlist[data.name] = 0;
                 }
             });
@@ -55,7 +55,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.$parent.$on('playerleave', function (event, data) {
             $scope.$apply(function () {
                 if (data.name != $scope.user.FullName) {
-                    $scope.chat.push(data.name + ' has left.');
+                    $scope.chattext.push(data.name + ' has left.');
                     delete $scope.chatlist[data.name];
                 }
             });
