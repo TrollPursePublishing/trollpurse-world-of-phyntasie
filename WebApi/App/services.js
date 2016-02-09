@@ -82,13 +82,15 @@ angular.module('app.services', [])
                 $(function () {
                     message.ChatHub = $.connection.chatHub;
                     message.ChatHub.client.broadcastMessage = function (playerName, msg) {
-                        console.log('broadcast', playerName + ':' + msg);
                         $rootScope.$emit('chat', { name: playerName, msg: msg });
                     }
 
                     message.ChatHub.client.broadcastJoin = function (playerName) {
-                        console.log('broadcast', playerName + ':' + 'join');
                         $rootScope.$emit('playerjoin', { name: playerName });
+                    }
+
+                    message.ChatHub.client.broadcastJoin = function (playerName) {
+                        $rootScope.$emit('playerleave', { name: playerName });
                     }
                     $.connection.hub.start()
                     .done(function () { message.chatConnected = true; console.log('signalR', 'Connected!'); q.resolve('success'); })
@@ -106,8 +108,8 @@ angular.module('app.services', [])
             message.ChatHub.server.joinLocation(locationId, playerName);
         };
 
-        message.leaveLocation = function (locationId) {
-            message.ChatHub.server.leaveLocation(locationId);
+        message.leaveLocation = function (locationId, playerName) {
+            message.ChatHub.server.leaveLocation(locationId, playerName);
         };
 
         return message;

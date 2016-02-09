@@ -14,9 +14,10 @@ namespace WebApi.Hubs
             Clients.Group(locationId).broadcastJoin(playerName);
         }
 
-        public void LeaveLocation(string locationId)
+        public void LeaveLocation(string locationId, string playerName)
         {
             Groups.Remove(Context.ConnectionId, locationId);
+            Clients.Group(locationId).broadcastLeave(playerName);
         }
 
         public void Send(string playerName, string message, string locationId)

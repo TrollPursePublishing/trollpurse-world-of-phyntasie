@@ -7,6 +7,8 @@ angular.module('app.controllers', ['app.services'])
         $scope.user;
         $scope.currentDescription = {};
         $scope.navigation = {};
+        $scope.chat = [];
+        $scope.chatlist = {};
         $scope.showmenu = true;
 
         function activate() {
@@ -36,7 +38,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.$parent.$on('chat', function (event, data) {
             console.log('chat', data.name + ':' + data.msg);
             $scope.$apply(function () {
-                $scope.messages.push(data.name + ' said, ' + data.msg);
+                $scope.chat.push(data.name + ' said, ' + data.msg);
             });
         });
 
@@ -44,7 +46,17 @@ angular.module('app.controllers', ['app.services'])
             $scope.$apply(function () {
                 if(data.name != $scope.user.FullName)
                 {
-                    $scope.messages.push(data.name + ' has entered.');
+                    $scope.chat.push(data.name + ' has entered.');
+                    $scope.chatlist[data.name] = 0;
+                }
+            });
+        });
+
+        $scope.$parent.$on('playerleave', function (event, data) {
+            $scope.$apply(function () {
+                if (data.name != $scope.user.FullName) {
+                    $scope.chat.push(data.name + ' has left.');
+                    delete $scope.chatlist[data.name];
                 }
             });
         });
@@ -58,7 +70,7 @@ angular.module('app.controllers', ['app.services'])
             if (data.indexOf('"') === 0 && data.lastIndexOf('"') === data.length - 1) {
                 MessageService.send($scope.user.FullName, data, $scope.user.navigation.currentLocation.Id);
             } else {
-                MessageService.leaveLocation($scope.user.navigation.currentLocation.Id);
+                MessageService.leaveLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
                 CommandService.submit(data, $scope.user.Id)
                 .then(function (data) {
                     var d = angular.fromJson(data.data);
