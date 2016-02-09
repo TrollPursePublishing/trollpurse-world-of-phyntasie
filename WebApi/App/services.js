@@ -251,5 +251,5 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.0.7.0')
+    .value('version', '0.1.0.0')
     .value('gamename', 'AdventureQuestGame')

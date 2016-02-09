@@ -15,27 +15,27 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="" data-uib-tooltip="Health" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <span class="glyphicon glyphicon-heart"></span> {{user.attributes.currentHealth}}/{{user.attributes.health}}
+                        <span><img class="img-responsive" src="/Images/public/icon/heart-beats.png" /></span> {{user.attributes.currentHealth}}/{{user.attributes.health}}
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Mana" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <span class="glyphicon glyphicon-star"></span> {{user.attributes.currentMana}} / {{user.attributes.mana}}
+                        <span><img class="img-responsive" src="/Images/public/icon/star-pupil.png" /></span> {{user.attributes.currentMana}} / {{user.attributes.mana}}
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Stamina" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <span class="glyphicon glyphicon-flash"></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}
+                        <span><img class="img-responsive" src="/Images/public/icon/power-lightning.png" /></span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Strength" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <span class="glyphicon glyphicon-user"></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}
+                        <span><img class="img-responsive" src="/Images/public/icon/muscle-up.png" /></span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Toughness" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <span class="glyphicon glyphicon-tower"></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}
+                        <span><img class="img-responsive" src="/Images/public/icon/kevlar.png" /></span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}
                     </a>
                 </li>
             </ul>
@@ -51,12 +51,12 @@
         <div class="col-xs-6">
             <div class="row">
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-danger btn-block" data-ng-click="submit('attack')">Attack</button>
+                    <button type="button" class="btn btn-block" data-ng-click="submit('attack')"><img class="img-responsive" src="/Images/public/icon/quick-slash.png"/></button>
                 </div>
                 <div class="col-xs-4">
                     <div class="dropdown">
-                        <button type="button" class="btn btn-warning dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Cast
+                        <button type="button" class="btn dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="img-responsive" src="/Images/public/icon/magic-swirl.png"/>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
@@ -67,11 +67,14 @@
                     </div>
                 </div>
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-default btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
+                    <button type="button" class="btn btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
                 </div>
             </div>
             <uib-tabset data-ng-show="showmenu">
-                <uib-tab heading="Map">
+                <uib-tab>
+                    <uib-tab-heading>
+                        <img class="img-responsive" src="/Images/public/icon/treasure-map.png"/> Map
+                    </uib-tab-heading>
                     <div class="container-fluid">
                         <div class="row">
                             <h3 class="text-capitalize text-info">
@@ -79,15 +82,15 @@
                             </h3>
                         </div>
                         <div class="row">
-                            <div class="col-xs-3"><button type="button" class="btn btn-primary btn-block" data-ng-click="submit('explore')">Explore</button></div>
-                            <div class="col-xs-3"><button type="button" class="btn btn-success btn-block" data-ng-click="submit('rest')">Rest</button></div>
-                            <div class="col-xs-3"><button type="button" class="btn btn-default btn-block" data-ng-click="submit('whereami')">Where Am I?</button></div>
-                            <div class="col-xs-3"><button type="button" class="btn btn-success btn-block" data-ng-click="do('quest', 'start')">Accept Quest</button></div>
+                            <div class="col-xs-3"><button type="button" class="btn btn-block" data-ng-click="submit('explore')"><img class="img-responsive" src="/Images/public/icon/scroll-unfurled.png" /></button></div>
+                            <div class="col-xs-3"><button type="button" class="btn btn-block" data-ng-click="submit('rest')"><img class="img-responsive" src="/Images/public/icon/bed.png"/></button></div>
+                            <div class="col-xs-3"><button type="button" class="btn btn-block" data-ng-click="submit('whereami')">Where Am I?</button></div>
+                            <div class="col-xs-3"><button type="button" class="btn btn-block" data-ng-click="do('quest', 'start')"><img class="img-responsive" src="/Images/public/icon/tied-scroll.png"/></button></div>
                         </div>
                         <div class="row">
                             <h3>Available Areas</h3>
                             <div class="col-sm-3" data-ng-show="user.navigation.currentLocation.isExit">
-                                <div data-ng-click="do('go', area)" ng-repeat="area in temphcodeareas">
+                                <div style="cursor: pointer" data-ng-click="do('go', area)" ng-repeat="area in temphcodeareas">
                                     {{area}}
                                 </div>
                             </div>
@@ -98,34 +101,37 @@
                         <div class="row">
                             <h3>Available Locations</h3>
                             <div class="col-sm-3">
-                                <div data-ng-click="do('go', location.name)" ng-repeat="location in user.navigation.currentArea.locations" ng-class="{market: location.hasMarket, exit: location.isExit}">
+                                <div style="cursor: pointer" data-ng-click="do('go', location.name)" ng-repeat="location in user.navigation.currentArea.locations" ng-class="{market: location.hasMarket, exit: location.isExit}">
                                     {{location.name}}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <h3>Available Rooms</h3>
-                            <button data-ng-show="user.navigation.currentRoom.isExit" type="button" class="btn btn-danger" data-ng-click="do('exit', '')">Exit Room</button>
+                            <button data-ng-show="user.navigation.currentRoom.isExit" type="button" class="btn" data-ng-click="do('exit', '')"><img class="img-responsive" src="/Images/public/icon/exit-door.png"/></button>
                             <div class="col-sm-3">
-                                <div data-ng-click="do('go', room.name)" ng-repeat="room in user.navigation.currentLocation.rooms" ng-class="{entrance: room.isExit}">
+                                <div style="cursor: pointer" data-ng-click="do('go', room.name)" ng-repeat="room in user.navigation.currentLocation.rooms" ng-class="{entrance: room.isExit}">
                                     {{room.name}}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab heading="Inventory">
+                <uib-tab>
+                    <uib-tab-heading>
+                        <img class="img-responsive" src="/Images/public/icon/swap-bag.png" /> Inventory
+                    </uib-tab-heading>
                     <div class="container-fluid">
                         <div class="row">
-                            <div><button type="button" class="btn btn-success btn-block" data-ng-click="submit('quest')">Current Quests</button></div>
+                            <div><button type="button" class="btn btn-block" data-ng-click="submit('quest')">Current Quests</button></div>
                             <h3>Equipment</h3>
-                            <div><strong>Gold: </strong>{{user.inventory.gold}}</div>
-                            <div ng-click="do('unequip', user.equipment.head.name)"><strong>Helmet: </strong>{{user.equipment.head.name}}</div>
-                            <div ng-click="do('unequip', user.equipment.torso.name)"><strong>Armor: </strong>{{user.equipment.torso.name}}</div>
-                            <div ng-click="do('unequip', user.equipment.arm.name)"><strong>Shield: </strong>{{user.equipment.arm.name}}</div>
-                            <div ng-click="do('unequip', user.equipment.legs.name)"><strong>Leggings: </strong>{{user.equipment.legs.name}}</div>
-                            <div ng-click="do('unequip', user.equipment.feet.name)"><strong>Boots: </strong>{{user.equipment.feet.name}}</div>
-                            <div ng-click="do('unequip', user.equipment.weapon.name)"><strong>Weapon: </strong>{{user.equipment.weapon.name}}</div>
+                            <div><img class="img-responsive" src="/Images/public/icon/gold-bar.png"/> {{user.inventory.gold}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.head.name)"><img class="img-responsive" src="/Images/public/icon/crested-helmet.png"/> {{user.equipment.head.name}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.torso.name)"><img class="img-responsive" src="/Images/public/icon/armor-vest.png" />{{user.equipment.torso.name}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.arm.name)"><img class="img-responsive" src="/Images/public/icon/shield.png" />{{user.equipment.arm.name}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.legs.name)"><img class="img-responsive" src="/Images/public/icon/armored-pants.png" />{{user.equipment.legs.name}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.feet.name)"><img class="img-responsive" src="/Images/public/icon/boots.png" />{{user.equipment.feet.name}}</div>
+                            <div style="cursor: pointer" ng-click="do('unequip', user.equipment.weapon.name)"><img class="img-responsive" src="/Images/public/icon/plain-dagger.png" />{{user.equipment.weapon.name}}</div>
                         </div>
                         <div class="row">
                             <h3>Spells</h3>
@@ -159,20 +165,26 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab heading="Chat">
+                <uib-tab>
+                    <uib-tab-heading>
+                        <img class="img-responsive" src="/Images/public/icon/quill.png" /> Chat
+                    </uib-tab-heading>
                     <div class="container-fluid">
                         <form class="form-horizontal" data-ng-submit="chat(data); data='';">
                             <input class="col-xs-10 form-control" type="text" ng-model="data" required />
-                            <button class="col-xs-2 btn btn-primary" type="submit" ng-disabled="$invalid">Say</button>
+                            <button class="col-xs-2 btn " type="submit" ng-disabled="$invalid">Say</button>
                         </form>
                     </div>
                 </uib-tab>
-                <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket" heading="Shop">
+                <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket">
+                    <uib-tab-heading>
+                        <img class="img-responsive" src="/Images/public/icon/knapsack.png" /> Shop
+                    </uib-tab-heading>
                     <div class="container-fluid">
-                        <button type="button" class="btn btn-success" data-ng-click="submit('buy')">Ask for Shopkeeper's Inventory</button>
+                        <button type="button" class="btn" data-ng-click="submit('buy')">Ask for Shopkeeper's Inventory</button>
                         <form class="form-horizontal" data-ng-submit="do('buy', buydata); buydata='';">
                             <input class="col-xs-10 form-control" type="text" ng-model="buydata" required />
-                            <button class="col-xs-2 btn btn-primary" type="submit" ng-disabled="$invalid">Buy</button>
+                            <button class="col-xs-2 btn " type="submit" ng-disabled="$invalid">Buy</button>
                         </form>
                     </div>
                 </uib-tab>
