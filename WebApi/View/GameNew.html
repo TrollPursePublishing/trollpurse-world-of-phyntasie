@@ -15,27 +15,27 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <a href="" data-uib-tooltip="Health" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img class="img-responsive" src="/Images/public/icon/heart-beats.png" /><span> {{user.attributes.currentHealth}}/{{user.attributes.health}}</span>
+                        <img style="float:left" class="img-responsive" src="/Images/public/icon/heart-beats.png" /><span> {{user.attributes.currentHealth}}/{{user.attributes.health}}</span>
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Mana" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img class="img-responsive" src="/Images/public/icon/star-pupil.png" /><span> {{user.attributes.currentMana}} / {{user.attributes.mana}}</span>
+                        <img style ="float:left" class="img-responsive" src="/Images/public/icon/star-pupil.png" /><span> {{user.attributes.currentMana}} / {{user.attributes.mana}}</span>
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Stamina" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img class="img-responsive" src="/Images/public/icon/power-lightning.png" /><span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}</span>
+                        <img style ="float:left" class="img-responsive" src="/Images/public/icon/power-lightning.png" /><span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}</span>
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Strength" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img class="img-responsive" src="/Images/public/icon/muscle-up.png" /><span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</span>
+                        <img style ="float:left" class="img-responsive" src="/Images/public/icon/muscle-up.png" /><span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</span>
                     </a>
                 </li>
                 <li>
                     <a href="" data-uib-tooltip="Toughness" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img class="img-responsive" src="/Images/public/icon/kevlar.png" /><span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</span>
+                        <img style ="float:left" class="img-responsive" src="/Images/public/icon/kevlar.png" /><span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</span>
                     </a>
                 </li>
             </ul>
@@ -75,7 +75,7 @@
             <uib-tabset data-ng-show="showmenu">
                 <uib-tab>
                     <uib-tab-heading>
-                        <span><img style="float:left"  class="img-responsive" src="/Images/public/icon/treasure-map.png" />Map</span>
+                        <span><img class="img-responsive" src="/Images/public/icon/treasure-map.png" />Map</span>
                     </uib-tab-heading>
                     <div class="container-fluid">
                         <div class="row">
@@ -121,7 +121,7 @@
                 </uib-tab>
                 <uib-tab>
                     <uib-tab-heading>
-                        <span><img style="float:left"  class="img-responsive" src="/Images/public/icon/swap-bag.png" />Items</span>
+                        <span><img class="img-responsive" src="/Images/public/icon/swap-bag.png" />Items</span>
                     </uib-tab-heading>
                     <div class="container-fluid">
                         <div class="row">
@@ -171,7 +171,7 @@
                 </uib-tab>
                 <uib-tab>
                     <uib-tab-heading>
-                        <span><img style="float:left"  class="img-responsive" src="/Images/public/icon/quill.png" />Chat</span>
+                        <span><img class="img-responsive" src="/Images/public/icon/quill.png" />Chat</span>
                     </uib-tab-heading>
                     <div class="container-fluid">
                         <div class="row">
@@ -194,7 +194,7 @@
                 </uib-tab>
                 <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket">
                     <uib-tab-heading>
-                        <span><img style="float:left"  class="img-responsive" src="/Images/public/icon/knapsack.png" />Shop</span>
+                        <span><img class="img-responsive" src="/Images/public/icon/knapsack.png" />Shop</span>
                     </uib-tab-heading>
                     <div class="container-fluid">
                         <button type="button" class="btn" data-ng-click="submit('buy')">Ask for Shopkeeper's Inventory</button>
