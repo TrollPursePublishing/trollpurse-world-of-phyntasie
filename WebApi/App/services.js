@@ -100,7 +100,7 @@ angular.module('app.services', [])
                         $rootScope.$emit('playerjoin', { name: playerName });
                     }
 
-                    message.ChatHub.client.broadcastJoin = function (playerName) {
+                    message.ChatHub.client.broadcastLeave = function (playerName) {
                         $rootScope.$emit('playerleave', { name: playerName });
                     }
                     $.connection.hub.start()

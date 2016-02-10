@@ -71,7 +71,8 @@ angular.module('app.controllers', ['app.services'])
             if (data.indexOf('"') === 0 && data.lastIndexOf('"') === data.length - 1) {
                 MessageService.send($scope.user.FullName, data, $scope.user.navigation.currentLocation.Id);
             } else {
-                MessageService.leaveLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
+                var pastLocation = $scope.user.navigation.currentLocation.Id;
+                
                 CommandService.submit(data, $scope.user.Id)
                 .then(function (data) {
                     var d = angular.fromJson(data.data);
@@ -82,7 +83,11 @@ angular.module('app.controllers', ['app.services'])
                         $scope.messages.push(d.messages[i]);
                     }
                     $scope.user = d.player;
-                    MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
+
+                    if (pastLocation != $scope.user.navigation.currentLocation.Id) {
+                        MessageService.leaveLocation(pastLocation, $scope.user.FullName);
+                        MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
+                    }
                 }, function (error) {
                     console.error('error', error);
                     MessageService.joinLocation($scope.user.navigation.currentLocation.Id, $scope.user.FullName);
