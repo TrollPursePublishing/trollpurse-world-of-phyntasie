@@ -128,13 +128,76 @@
                             <div class="col-xs-12"><button type="button" class="btn btn-block" data-ng-click="submit('quest')"><span><img style="float:left"  class="img-responsive" src="/Images/public/icon/bookmarklet.png" /> Current Quests</span></button></div>
                             <div class="col-xs-6">
                                 <h3>Equipment</h3>
-                                <div class="col-xs-12"><img style="float:left" class="img-responsive" src="/Images/public/icon/gold-bar.png" data-uib-tooltip="Gold" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.inventory.gold}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.head.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/crested-helmet.png" data-uib-tooltip="Helmet" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.head.name}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.torso.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/armor-vest.png" data-uib-tooltip="Armor" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.torso.name}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.legs.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/armored-pants.png" data-uib-tooltip="Leg Armor" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.legs.name}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.feet.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/boots.png" data-uib-tooltip="Boots" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.feet.name}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.arm.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/shield.png" data-uib-tooltip="Shield" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.arm.name}}</span></div>
-                                <div class="col-xs-12" style="cursor: pointer" ng-click="do('unequip', user.equipment.weapon.name)"><img style="float:left" class="img-responsive" src="/Images/public/icon/plain-dagger.png" data-uib-tooltip="Weapon" data-tooltip-placement="left" data-tooltip-trigger="mouseenter" /><span> {{user.equipment.weapon.name}}</span></div>
+                                <div class="media">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="#">
+                                            <img class="media-object" src="/Images/public/icon/gold-bar.png" alt="Gold" data-uib-tooltip="Gold" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.inventory.gold}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.head.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="/Images/public/icon/crested-helmet.png" alt="Helmet" data-uib-tooltip="Helmet" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.head.name}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.torso.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="/Images/public/icon/armor-vest.png" alt="Armor" data-uib-tooltip="Armor" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.torso.name}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.legs.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="/Images/public/icon/armored-pants.png" alt="Leg Armor" data-uib-tooltip="Leg Armor" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.legs.name}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.feet.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="/Images/public/icon/boots.png" alt="Boots" data-uib-tooltip="Boots" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.feet.name}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.arm.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="/Images/public/icon/shield.png" alt="Shield" data-uib-tooltip="Shield" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.arm.name}}
+                                    </div>
+                                </div>
+                                <div class="media" style="cursor: pointer" ng-click="do('unequip', user.equipment.weapon.name)">
+                                    <div class="col-xs-12 media-left media-middle">
+                                        <a href="">
+                                            <img class="media-object" src="Images/public/icon/plain-dagger.png" alt="Weapon" data-uib-tooltip="Weapon" data-tooltip-placement="left" data-tooltip-trigger="mouseenter">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        {{user.equipment.weapon.name}}
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-xs-6">
                                 <uib-tabset>
@@ -192,16 +255,14 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket">
+                <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket" select="getBuyList()">
                     <uib-tab-heading>
                         <span><img class="img-responsive" src="/Images/public/icon/knapsack.png" />Shop</span>
                     </uib-tab-heading>
                     <div class="container-fluid">
-                        <button type="button" class="btn" data-ng-click="submit('buy')">Ask for Shopkeeper's Inventory</button>
-                        <form class="form-horizontal" data-ng-submit="do('buy', buydata); buydata='';">
-                            <input class="col-xs-10 form-control" type="text" ng-model="buydata" required />
-                            <button class="col-xs-2 btn " type="submit" ng-disabled="$invalid">Buy</button>
-                        </form>
+                        <div class="row">
+                            <div class="col-xs-12" style="cursor: pointer" data-ng-repeat="item in buylist" data-ng-click="do('buy', item)">{{item}}</div>
+                        </div>
                     </div>
                 </uib-tab>
             </uib-tabset>

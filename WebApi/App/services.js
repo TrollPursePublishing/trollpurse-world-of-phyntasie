@@ -54,9 +54,20 @@ angular.module('app.services', [])
     .factory('CommandService', ['$http', '$q', function ($http, $q) {
         var command = {};
         command.submit = function (data, userId) {
-            //console.log(data);
             var q = $q.defer();
             $http.post('api/Command', {playerId: userId, parameters: data})
+            .success(function (data) {
+                q.resolve({ data: data });
+            })
+            .error(function (msg, code) {
+                q.reject(msg);
+            });
+            return q.promise;
+        };
+
+        command.buylist = function (data, userId) {
+            var q = $q.defer();
+            $http.get('api/command/shoplist/' + userId)
             .success(function (data) {
                 q.resolve({ data: data });
             })

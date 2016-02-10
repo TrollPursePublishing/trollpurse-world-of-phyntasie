@@ -40,7 +40,46 @@ namespace WebApi.Controllers
                     else
                         return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject("The world used to be a good place, but now it is not..."));
                 }
-                catch (Exception e)
+                catch (Exception)
+                {
+                    return JsonConvert.SerializeObject("The world used to be a good place, but now it is not...");
+                }
+            }
+            else
+            {
+                return JsonConvert.SerializeObject("The world used to be a good place, but now it is not...");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles="Player")]
+        [Route("api/command/shoplist/{playerId}")]
+        public async Task<string> Shoplist(string playerId)
+        {
+            if (!String.IsNullOrWhiteSpace(playerId))
+            {
+                try
+                {
+                    var command = new CommandViewModel
+                    {
+                        playerId = playerId,
+                        parameters = "buy"
+                    };
+                    var ctx = Request.GetOwinContext();
+                    var user = ctx.Authentication.User;
+                    var claims = user.Claims;
+                    if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(command.playerId)) != null)
+                    {
+                        var response = service.ProcessCommand(service.ResolvePlayer(Guid.Parse(command.playerId)), command.parameters);
+                        response.messages.RemoveAt(0); //remove the "buy was not found..."
+                        return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(response));
+                    }
+                    else
+                    {
+                        return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject("The world used to be a good place, but now it is not..."));
+                    }
+                }
+                catch (Exception)
                 {
                     return JsonConvert.SerializeObject("The world used to be a good place, but now it is not...");
                 }

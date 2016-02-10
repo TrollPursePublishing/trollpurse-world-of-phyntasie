@@ -9,6 +9,7 @@ angular.module('app.controllers', ['app.services'])
         $scope.navigation = {};
         $scope.chattext = [];
         $scope.chatlist = {};
+        $scope.buylist = [];
         $scope.showmenu = true;
 
         function activate() {
@@ -88,6 +89,16 @@ angular.module('app.controllers', ['app.services'])
                 });
             }
         };
+
+        $scope.getBuyList = function () {
+            CommandService.buylist($scope.user.Id)
+            .then(function (data) {
+                var d = angular.fromJson(data.data);
+                $scope.buylist = d.messages;
+            }, function (error) {
+                console.error('error', error);
+            });
+        }
 
         $scope.detailedView = function (descriptableObject) {
             delete descriptableObject.Id;
