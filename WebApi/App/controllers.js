@@ -95,7 +95,7 @@ angular.module('app.controllers', ['app.services'])
             .then(function (data) {
                 var d = angular.fromJson(data.data);
                 $scope.buylist = [];
-                angular.forEach(data.messages, function (value) {
+                angular.forEach(d.messages, function (value) {
                     $scope.buylist.push(value.split('&'));
                 });
             }, function (error) {
