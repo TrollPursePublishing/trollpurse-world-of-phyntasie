@@ -92,9 +92,9 @@ namespace AdventureQuestGame.Services
                 .markets
                 .FirstOrDefault(m => m.locationIAmIn.Id == player.navigation.currentLocation.Id);
 
-            results.AddRange(market.inventory.armors.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
-            results.AddRange(market.inventory.potions.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
-            results.AddRange(market.inventory.weapons.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
+            results.AddRange(market.inventory.armors.Select(a => String.Format("{0}&{1}", a.name, a.value)).ToArray());
+            results.AddRange(market.inventory.potions.Select(a => String.Format("{0}&{1}", a.name, a.value)).ToArray());
+            results.AddRange(market.inventory.weapons.Select(a => String.Format("{0}&{1}", a.name, a.value)).ToArray());
 
             PostCommand(player, results);
             return new GameResponse(results, player);

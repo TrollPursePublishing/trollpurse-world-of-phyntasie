@@ -57,9 +57,7 @@
                     <div class="dropdown">
                         <button type="button" class="btn dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img style="float:left"  class="img-responsive" src="/Images/public/icon/magic-swirl.png" />
-                            <span class="caret">
-                                Cast
-                            </span>
+                            Cast <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             <li style="cursor: pointer" data-ng-click="do('cast', spell.name)" data-ng-repeat="spell in user.spells">
@@ -262,9 +260,16 @@
                     <div class="container-fluid">
                         <div class="row">
                             <table class="table table-hover">
-                                <tr class="col-xs-12" data-ng-repeat="item in buylist" data-ng-click="do('buy', item)">
-                                    <td>{{item}}</td>
-                                </tr>
+                                <thead>
+                                    <th>Item</th>
+                                    <th>Cost</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="col-xs-12" data-ng-repeat="item in buylist" data-ng-click="do('buy', item[0])">
+                                        <td>{{item[0]}}</td>
+                                        <td>{{item[1]}}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>

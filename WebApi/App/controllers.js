@@ -94,7 +94,10 @@ angular.module('app.controllers', ['app.services'])
             CommandService.buylist($scope.user.Id)
             .then(function (data) {
                 var d = angular.fromJson(data.data);
-                $scope.buylist = d.messages;
+                $scope.buylist = [];
+                angular.forEach(data.messages, function (value) {
+                    $scope.buylist.push(value.split('&'));
+                });
             }, function (error) {
                 console.error('error', error);
             });
