@@ -40,6 +40,7 @@ angular.module('app.controllers', ['app.services'])
             console.log('chat', data.name + ':' + data.msg);
             $scope.$apply(function () {
                 $scope.chattext.push(data.name + ' said, ' + data.msg);
+                $scope.chatlist[data.name] = 0;
             });
         });
 
