@@ -84,6 +84,22 @@ namespace AdventureQuestGame.Services
             return GameCtx.players.First(p => p.Id == id);
         }
 
+        public GameResponse GetBuylist(Player player)
+        {
+            List<string> results = new List<string>();
+
+            Market market = GameCtx
+                .markets
+                .FirstOrDefault(m => m.locationIAmIn.Id == player.navigation.currentLocation.Id);
+
+            results.AddRange(market.inventory.armors.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
+            results.AddRange(market.inventory.potions.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
+            results.AddRange(market.inventory.weapons.Select(a => String.Format("{0} costs {1} gold", a.name, a.value)).ToArray());
+
+            PostCommand(player, results);
+            return new GameResponse(results, player);
+        }
+
         public GameResponse ProcessCommand(Player player, string additionalParams)
         {
             IList<string> result;
@@ -95,10 +111,7 @@ namespace AdventureQuestGame.Services
             {
                 result = workers.First(w => w.Handles().Equals(ecommand)).Process(player, additionalParams, GameCtx);
 
-                GameplayStatics.DetectOneToOneRemovals(GameCtx, player);
-                GameplayStatics.DetectLevelUpEvent(GameCtx, player);
-                (result as List<string>).AddRange(GameplayStatics.DetectCompletedQuests(GameCtx, player));
-                GameCtx.SaveChanges();
+                PostCommand(player, result);
 
                 return new GameResponse(result, player);
             }
@@ -106,6 +119,14 @@ namespace AdventureQuestGame.Services
             {
                 return new GameResponse(new List<string>(new[] { String.Format("I do not know how to {0}", command) }), player);
             }
+        }
+
+        private void PostCommand(Player player, IList<string> result)
+        {
+            GameplayStatics.DetectOneToOneRemovals(GameCtx, player);
+            GameplayStatics.DetectLevelUpEvent(GameCtx, player);
+            (result as List<string>).AddRange(GameplayStatics.DetectCompletedQuests(GameCtx, player));
+            GameCtx.SaveChanges();
         }
     }
 }

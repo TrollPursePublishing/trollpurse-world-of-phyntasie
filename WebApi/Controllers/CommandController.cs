@@ -60,19 +60,13 @@ namespace WebApi.Controllers
             {
                 try
                 {
-                    var command = new CommandViewModel
-                    {
-                        playerId = playerId,
-                        parameters = "buy"
-                    };
+
                     var ctx = Request.GetOwinContext();
                     var user = ctx.Authentication.User;
                     var claims = user.Claims;
-                    if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(command.playerId)) != null)
+                    if (claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.NameIdentifier) && c.Value.Equals(playerId)) != null)
                     {
-                        var response = service.ProcessCommand(service.ResolvePlayer(Guid.Parse(command.playerId)), command.parameters);
-                        response.messages.RemoveAt(0); //remove the "buy was not found..."
-                        return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(response));
+                        return await Task.Factory.StartNew<string>(() => JsonConvert.SerializeObject(service.GetBuylist(service.ResolvePlayer(Guid.Parse(playerId)))));
                     }
                     else
                     {
