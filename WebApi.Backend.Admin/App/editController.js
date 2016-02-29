@@ -39,7 +39,7 @@
         }
 
         function loadAreas() {
-            areaService.getAreas().then(function (good) {
+            areaService.get().then(function (good) {
                 $scope.areas = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
