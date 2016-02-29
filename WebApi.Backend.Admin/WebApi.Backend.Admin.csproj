@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\app.js" />
+    <Content Include="App\areaService.js" />
     <Content Include="App\authService.js" />
     <Content Include="App\eventService.js" />
     <Content Include="App\locationService.js" />
@@ -939,6 +940,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AreaAdminController.cs" />
     <Compile Include="Controllers\EventAdminController.cs" />
     <Compile Include="Controllers\LocationAdminController.cs" />
     <Compile Include="Controllers\RelicAdminController.cs" />
@@ -949,6 +951,7 @@
     </Compile>
     <Compile Include="Models\APIAuthorizationServerProvider.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\AreaViewModel.cs" />
     <Compile Include="Models\EventViewModel.cs" />
     <Compile Include="Models\LocationViewModel.cs" />
     <Compile Include="Models\MonsterViewModel.cs" />

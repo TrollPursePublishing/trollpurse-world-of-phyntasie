@@ -16,13 +16,6 @@ namespace AdventureQuestGame.Admin
             GameCtx.Configuration.LazyLoadingEnabled = false;
         }
 
-        public List<Area> GetAreas()
-        {
-            return GameCtx.areas
-                .Include(a => a.locations)
-                .ToList();
-        }
-
         public List<Room> GetRooms()
         {
             var res = GameCtx.rooms

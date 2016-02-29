@@ -6,10 +6,10 @@
         .controller('editController', editController);
 
     editController.$inject = ['$scope', 'editService', 'authService', 'locationService', 'eventService', 'monsterService',
-    'relicService'];
+    'relicService', 'areaService'];
 
     function editController($scope, editService, authService, locationService, eventService, monsterService,
-        relicService) {
+        relicService, areaService) {
         $scope.title = 'editController';
 
         $scope.error = '';
@@ -39,7 +39,7 @@
         }
 
         function loadAreas() {
-            editService.getAreas().then(function (good) {
+            areaService.getAreas().then(function (good) {
                 $scope.areas = angular.fromJson(good.data);
             }, function (bad) {
                 var res = angular.fromJson(bad); $scope.error = bad.statusText;
@@ -205,6 +205,12 @@
         $scope.currentEvent;
         $scope.currentMonster;
         $scope.currentRelic;
+        $scope.currentArea;
+
+        $scope.resetArea = function () {
+            $scope.working = editService.zeroGUID;
+            $scope.currentArea = areaService.defaultArea();
+        }
 
         $scope.resetRelic = function() {
             $scope.working = editService.zeroGUID;
@@ -241,49 +247,50 @@
         function activate() {
         }
 
+        function onBad(bad) {
+            var res = angular.fromJson(bad); $scope.error = bad.statusText;
+        }
+
+        $scope.deleteArea = function (id) {
+            $scope.error = '';
+            areaService.delete(id).then(function (data) {
+                loadAreas();
+            }, onBad);
+        }
+
         $scope.deleteRelic = function (id) {
             $scope.error = '';
             relicService.delete(id).then(function (good) {
                 loadRelics();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.deleteQuest = function(id) {
             $scope.error = '';
             editService.deleteQuest(id).then(function(data){
                 loadQuests();
-            }, function(bad){
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.deleteQuestGiver = function (id) {
             $scope.error = '';
             editService.deleteQuestGiver(id).then(function (good) {
                 loadQuestGivers();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            },onBad);
         }
 
         $scope.deleteLocation = function (id) {
             $scope.error = '';
             locationService.delete(id).then(function (good) {
                 loadLocations();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            },onBad);
         }
 
         $scope.deleteMonster = function (id) {
             $scope.error = '';
             monsterService.delete(id).then(function (good) {
                 loadMonsters();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            },onBad);
         }
 
         $scope.createEvent = function () {
@@ -291,9 +298,7 @@
             eventService.create($scope.currentEvent).then(function (good) {
                 loadEvents();
                 $scope.resetEvent();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.createQuest = function () {
@@ -301,9 +306,7 @@
             editService.createQuest($scope.currentQuest).then(function (good) {
                 loadQuests();
                 $scope.resetQuest();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            },onBad);
         }
 
         $scope.createQuestGiver = function () {
@@ -311,9 +314,7 @@
             editService.createQuestGiver($scope.currentQuestGiver).then(function (good) {
                 loadQuestGivers();
                 $scope.resetGiver();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            },onBad);
         }
 
         $scope.createLocation = function () {
@@ -321,9 +322,7 @@
             locationService.create($scope.currentLocation).then(function (good) {
                 loadLocations();
                 $scope.resetLocation();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.createMonster = function () {
@@ -331,9 +330,15 @@
             monsterService.create($scope.currentMonster).then(function (good) {
                 loadMonsters();
                 $scope.resetMonster();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
+        }
+
+        $scope.createArea = function () {
+            $scope.error = '';
+            areaService.create($scope.currentArea).then(function (good) {
+                loadAreas();
+                $scope.resetArea();
+            }, onBad);
         }
 
         $scope.createRelic = function () {
@@ -341,8 +346,17 @@
             relicService.create($scope.currentRelic).then(function (good) {
                 loadRelics();
                 $scope.resetRelic();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
+            },onBad);
+        }
+
+        $scope.updateAreaLocation = function(id, area) {
+            if (!angular.isDefined(area.locations)) {
+                area.locations = [];
+            }
+            angular.forEach($scope.locations, function (loc) {
+                if (loc.Id == id) {
+                    area.locations.push(loc);
+                }
             });
         }
 
@@ -369,6 +383,14 @@
             }
         }
 
+        $scope.removeAreaLocation = function (id, area) {
+            angular.forEach(area.locations, function (loc) {
+                if (loc.Id == id) {
+                    area.rooms.splice(loc, 1);
+                }
+            });
+        }
+
         $scope.removeLocationRoom = function (id, location) {
             angular.forEach(location.rooms, function (room) {
                 if (room.Id == id) {
@@ -387,14 +409,20 @@
             });
         }
 
+        $scope.updateArea = function (area) {
+            $scope.error = '';
+            areaService.update(location).then(function (good) {
+                loadAreas();
+                $scope.resetArea();
+            }, onBad);
+        }
+
         $scope.updateLocation = function (location) {
             $scope.error = '';
             locationService.update(location).then(function (good) {
                 loadLocations();
                 $scope.resetLocation();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.updateQuestGiver = function (questGiver) {
@@ -402,9 +430,7 @@
             editService.update(questGiver).then(function (good) {
                 loadQuestGivers();
                 $scope.resetGiver();
-            }, function(bad){
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.updateMonster = function (monster) {
@@ -412,9 +438,7 @@
             monsterService.update(monster).then(function (good) {
                 loadMonsters();
                 $scope.resetMonster();
-            }, function (bad) {
-                var res = angular.fromJson(bad); $scope.error = bad.statusText;
-            });
+            }, onBad);
         }
 
         $scope.updateQuestGiverQuest = function (id, questGiver) {

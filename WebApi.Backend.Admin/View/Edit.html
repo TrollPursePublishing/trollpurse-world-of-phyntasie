@@ -136,12 +136,51 @@
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <th>
+                        <button data-ng-click="createArea()">Add</button>
+                        <button data-ng-click="resetArea()">Clear</button>
+                    </th>
+                    <td>AUTO GENERATED</td>
+                    <td><textarea data-ng-model="currentArea.Name"></textarea></td>
+                    <td><textarea data-ng-model="currentArea.Description"></textarea></td>
+                    <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in locations" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="currentArea.LocationIds.push(working)">Add</button>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="r in currentArea.LocationIds">
+                                    <td>{{r}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
                 <tr data-ng-repeat="a in areas">
                     <td>{{a.Id}}</td>
-                    <td>{{a.name}}</td>
-                    <td>{{a.description}}</td>
-                    <td>{{a.imagepath}}</td>
+                    <td><textarea data-ng-model="a.name"></textarea></td>
+                    <td><textarea data-ng-model="a.description"></textarea></td>
+                    <td><textarea data-ng-model="a.imagepath"></textarea></td>
                     <td>
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in locations" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="updateAreaLocation(working, a)">Add</button>
+
+                        <select data-ng-model="working">
+                            <option value="00000000-0000-0000-0000-000000000000">None</option>
+                            <option data-ng-repeat="r in l.locations" value="{{r.Id}}">{{r.name}}</option>
+                        </select>
+                        <button data-ng-click="removeAreaLocation(working, a)">Remove</button>
                         <table border="1">
                             <thead>
                                 <tr>

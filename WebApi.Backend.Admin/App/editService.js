@@ -52,10 +52,6 @@
 
         this.contexts = [this.monster, this.area, this.location, this.room, this.relic, this.questgiver, this.quest, this.event];
 
-        this.getAreas = function () {
-            return $http.get('/quest/GetAreas');
-        }
-
         this.getLocations = function () {
             return $http.get('/quest/GetLocations');
         }

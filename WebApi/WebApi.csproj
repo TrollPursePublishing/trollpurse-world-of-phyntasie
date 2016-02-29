@@ -196,6 +196,7 @@
     <Content Include="Images\public\icon\treasure-map.png" />
     <Content Include="Images\public\icon\worried-eyes.png" />
     <Content Include="Images\public\Untitled.png" />
+    <Content Include="Images\public\vastdessert.png" />
     <Content Include="Images\public\worldcompetition.png" />
     <Content Include="Index.html" />
     <Content Include="Index.min.html">

@@ -66,20 +66,21 @@ namespace WebApi.Backend.Admin.Controllers
                         .FirstOrDefault(c => c.ClaimValue == "Player") != null)
                     .ToList();
 
-                foreach (var u in mailableUsers)
-                {
-                    await UserManager.SendEmailAsync(u.Id,
+                mailableUsers.AsParallel()
+                    .ForAll(async u =>
+                    {
+                        await UserManager.SendEmailAsync(u.Id,
                         String.Format("AdventureGameQuest: {0}", model.Title),
                         String.Format("{0}<br /><br /> Haven't played in a while? <a href=\"{1}\">Press to Play!</a><br /><br /> Don't want to receive these emails anymore? Log in to your account and disable Email Notifications.",
                             model.Description,
                            @"https://adventuregamequest.azurewebsites.net"));
-                }
+                    });
 
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return InternalServerError();
+                return InternalServerError(e);
             }
         }
     }
