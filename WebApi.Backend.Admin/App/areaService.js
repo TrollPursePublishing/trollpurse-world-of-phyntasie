@@ -35,7 +35,7 @@
             return $http.post('area/UpdateArea/' + model.Id, {
                 Name: model.name,
                 Description: model.description,
-                ImagePath: model.ImagePath,
+                ImagePath: model.imagepath,
                 LocationIds: locationIds
             });
         }
