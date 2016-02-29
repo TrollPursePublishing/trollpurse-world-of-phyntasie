@@ -108,6 +108,8 @@
                     loadMonsters();
                     break;
                 case editService.area.id:
+                    $scope.resetArea();
+                    loadLocations();
                     loadAreas();
                     break;
                 case editService.location.id:
