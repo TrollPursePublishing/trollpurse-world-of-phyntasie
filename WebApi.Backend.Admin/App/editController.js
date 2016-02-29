@@ -413,7 +413,7 @@
 
         $scope.updateArea = function (area) {
             $scope.error = '';
-            areaService.update(location).then(function (good) {
+            areaService.update(area).then(function (good) {
                 loadAreas();
                 $scope.resetArea();
             }, onBad);
