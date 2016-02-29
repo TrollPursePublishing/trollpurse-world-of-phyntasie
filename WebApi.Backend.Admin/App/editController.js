@@ -388,7 +388,7 @@
         $scope.removeAreaLocation = function (id, area) {
             angular.forEach(area.locations, function (loc) {
                 if (loc.Id == id) {
-                    area.rooms.splice(loc, 1);
+                    area.locations.splice(loc, 1);
                 }
             });
         }

@@ -167,8 +167,8 @@
                 </tr>
                 <tr data-ng-repeat="a in areas">
                     <td>
-                        <button data-ng-click="updateArea(l)">Update</button>
-                        <button data-ng-click="deleteArea(l.Id)">Delete</button>
+                        <button data-ng-click="updateArea(a)">Update</button>
+                        <button data-ng-click="deleteArea(a.Id)">Delete</button>
                     </td>
                     <td>{{a.Id}}</td>
                     <td><textarea data-ng-model="a.name"></textarea></td>
