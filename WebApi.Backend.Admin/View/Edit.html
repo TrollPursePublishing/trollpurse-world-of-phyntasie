@@ -128,6 +128,7 @@
         <table border="1" data-ng-switch-when="1">
             <thead>
                 <tr>
+                    <th>Action</th>
                     <th>Id</th>
                     <th>Name</th>
                     <th>Description</th>
@@ -137,10 +138,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <th>
+                    <td>
                         <button data-ng-click="createArea()">Add</button>
                         <button data-ng-click="resetArea()">Clear</button>
-                    </th>
+                    </td>
                     <td>AUTO GENERATED</td>
                     <td><textarea data-ng-model="currentArea.Name"></textarea></td>
                     <td><textarea data-ng-model="currentArea.Description"></textarea></td>
@@ -165,6 +166,10 @@
                     </td>
                 </tr>
                 <tr data-ng-repeat="a in areas">
+                    <td>
+                        <button data-ng-click="updateArea(l)">Update</button>
+                        <button data-ng-click="deleteArea(l.Id)">Delete</button>
+                    </td>
                     <td>{{a.Id}}</td>
                     <td><textarea data-ng-model="a.name"></textarea></td>
                     <td><textarea data-ng-model="a.description"></textarea></td>
@@ -178,7 +183,7 @@
 
                         <select data-ng-model="working">
                             <option value="00000000-0000-0000-0000-000000000000">None</option>
-                            <option data-ng-repeat="r in l.locations" value="{{r.Id}}">{{r.name}}</option>
+                            <option data-ng-repeat="r in a.locations" value="{{r.Id}}">{{r.name}}</option>
                         </select>
                         <button data-ng-click="removeAreaLocation(working, a)">Remove</button>
                         <table border="1">
