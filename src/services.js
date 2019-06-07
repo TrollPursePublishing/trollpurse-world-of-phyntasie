@@ -53,15 +53,9 @@ angular.module('app.services', [])
 
     .factory('CommandService', ['$http', '$q', function ($http, $q) {
         var command = {};
-        command.submit = function (d, userId) {
+        command.submit = function (d) {
             var q = $q.defer();
-            $http.post('api/Command', {playerId: userId, parameters: d})
-            .success(function (data) {
-                q.resolve({ data: data });
-            })
-            .error(function (msg, code) {
-                q.reject(msg);
-            });
+            q.resolve({ data: doCommand(d) });
             return q.promise;
         };
 
@@ -71,7 +65,7 @@ angular.module('app.services', [])
             .success(function (data) {
                 q.resolve({ data: data });
             })
-            .error(function (msg, code) {
+            .error(function (msg) {
                 q.reject(msg);
             });
             return q.promise;
@@ -264,5 +258,5 @@ angular.module('app.services', [])
         return user;
     }])
 
-    .value('version', '0.1.0.0')
-    .value('gamename', 'AdventureQuestGame')
+    .value('version', '1.0.0')
+    .value('gamename', 'World of Phyntasie')
