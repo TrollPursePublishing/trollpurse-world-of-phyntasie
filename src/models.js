@@ -107,11 +107,11 @@ function equipment({
     weapon,
   };
 
-  instance.tryGetArmorTypeFromName = function (armorName) {
+  instance.tryGetArmorFromName = function (armorName) {
     const match = armorName.toLowerCase();
     function m(field) {
       return (field && field.name.toLowerCase() === match)
-        ? field.type
+        ? field
         : null;
     }
     return m(instance.arm)
@@ -407,6 +407,12 @@ function player({
     return `${instance.addItemToInventory(old)} Unequipped armor ${old.name}`;
   }
 
+  instance.unequipWeapon = function (weapon) {
+    const old = instance.equipment.weapon;
+    instance.equipment.weapon = null;
+    return `${instance.addItemToInventory(old)} Unequipped weapon ${old.name}`;
+  }
+
   instance.castSpell = function (spell, target) {
     if (instance.attributes.currentMana >= spell.manaCost) {
       instance.savedTarget = target;
@@ -454,12 +460,11 @@ function player({
   }
 
   instance.usePotion = function(potion, target) {
-    instance.removeItemFromInventory(potion);
     if (target) {
       instance.savedTarget = target;
     }
     const potionText = potion.apply(this, target);
-    return potionText;
+    return instance.removeItemFromInventory(potion) + potionText;
   }
 
   instance.onCombatOver = function(target) {
@@ -539,9 +544,10 @@ function playerAttribute({
     }
 
     const power = magnitude([instance.strength, instance.stanima]);
+    const potency = magnitude([instance.mana, instance.strength]);
     const durability = magnitude([instance.toughness, instance.health]);
 
-    return Math.floor(magnitude([power, durability]) / 10);
+    return Math.floor(magnitude([magnitude([power, potency]), durability]) / 10);
   }
 }
 
