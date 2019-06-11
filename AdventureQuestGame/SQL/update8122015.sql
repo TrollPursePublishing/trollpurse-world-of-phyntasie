@@ -1,1 +1,0 @@
-INSERT INTO Events (Id, title, description, "when") VALUES (NEWID(), 'Game & Website Update!', 'We are excited to announce that the website has gone through some awesome updates. These updates include account management, UI for both the game and website, as well as some awesome background art created by S. K. Henry. Log in and check it out!', GETUTCDATE());
