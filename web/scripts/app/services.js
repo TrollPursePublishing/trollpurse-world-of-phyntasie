@@ -1,5 +1,11 @@
 ﻿"use strict";
 
+const {
+  doCommand,
+  getPlayer,
+  getBuyList,
+} = wop_game();
+
 angular
   .module("app.services", [])
   .factory("CommandService", [
@@ -8,13 +14,13 @@ angular
       var command = {};
       command.submit = function(d) {
         var q = $q.defer();
-        q.resolve({ data: doCommand(d) });
+        q.resolve(JSON.parse(doCommand(d)));
         return q.promise;
       };
 
       command.buylist = function(userId) {
         var q = $q.defer();
-        q.resolve({ data: getBuyList() });
+        q.resolve(JSON.parse(getBuyList()));
         return q.promise;
       };
 
@@ -28,13 +34,13 @@ angular
 
       notifications.getEvents = function() {
         var q = $q.defer();
-        q.resolve({ data: [] });
+        q.resolve([]);
         return q.promise;
       };
 
       notifications.getPlayerAcheivements = function(userId) {
         var q = $q.defer();
-        q.resolve({ data: [] });
+        q.resolve([]);
         return q.promise;
       };
 
@@ -43,9 +49,8 @@ angular
   ])
 
   .factory("UserService", [
-    "$http",
     "$q",
-    function($http, $q) {
+    function($q) {
       var user = {};
       user.user;
 
@@ -54,10 +59,7 @@ angular
       };
 
       user.isLoggedIn = function() {
-        return (
-          localStorage.getItem("autosave:Player") !== null &&
-          localStorage.getItem("autosave:Player") !== undefined
-        );
+        return !!getPlayer();
       };
 
       user.getId = function() {
@@ -67,25 +69,15 @@ angular
       user.register = function(
         username,
       ) {
-        localStorage.setItem(
-          "autosave:Player",
-          player({
-            name: username,
-            title: "Adventurer"
-          })
-        );
+        createPlayer(username);
         var q = $q.defer();
-        q.resolve({
-          data: JSON.parse(localStorage.getItem("autosave:Player"))
-        });
+        q.resolve( JSON.parse(getPlayer("autosave")));
         return q.promise;
       };
 
       user.getPlayerData = function() {
         var q = $q.defer();
-        q.resolve({
-          data: JSON.parse(localStorage.getItem("autosave:Player"))
-        });
+        q.resolve(JSON.parse(getPlayer("autosave")));
         return q.promise;
       };
 

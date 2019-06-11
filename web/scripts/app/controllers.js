@@ -7,14 +7,12 @@ angular
   .controller("CommandCtrl", [
     "$scope",
     "$location",
-    "$window",
     "UserService",
     "CommandService",
     "$filter",
     function(
       $scope,
       $location,
-      _$window,
       UserService,
       CommandService,
       $filter
@@ -33,7 +31,7 @@ angular
         } else {
           UserService.getPlayerData().then(
             function(data) {
-              $scope.user = angular.fromJson(data.data);
+              $scope.user = data;
               $scope.navigation = $scope.user.navigation;
             },
             function(_error) {
@@ -47,36 +45,10 @@ angular
 
       $scope.messages = [];
 
-      $scope.$parent.$on("chat", function(event, data) {
-        console.log("chat", data.name + ":" + data.msg);
-        $scope.$apply(function() {
-          $scope.chattext.push(data.name + " said, " + data.msg);
-          $scope.chatlist[data.name] = 0;
-        });
-      });
-
-      $scope.$parent.$on("playerjoin", function(event, data) {
-        $scope.$apply(function() {
-          if (data.name != $scope.user.FullName) {
-            $scope.chattext.push(data.name + " has entered.");
-            $scope.chatlist[data.name] = 0;
-          }
-        });
-      });
-
-      $scope.$parent.$on("playerleave", function(event, data) {
-        $scope.$apply(function() {
-          if (data.name != $scope.user.FullName) {
-            $scope.chattext.push(data.name + " has left.");
-            delete $scope.chatlist[data.name];
-          }
-        });
-      });
-
       $scope.submit = function(data) {
         CommandService.submit(data, $scope.user.Id).then(
           function(data) {
-            var d = angular.fromJson(data.data);
+            var d = data;
             if (
               $location.path().indexOf("play") > -1 &&
               d.messages != undefined
@@ -97,7 +69,7 @@ angular
       $scope.getBuyList = function() {
         CommandService.buylist($scope.user.Id).then(
           function(data) {
-            var d = angular.fromJson(data.data);
+            var d = data;
             $scope.buylist = [];
             angular.forEach(d.messages, function(value) {
               $scope.buylist.push(value.split("&"));
@@ -143,10 +115,6 @@ angular
         $scope.showmenu = !$scope.showmenu;
       };
 
-      $scope.chat = function(msg) {
-        $scope.submit('"' + msg + '"');
-      };
-
       $scope.temphcodeareas = [
         "Haunted Forest",
         "Vast Desert",
@@ -159,53 +127,22 @@ angular
 
   .controller("HomeCtrl", [
     "$scope",
-    "$location",
-    "$window",
-    "NotificationService",
     "gamename",
     function(
       $scope,
-      $location,
-      $window,
-      NotificationService,
       gamename
     ) {
       $scope.$root.title = gamename;
       $scope.items = {};
-      $scope.events = {};
       $scope.acheivements = {};
-
-      function activate() {
-        NotificationService.getEvents().then(
-          function(data) {
-            $scope.events = angular.fromJson(data.data).events;
-          },
-          function(error) {
-            console.error("error", error);
-          }
-        );
-      }
-
-      activate();
     }
-  ])
-
-  .controller("SignUpCtrl", [
-    "$scope",
-    "$location",
-    "$window",
-    "UserService",
-    "gamename",
-    function($scope, $location, $window, UserService, gamename) {}
   ])
 
   // Path: /about
   .controller("AboutCtrl", [
     "$scope",
-    "$location",
-    "$window",
     "gamename",
-    function($scope, $location, $window, gamename) {
+    function($scope, gamename) {
       $scope.$root.title = gamename + " | About";
     }
   ])
@@ -214,10 +151,9 @@ angular
   .controller("LoginCtrl", [
     "$scope",
     "$location",
-    "$window",
     "UserService",
     "gamename",
-    function($scope, $location, $window, UserService, gamename) {
+    function($scope, $location, UserService, gamename) {
       $scope.$root.title = gamename + " | Login";
       $scope.authError = "";
       $scope.result = {};
@@ -233,52 +169,6 @@ angular
 
       activate();
 
-      $scope.reset = function(email) {
-        $scope.pleasewait = "Sending reset. Please wait.";
-        $scope.hasClicked = true;
-        UserService.reset(email).then(
-          function(data) {
-            $scope.bResetError = false;
-            $scope.result = angular.fromJson(data.data);
-            $scope.hasClicked = false;
-          },
-          function(error) {
-            $scope.bResetError = true;
-            $scope.result = {
-              msg: angular.isDefined(error.Message)
-                ? error.Message
-                : "Sorry, an error occured. Please contact support",
-              success: false
-            };
-            $scope.hasClicked = false;
-          }
-        );
-      };
-
-      $scope.login = function(entereduserName, password) {
-        $scope.pleasewait = "Logging in. Please wait.";
-        $scope.hasClicked = true;
-        UserService.login(entereduserName, password).then(
-          function(data) {
-            $scope.bAuthError = false;
-            $scope.authError = "";
-            var tk = angular.fromJson(data.data);
-            localStorage.setItem("aqg_token", angular.toJson(data.data));
-            UserService.onLoginSuccess();
-            $scope.hasClicked = false;
-            $location.path("/userwelcome");
-          },
-          function(error) {
-            $scope.authError =
-              error.data.error === "invalid_grant"
-                ? "Incorrect username or password"
-                : error.data.error;
-            $scope.bAuthError = true;
-            $scope.hasClicked = false;
-          }
-        );
-      };
-
       $scope.error = {};
       $scope.hasError = false;
       $scope.registered = false;
@@ -288,39 +178,20 @@ angular
 
       $scope.signup = function(
         username,
-        password,
-        confirmpassword,
-        email,
-        gender,
-        emailOptout
       ) {
         $scope.pleasewait = "Registering. Please wait.";
         $scope.hasClicked = true;
         $scope.registered = false;
         UserService.register(
           username,
-          password,
-          confirmpassword,
-          email,
-          gender,
-          emailOptout
         ).then(
-          function(data) {
+          function() {
             $scope.error = {};
             $scope.hasError = false;
             $scope.registered = true;
-
-            if (emailOptout) $scope.notification = data.data.msg;
-            else $scope.notification = data.data.Errors[0];
-
             $scope.hasClicked = false;
-
             $scope.userName = "";
-            $scope.spassword = "";
-            $scope.confirmpassword = "";
-            $scope.email = "";
-            $scope.gender = "";
-            $scope.emailOptout = false;
+            $location.path("/userwelcome");
           },
           function(error) {
             $scope.hasError = true;
@@ -339,24 +210,18 @@ angular
   .controller("UserCtrl", [
     "$scope",
     "$location",
-    "$window",
     "UserService",
     "NotificationService",
     "gamename",
     function(
       $scope,
       $location,
-      $window,
       UserService,
-      NotificationService,
       gamename
     ) {
       $scope.$root.title = gamename;
       $scope.user = {};
       $scope.acheivements = {};
-      $scope.registerText = "Register To Get Email";
-      $scope.registerSuccess = false;
-      $scope.currentlySendMail = false;
 
       function activate() {
         if (!UserService.isLoggedIn()) {
@@ -365,33 +230,16 @@ angular
 
         UserService.getPlayerData().then(
           function(data) {
-            $scope.user = angular.fromJson(data.data);
-            NotificationService.getPlayerAcheivements($scope.user.Id).then(
-              function(data) {
-                $scope.acheivements = angular.fromJson(data.data);
-              },
-              function(error) {
-                console.error("error", error);
-              }
-            );
+            $scope.user = data;
           },
-          function(error) {
+          function (error) {
+            console.error(error);
             $location.path("/login");
           }
         );
       }
 
       activate();
-
-      $scope.logout = function() {
-        UserService.logout();
-        UserService.clearToken();
-        $location.path("/");
-      };
-
-      $scope.adventure = function() {
-        $location.path("/adventure");
-      };
 
       $scope.adventurenew = function() {
         $location.path("/play");
@@ -402,9 +250,7 @@ angular
   // Path: /error/404
   .controller("Error404Ctrl", [
     "$scope",
-    "$location",
-    "$window",
-    function($scope, $location, $window) {
+    function($scope) {
       $scope.$root.title = "Page Not Found";
     }
   ]);

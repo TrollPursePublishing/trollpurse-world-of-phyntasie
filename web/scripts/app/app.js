@@ -20,7 +20,7 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             templateUrl: 'view/manual.html'
         })
         .when('/play', {
-            templateUrl: 'view/gamenew.html',
+            templateUrl: 'view/game.html',
             controller: 'CommandCtrl'
         })
         .when('/', {
@@ -34,7 +34,7 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             redirectTo: 'login'
         })
         .when('/userwelcome', {
-            templateUrl: 'view/userwelcome.html',
+            templateUrl: 'view/welcome.html',
             controller: 'UserCtrl',
         })
         .when('/404', {
