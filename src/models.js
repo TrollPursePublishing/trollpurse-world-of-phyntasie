@@ -2,9 +2,10 @@ function acheivement({
   name,
   description,
   player,
+  id = name + Date.now(),
 }) {
   return {
-    Id: name + Date.now(),
+    id,
     name,
     description,
     time: new Date(),
@@ -17,12 +18,13 @@ function area({
   description,
   locations = [],
   imagePath = "none",
+  id = name + Date.now(),
 }) {
   return {
-    Id: name + Date.now(),
+    id,
     name,
     description,
-    locations,
+    locations: locations.map(l => location(l)),
     imagePath,
   };
 }
@@ -55,9 +57,10 @@ function armor({
   value,
   description,
   slot,
+  id = name + Date.now(),
 }) {
   return {
-    Id: name + Date.now(),
+    id,
     name,
     type,
     armorRating,
@@ -76,9 +79,10 @@ function weapon({
   durability,
   stanimaCost,
   value,
+  id = name + Date.now(),
 }) {
   return {
-    Id: name + Date.now(),
+    id,
     name,
     damage,
     description,
@@ -96,15 +100,16 @@ function equipment({
   legs = null,
   feet = null,
   weapon = null,
+  id = Date.now(),
 }) {
   const instance = {
-    Id: Date.now(),
-    arm,
-    head,
-    torso,
-    legs,
-    feet,
-    weapon,
+    id,
+    arm: armor(arm),
+    head: armor(head),
+    torso: armor(torso),
+    legs: armor(legs),
+    feet: armor(feet),
+    weapon: weapon(weapon),
   };
 
   instance.tryGetArmorFromName = function (armorName) {
@@ -153,10 +158,10 @@ function inventory({
   gold = 1000,
 }) {
   const instance = {
-    [INVENTORY_SLOTS.Armor]: armors,
-    [INVENTORY_SLOTS.Potion]: potions,
-    [INVENTORY_SLOTS.Weapon]: weapons,
-    [INVENTORY_SLOTS.Relic]: relics,
+    [INVENTORY_SLOTS.Armor]: armors.map(a => armor(a)),
+    [INVENTORY_SLOTS.Potion]: potions.map(p => potion(p)),
+    [INVENTORY_SLOTS.Weapon]: weapons.map(w => weapon(w)),
+    [INVENTORY_SLOTS.Relic]: relics.map(r => relic(r)),
     gold,
   };
 
@@ -174,33 +179,25 @@ function inventory({
   }
 }
 
-const MONSTER_TYPES = {
-  Monster: 0,
-  Person: 1,
-  Creature: 2,
-};
-
-MONSTER_TYPES.VALUES = Object.keys(MONSTER_TYPES).map(function (key) { return MONSTER_TYPES[key]; });
-
 function location({
   name,
   description,
   rooms = [],
   monsters = [],
   isExit = false,
-  hasMarket = false,
   questGiver = null,
   id = name + Date.now(),
+  market = null,
 }) {
   return {
     id,
     name,
     description,
-    rooms,
+    rooms: rooms.map(r => room(r)),
+    monsters: monsters.map(m => player(m)),
     isExit,
-    hasMarket,
-    monsters,
-    questGiver,
+    hasMarket: market !== null && market !== undefined,
+    questGiver: questGiver(questGiver),
   };
 }
 
@@ -209,29 +206,15 @@ function market({
   locationIAmIn,
 }) {
   return {
-    inventory,
+    inventory: inventory(inventory),
     locationIAmIn
-  }
-}
-
-function monster({
-  name,
-  description,
-  attribute,
-  type,
-}) {
-  return {
-    Id: name + Date.now(),
-    name,
-    description,
-    attribute,
-    type,
-    GoldLoot = attribute.level + (attribute.toughness + attribute.health) * 0.5,
   }
 }
 
 const QUEST_TYPE = {
   GoTo: 0,
+  Collect: 1,
+  Kill: 2,
 };
 
 QUEST_TYPE.VALUES = Object.keys(QUEST_TYPE).map(function (key) { return QUEST_TYPE[key]; });
@@ -263,27 +246,28 @@ function player({
   myTurn = false,
   placesVisited = [],
   areasDiscovered = 0,
+  description = '',
   id = Date.now(),
 }) {
   const instance = {
     id,
-    savedTarget = null,
     name,
     title,
     isInRoom,
-    currentLocation,
-    currentArea,
-    currentRoom,
-    currentWorld,
-    inventory,
+    currentLocation: currentLocation ? location(currentLocation) : null,
+    currentArea: currentArea ? area(currentArea) : null,
+    currentRoom: currentRoom ? room(currentRoom) : null,
+    currentWorld: currentWorld ? world(currentWorld) : null,
+    description,
+    inventory: inventory(inventory),
     spells,
-    attributes,
-    equipment,
+    attributes: attribute(attributes),
+    equipment: equipment(equipment),
     savedTarget,
     isInCombat,
     isInside,
     expireRoom,
-    quests,
+    quests: playerQuests(quests),
     myTurn,
     placesVisited,
     areasDiscovered,
@@ -294,11 +278,9 @@ function player({
     instance.state = PLAYER_STATE.Alive;
     instance.attributes.resetStats();
     instance.inventory.gold = instance.inventory.gold / 2;
-    instance.inventory.armors = [];
-    instance.inventory.weapons = [];
     instance.inventory.relics = [];
     instance.inventory.potions = [];
-    instance.attributes.addExperience(-10 * instance.attributes.level);
+    instance.attributes.addExperience(-10 * instance.attributes.level());
     instance.expireRoom = true;
     return `${instance.fullName} has been revived by the magic of the world.`;
   }
@@ -407,7 +389,7 @@ function player({
     return `${instance.addItemToInventory(old)} Unequipped armor ${old.name}`;
   }
 
-  instance.unequipWeapon = function (weapon) {
+  instance.unequipWeapon = function (_weapon) {
     const old = instance.equipment.weapon;
     instance.equipment.weapon = null;
     return `${instance.addItemToInventory(old)} Unequipped weapon ${old.name}`;
@@ -512,6 +494,14 @@ function playerAttribute({
     experience,
   };
 
+  function quadratic_polynomial(a, x) {
+    return (a * Math.pow(x, 2)) + (a * x) + a;
+  }
+
+  function cubic_polynomial(a, x) {
+    return (a + Math.pow(x, 3)) + (a * Math.pow(x, 2)) + (a * x) + a;
+  }
+
   instance.resetStats = function () {
     instance.currentHealth = instance.health;
     instance.currentMana = instance.mana;
@@ -520,14 +510,18 @@ function playerAttribute({
     instance.currentToughness = instance.toughness;
   }
 
-  instance.levelUp = function () {
-    function quadratic_polynomial(a, x) {
-      return (a * Math.pow(x, 2)) + (a * x) + a;
+  instance.addExperience = function (value) {
+    instance.experience = instance.experience + value;
+    console.log(`Power Level: ${instance.level()}/Experience: ${instance.experience}`);
+    const experienceNeeded = cubic_polynomial(100, instance.level());
+    console.log(`Experience Needed for Level Up: ${experienceNeeded}`);
+    if (experienceNeeded < instance.experience) {
+      instance.levelUp();
     }
+  }
 
-    function cubic_polynomial(a, x) {
-      return (a + Math.pow(x, 3)) + (a * Math.pow(x, 2)) + (a * x) + a;
-    }
+  instance.levelUp = function () {
+    console.log(`Old Stats: ${instance.health}/${instance.mana}/${instance.strength}/${instance.toughness}`);
 
     instance.health = cubic_polynomial(12, instance.health);
     instance.mana = cubic_polynomial(10, instance.mana);
@@ -535,6 +529,7 @@ function playerAttribute({
     instance.strength = quadratic_polynomial(5, instance.strength);
     instance.toughness = cubic_polynomial(2, instance.toughness);
 
+    console.log(`New Stats: ${instance.health}/${instance.mana}/${instance.strength}/${instance.toughness}`);
     instance.resetStats();
   }
 
@@ -679,21 +674,36 @@ function room({
     description,
     isExit,
     chanceForRelic,
-    linkedRoom,
+    linkedRoom: linkedRoom.map(r => room(r)),
     id,
   }
+}
+
+function spell({
+  name,
+  description,
+  manaCost,
+  apply = null,
+}) {
+  return {
+    name,
+    description,
+    manaCost,
+    apply,
+  };
 }
 
 function world({
   name,
   description,
   areas = [],
+  id = name + Date.now(),
 }) {
   return {
-    Id: name + Date.now(),
+    id,
     name,
     description,
-    areas,
+    areas: areas.map(a => area(a)),
   }
 }
 
