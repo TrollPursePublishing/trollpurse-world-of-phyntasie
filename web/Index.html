@@ -6,18 +6,15 @@
     <title ng-bind="title" data-game-name></title>
     <meta name="description" content="The Most Amazing Text RPG Game To Date" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/Content/hint.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="styles/hint.min.css" rel="stylesheet"/>
+    <link href="styles/ui-bootstrap-csp.css"/>
 </head>
 <body>
-    <!--[if lt IE 9]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
     <nav class="nav navbar navbar-inverse navbar-fixed-top" role="navigation" ng-if=" !layout " style="z-index:1000;">
         <div class="container">
             <div class="navbar-header">
@@ -27,7 +24,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#/" class="navbar-brand">AdventureQuestGame <i style="font-size:8px;" data-app-version></i></a>
+                <a href="#/" class="navbar-brand"><i data-game-name></i> <i style="font-size:8px;" data-app-version></i></a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -56,17 +53,18 @@
     </nav>
     <div ng-view style="padding-top:50px;">
     </div>
-    <script src="/Scripts/moment.min.js"></script>
-    <script src="/Scripts/angular.min.js"></script>
-    <script src="/Scripts/angular-route.min.js"></script>
-    <script src="Scripts/jquery.signalR-2.1.2.min.js"></script>
-    <script src="/Scripts/angular-ui/ui-bootstrap.min.js"></script>
-    <script src="/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
-    <script src="signalr/hubs"></script>
-    <script src="/App/directives.min.js"></script>
-    <script src="/App/filters.min.js"></script>
-    <script src="/App/services.min.js"></script>
-    <script src="/App/controllers.min.js"></script>
-    <script src="/App/app.min.js"></script>
+    <script src="scripts/engine/models"></script>
+    <script src="scripts/engine/gameContext.js"></script>
+    <script src="scripts/engine/game.js"></script>
+    <script src="scripts/thirdparty/moment.min.js"></script>
+    <script src="scripts/thirdparty/angular.min.js"></script>
+    <script src="scripts/thirdparty/angular-route.min.js"></script>
+    <script src="scripts/thirdparty/angular-ui/ui-bootstrap.min.js"></script>
+    <script src="scripts/thirdparty/angular-ui/ui-bootstrap-tpls.min.js"></script>
+    <script src="scripts/app/directives.js"></script>
+    <script src="scripts/app/filters.js"></script>
+    <script src="scripts/app/services.js"></script>
+    <script src="scripts/app/controllers.js"></script>
+    <script src="scripts/app/app.js"></script>
 </body>
 </html>
