@@ -4,6 +4,7 @@ const {
   doCommand,
   getPlayer,
   getBuyList,
+  createPlayer,
 } = wop_game();
 
 angular

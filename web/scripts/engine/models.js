@@ -1,7 +1,21 @@
 "use strict";
 
 function wop_models() {
-  function wop_acheivement({ name, description, player, id = name + Date.now() }) {
+  function wop_id() {
+    return (
+      "id" +
+      Math.random()
+        .toString(36)
+        .substr(2, 9)
+    );
+  }
+
+  function wop_acheivement({
+    name,
+    description,
+    player,
+    id = name + wop_id()
+  }) {
     return {
       id,
       name,
@@ -16,7 +30,7 @@ function wop_models() {
     description,
     locations = [],
     imagePath = "none",
-    id = name + Date.now()
+    id = name + wop_id()
   }) {
     return {
       id,
@@ -58,8 +72,8 @@ function wop_models() {
     durability,
     value,
     description,
-    slot,
-    id = name + Date.now()
+    slot = INVENTORY_SLOTS.Armor,
+    id = name + wop_id()
   }) {
     return {
       id,
@@ -69,7 +83,17 @@ function wop_models() {
       durability,
       value,
       description,
-      slot
+      slot,
+      clone: () =>
+        wop_armor({
+          name,
+          type,
+          armorRating,
+          durability,
+          value,
+          description,
+          slot
+        })
     };
   }
 
@@ -81,7 +105,8 @@ function wop_models() {
     durability,
     stanimaCost,
     value,
-    id = name + Date.now()
+    slot = INVENTORY_SLOTS.Weapon,
+    id = name + wop_id()
   }) {
     return {
       id,
@@ -91,7 +116,19 @@ function wop_models() {
       criticalDamage,
       durability,
       stanimaCost,
-      value
+      value,
+      slot,
+      clone: () =>
+        wop_weapon({
+          name,
+          damage,
+          description,
+          criticalDamage,
+          durability,
+          stanimaCost,
+          value,
+          slot
+        })
     };
   }
 
@@ -102,7 +139,7 @@ function wop_models() {
     legs = null,
     feet = null,
     weapon = null,
-    id = Date.now()
+    id = wop_id()
   }) {
     const instance = {
       id,
@@ -133,7 +170,7 @@ function wop_models() {
 
   function wop_event({ title, description }) {
     return {
-      Id: title + Date.now(),
+      Id: title + wop_id(),
       when: new Date(),
       title,
       description
@@ -168,7 +205,7 @@ function wop_models() {
 
     instance.getItem = function(itemName) {
       return instance
-        .getAllItems()
+        .allItems()
         .find(item => item.name.toLowerCase() === itemName.toLowerCase());
     };
 
@@ -179,6 +216,7 @@ function wop_models() {
         ...instance[INVENTORY_SLOTS.Weapon]
       ];
     };
+    return instance;
   }
 
   function wop_location({
@@ -188,7 +226,7 @@ function wop_models() {
     monsters = [],
     isExit = false,
     questGiver = null,
-    id = name + Date.now(),
+    id = name + wop_id(),
     market = null
   }) {
     return {
@@ -200,7 +238,7 @@ function wop_models() {
       isExit,
       market: market ? wop_market(market) : null,
       hasMarket: market !== null && market !== undefined,
-      questGiver: questGiver ? wop_questGiver(questGiver) : null,
+      questGiver: questGiver ? wop_questGiver(questGiver) : null
     };
   }
 
@@ -245,7 +283,7 @@ function wop_models() {
     experience = 0
   }) {
     const instance = {
-      Id: Date.now(),
+      Id: wop_id(),
       strength,
       mana,
       stanima,
@@ -277,9 +315,9 @@ function wop_models() {
     };
 
     instance.addExperience = function(value) {
-      instance.experience = instance.experience + value;
+      instance.experience = Math.max(0, instance.experience + value);
       console.log(
-        `Power Level: ${instance.level()}/Experience: ${instance.experience}`
+        `Power Level: ${instance.level()} / Experience: ${instance.experience}`
       );
       const experienceNeeded = cubic_polynomial(100, instance.level());
       console.log(`Experience Needed for Level Up: ${experienceNeeded}`);
@@ -328,7 +366,7 @@ function wop_models() {
 
   function wop_playerQuestQuest({ quest, count = 0, complete = false }) {
     return {
-      id: Date.now(),
+      id: wop_id(),
       quest,
       count,
       complete
@@ -337,7 +375,7 @@ function wop_models() {
 
   function wop_playerQuests({ quests = [] }) {
     return {
-      id: Date.now(),
+      id: wop_id(),
       quests
     };
   }
@@ -346,16 +384,20 @@ function wop_models() {
     name,
     description,
     value,
+    slot = INVENTORY_SLOTS.Potion,
     apply = function(_instigator, _target) {
       return "An empty bottle!";
-    }
+    },
+    id = wop_id()
   }) {
     return {
-      id: Date.now(),
+      id,
       name,
       description,
       value,
-      apply
+      slot,
+      apply,
+      clone: () => wop_potion({ name, description, value, slot, apply })
     };
   }
 
@@ -368,7 +410,7 @@ function wop_models() {
     nameOfObject,
     countNeeded,
     nextQuest = null,
-    id = Date.now()
+    id = wop_id()
   }) {
     const instance = {
       title,
@@ -392,7 +434,7 @@ function wop_models() {
     name,
     description,
     questsToUnlockThisQuestGiver = null,
-    id = Date.now()
+    id = wop_id()
   }) {
     const instance = {
       id,
@@ -420,7 +462,7 @@ function wop_models() {
 
   function wop_player({
     name,
-    title = '',
+    title = "",
     isInRoom = false,
     currentLocation = null,
     currentArea = null,
@@ -439,9 +481,9 @@ function wop_models() {
     placesVisited = [],
     areasDiscovered = 0,
     description = "",
-    id = Date.now(),
+    id = wop_id(),
     joinDate = new Date(),
-    monstersSlain = 0,
+    monstersSlain = 0
   }) {
     const instance = {
       id,
@@ -467,7 +509,7 @@ function wop_models() {
       areasDiscovered,
       fullName: `${title} ${name}`,
       joinDate,
-      monstersSlain,
+      monstersSlain
     };
 
     instance.onRevive = function() {
@@ -524,12 +566,11 @@ function wop_models() {
         qq.count = qq.count + 1;
       }
 
-      if (!instance.placesVisited.find(place => place === where)) {
-        instance.placesVisited.push(where);
-        instance.areasDiscovered = instance.placesVisited.length;
+      if (!instance.placesVisited.includes(where.name)) {
+        instance.areasDiscovered = instance.placesVisited.push(where.name);
       }
 
-      return `I move forth to ${where.name}`;
+      return `I move forth to ${where.name}. ${where.description}`;
     };
 
     instance.addItemToInventory = function(item) {
@@ -564,7 +605,7 @@ function wop_models() {
 
     instance.removeItemFromInventory = function(item) {
       instance.inventory[item.slot] = instance.inventory[item.slot].filter(
-        i => i.Id !== item.Id
+        i => i.id !== item.id
       );
       if (item.slot === INVENTORY_SLOTS.Relic) {
         const quest = instance.quests.quests.find(
@@ -650,7 +691,11 @@ function wop_models() {
       }
     };
 
-    instance.defend = function(instigator, physicalDamage, weaponDamage) {
+    instance.defend = function(
+      instigator,
+      physicalDamage = 1,
+      weaponDamage = 0
+    ) {
       instance.savedTarget = instigator;
       let totalArmorRating = 0;
 
@@ -673,7 +718,9 @@ function wop_models() {
 
       return `${instigator.fullName} has caused ${totalDamage} pain to ${
         instance.fullName
-      }`;
+      }. ${instance.fullName} has ${
+        instance.attributes.currentHealth
+      } health remaining.`;
     };
 
     instance.usePotion = function(potion, target) {
@@ -681,7 +728,7 @@ function wop_models() {
         instance.savedTarget = target;
       }
       const potionText = potion.apply(this, target);
-      return instance.removeItemFromInventory(potion) + potionText;
+      return instance.removeItemFromInventory(potion) + " " + potionText;
     };
 
     instance.onCombatOver = function(target) {
@@ -701,11 +748,18 @@ function wop_models() {
     return instance;
   }
 
-  function wop_relic({ name, description, value, id = Date.now() }) {
+  function wop_relic({
+    name,
+    description,
+    value,
+    slot = INVENTORY_SLOTS.Relic,
+    id = wop_id()
+  }) {
     return {
       name,
       description,
       value,
+      slot,
       id
     };
   }
@@ -727,14 +781,14 @@ function wop_models() {
     isExit,
     chanceForRelic,
     linkedRoom = [],
-    id = Date.now()
+    id = wop_id()
   }) {
     return {
       name,
       description,
       isExit,
       chanceForRelic,
-      linkedRoom: linkedRoom.map(r => room(r)),
+      linkedRoom: linkedRoom.map(r => wop_room(r)),
       id
     };
   }
@@ -748,7 +802,7 @@ function wop_models() {
     };
   }
 
-  function wop_world({ name, description, areas = [], id = name + Date.now() }) {
+  function wop_world({ name, description, areas = [], id = name + wop_id() }) {
     return {
       id,
       name,

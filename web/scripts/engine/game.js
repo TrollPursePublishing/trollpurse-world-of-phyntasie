@@ -1,67 +1,79 @@
 "use strict";
 
 function wop_game() {
-  const {
-    wop_player,
-  } = wop_models();
+  const { wop_player, INVENTORY_SLOTS } = wop_models();
   const {
     defaultGameContext,
     wop_gameContext,
     allSpells,
+    allPotions
   } = gameContext();
 
   // Begin Utility functions
   function playerBridge(player) {
-    return player ? {
-      ...player,
-      attributes: {
-        ...player.attributes,
-        level: player.attributes.level(),
-      },
-      navigation: {
-        currentWorld: player.currentWorld,
-        currentArea: player.currentArea,
-        currentLocation: player.currentLocation,
-        currentRoom: player.currentRoom,
-      },
-      title: {
-        name: player.title,
-      },
-      stats: {
-        areasDiscovered: player.areasDiscovered,
-        monstersKilled: player.monstersSlain,
-        joinDate: player.joinDate,
-      }
-    } : {};
+    function flattenRooms(rooms) {
+      return rooms.concat(rooms.flatMap(room => flattenRooms(room.linkedRoom)));
+    }
+
+    const rooms = flattenRooms(player.currentLocation.rooms);
+
+    return player
+      ? {
+          ...player,
+          attributes: {
+            ...player.attributes,
+            level: player.attributes.level()
+          },
+          navigation: {
+            currentWorld: player.currentWorld,
+            currentArea: player.currentArea,
+            currentLocation: {
+              ...player.currentLocation,
+              rooms
+            },
+            currentRoom: player.currentRoom
+          },
+          title: {
+            name: player.title
+          },
+          stats: {
+            areasDiscovered: player.areasDiscovered,
+            monstersKilled: player.monstersSlain,
+            joinDate: player.joinDate
+          }
+        }
+      : {};
   }
 
   function postPlayerCombatAction(p, targetPlayer, gtx) {
     const result = [];
-    if (targetPlayer.currentHealth > 0) {
+    if (targetPlayer.attributes.currentHealth > 0) {
       result.push(targetPlayer.attack(p));
-      if (p.currentHealth <= 0) {
-        results.push(p.onDeath());
-        results.push(p.onCombatOver(targetPlayer));
-        results.push(p.onRevive());
+      if (p.attributes.currentHealth <= 0) {
+        result.push(p.onDeath());
+        result.push(p.onCombatOver(targetPlayer));
+        result.push(p.onRevive());
         p.currentWorld = gtx.world;
         p.currentArea = p.currentWorld.areas[0];
         p.currentLocation = p.currentArea.locations[0];
+        p.currentRoom = null;
       }
     } else {
-      p.attributes.addExperience(targetPlayer.attributes.level());
+      p.attributes.addExperience(targetPlayer.attributes.level() * 30);
       result.push(targetPlayer.onDeath());
       targetPlayer.onRevive(); //Do not post this message.
       result.push(p.onCombatOver(targetPlayer));
       p.monstersSlain = p.monstersSlain + 1;
     }
-    result;
+    targetPlayer.savedTarget = null; //clear monster's saved target
+    return result;
   }
 
   function rollEncounter(p, oneThroughFive) {
     const roll = Math.floor(Math.random() * Math.floor(5));
     if (roll > oneThroughFive) {
       const index = Math.floor(
-        Math.random() * Math.floor(p.currentLocation.monsters.length)
+        Math.random() * p.currentLocation.monsters.length
       );
       const monster = p.currentLocation.monsters[index];
       if (monster) {
@@ -74,12 +86,9 @@ function wop_game() {
 
   function attack(p, _, gtx) {
     if (p.isInCombat) {
-      const targetPlayer = p.savedTarget;
-      const result = [
-        p.attack(targetPlayer),
-        ...postPlayerCombatAction(p, targetPlayer, gtx),
-      ];
-      return result;
+      return [p.attack(p.savedTarget)].concat(
+        postPlayerCombatAction(p, p.savedTarget, gtx)
+      );
     }
     return ["I am not in combat right now"];
   }
@@ -94,11 +103,11 @@ function wop_game() {
     if (market) {
       const item = market.inventory.getItem(itemName);
       if (item) {
-        return [p.buyItem(item)];
+        return [p.buyItem(item.clone())];
       }
       return [
         "I can buy the following.",
-        ...market.getAllItems().map(item => item.name)
+        ...market.inventory.allItems().map(item => item.name)
       ];
     } else {
       return ["There is no market where I am at."];
@@ -111,13 +120,16 @@ function wop_game() {
     );
     if (spell) {
       if (p.isInCombat) {
-        const targetPlayer = p.savedTarget;
         return [
-          p.castSpell(spell, targetPlayer),
-          ...postPlayerCombatAction(p, targetPlayer, gtx)
+          spell.description,
+          p.castSpell(spell, p.savedTarget),
+          ...postPlayerCombatAction(p, p.savedTarget, gtx)
         ];
       } else {
-        return [p.castSpell(spell)];
+        return [
+          spell.description,
+          p.castSpell(spell),
+        ];
       }
     }
     return [`I do not know how to cast ${spellName}`];
@@ -144,7 +156,7 @@ function wop_game() {
     }
 
     if (p.currentRoom) {
-      if (p.currenRoom.isExit) {
+      if (p.currentRoom.isExit) {
         p.isInside = false;
         p.expireRoom = true;
 
@@ -174,9 +186,7 @@ function wop_game() {
 
     if (p.isInside) {
       if (Math.random() <= p.currentRoom.chanceForRelic) {
-        const index = Math.floor(
-          Math.random() * Math.floor(gtx.relics.length)
-        );
+        const index = Math.floor(Math.random() * Math.floor(gtx.relics.length));
         return [p.addItemToInventory(gtx.relics[index])];
       } else {
         const index = Math.floor(
@@ -195,14 +205,31 @@ function wop_game() {
       return ["I cannot go anywhere when in combat."];
     }
 
-    if (p.currentRoom && player.isInside) {
+    if (p.currentRoom && p.isInside) {
       if (p.currentRoom.linkedRoom && p.currentRoom.linkedRoom.length) {
-        const destination = player.currentRoom.linkedRoom.find(
+        const destination = p.currentRoom.linkedRoom.find(
           room => room.name.toLowerCase() === where.toLowerCase()
         );
         if (destination) {
           p.currentRoom = destination;
           return [p.onMove(destination), rollEncounter(p, 1)];
+        }
+      } else {
+        //n-tree breadth first search for root with child node of name
+        function findParentRoom(rooms) {
+          return rooms.find(room =>
+            room.linkedRoom.find(room => room.name === p.currentRoom.name)
+          );
+        }
+        let room;
+        let rooms = p.currentLocation.rooms;
+        do {
+          room = findParentRoom(rooms);
+          rooms = rooms.flatMap(room => room.linkedRoom);
+        } while (!room);
+        if (where.toLowerCase() === room.name.toLowerCase()) {
+          p.currentRoom = room;
+          return [p.onMove(room), rollEncounter(p, 1)];
         }
       }
       return [`${where} is not a room I may go to.`];
@@ -227,7 +254,7 @@ function wop_game() {
         if (destination.questGiver && destination.questGiver.canDoQuest(p)) {
           results.push(
             `${destination.questGiver.name} is here. ${
-            destination.questGiver.description
+              destination.questGiver.description
             }`
           );
         }
@@ -258,7 +285,7 @@ function wop_game() {
   }
 
   function quest(p, start, _gameContext) {
-    if (start.toLowerCase() === "start") {
+    if (start && start.toLowerCase() === "start") {
       const cannotDo = ["There are no quest givers here."];
       if (!p.currentLocation.questGiver) {
         return cannotDo;
@@ -288,11 +315,13 @@ function wop_game() {
 
     const active = p.quests.quests
       .filter(q => !q.isComplete)
-      .flatMap(q => [q.quest.title, ...q.quest.instructions]);
+      .flatMap(q => [q.quest.title, q.quest.instructions]);
 
     active.length
       ? active
-      : "I have not taken on any quests lately, am I a coward? Lazy? I think not! Forth I go to collect and complete quests!";
+      : [
+          "I have not taken on any quests lately, am I a coward? Lazy? I think not! Forth I go to collect and complete quests!"
+        ];
   }
 
   function rest(p, _params, _gameContext) {
@@ -300,13 +329,13 @@ function wop_game() {
       p.attributes.resetStats();
       return [
         `Resting at the ${
-        p.currentLocation.name
+          p.currentLocation.name
         } Inn. The bed was hard, the bread was hard, and my coin purse seems softer.`
       ];
     }
     return [
       `${
-      p.currentLocation.name
+        p.currentLocation.name
       } does not have an Inn. I must find a place with a Market to find an Inn and rest.`
     ];
   }
@@ -336,7 +365,7 @@ function wop_game() {
       if (p.isInCombat) {
         return [
           p.usePotion(potion, p.savedTarget),
-          postPlayerCombatAction(p, p.savedTarget, gtx)
+          ...postPlayerCombatAction(p, p.savedTarget, gtx)
         ];
       }
       return [p.usePotion(potion)];
@@ -360,8 +389,8 @@ function wop_game() {
       ...p.currentArea.locations.map(l => l.name),
       p.currentLocation.rooms && p.currentLocation.rooms.length
         ? `${p.currentLocation} also has an entrance at ${
-        p.currentLocation.rooms.find(r => r.isExit).name
-        }`
+            p.currentLocation.rooms.find(r => r.isExit).name
+          }`
         : "There are no rooms to go to.",
       p.currentLocation.isExit
         ? "I may also travel to further areas. I should check my map"
@@ -386,7 +415,7 @@ function wop_game() {
   };
 
   function help(_p, _, _gameContext) {
-    return ["Here is what I can possibly do.", ...Object.keys(ACTIONS), "help"];
+    return ["Here is what I can possibly do.", ...Object.keys(ACTIONS)];
   }
 
   ACTIONS.help = help;
@@ -407,15 +436,24 @@ function wop_game() {
       ? wop_gameContext(JSON.parse(localStorage.getItem(contextKey)))
       : wop_gameContext(defaultGameContext());
 
-    let PlayerObj = localStorage.getItem(playerKey)
+    let PlayerObj = localStorage.getItem(playerKey);
     if (PlayerObj) {
       PlayerObj = JSON.parse(PlayerObj);
 
       const Player = wop_player({
         ...PlayerObj,
-        spells: PlayerObj.spells.map(spell => spell({ ...allSpells[spell.name], name: spell.name })),
-        savedTarget: PlayerObj.savedTarget ? GameContext.monsters[PlayerObj.savedTarget.name] : null,
+        spells: PlayerObj.spells.map(spell => allSpells[spell.name])
       });
+
+      Player.inventory[INVENTORY_SLOTS.Potion] = Player.inventory[
+        INVENTORY_SLOTS.Potion
+      ].map(potion => allPotions[potion.name].clone());
+
+      Player.savedTarget = Player.savedTarget
+        ? Player.currentLocation.monsters.find(
+            m => m.name === Player.savedTarget.name
+          )
+        : null;
 
       return { GameContext, Player };
     }
@@ -434,24 +472,23 @@ function wop_game() {
   function doCommand(parameters) {
     const { GameContext, Player } = load();
     let messages = [];
+    const originalParameters = parameters;
 
     try {
       if (parameters.includes(" ")) {
         const params = parameters.split(" ");
         parameters = params.splice(0, 1)[0];
         messages = messages.concat(
-          ACTIONS[parameters](
-            Player,
-            params.join(" "),
-            GameContext
-          )
+          ACTIONS[parameters](Player, params.join(" "), GameContext)
         );
       } else {
-        messages = messages.concat(ACTIONS[parameters](Player, null, GameContext));
+        messages = messages.concat(
+          ACTIONS[parameters](Player, null, GameContext)
+        );
       }
     } catch (err) {
       messages = messages
-        .concat([`I do not know how to ${parameters}`])
+        .concat([`I do not know how to ${originalParameters}`])
         .concat(help());
       console.error(err);
     } finally {
@@ -464,7 +501,7 @@ function wop_game() {
     });
   }
 
-  function getPlayer(slotName = 'autosave') {
+  function getPlayer(slotName = "autosave") {
     try {
       const { Player } = load(slotName);
       return JSON.stringify(playerBridge(Player));
@@ -478,14 +515,18 @@ function wop_game() {
     save({
       Player: wop_player({
         name: playerName,
-        title: 'Adventurer',
-        description: 'I am a mighty adventurer!',
+        title: "Adventurer",
+        description: "I am a mighty adventurer!",
         currentWorld: newContext.world,
         currentArea: newContext.world.areas[0],
         currentLocation: newContext.world.areas[0].locations[0],
+        spells: [
+          allSpells["Healing Touch"],
+          allSpells["Fire Spit"],
+        ],
       }),
-      GameContext: newContext,
-    })
+      GameContext: newContext
+    });
   }
 
   function getBuyList() {
@@ -494,9 +535,9 @@ function wop_game() {
       player: playerBridge(Player),
       messages: Player.currentLocation.market
         ? Player.currentLocation.market.inventory
-          .getAllItems()
-          .map(({ name, value }) => `${name}&${value}`)
-        : [],
+            .allItems()
+            .map(({ name, value }) => `${name}&${value}`)
+        : []
     });
   }
 
@@ -507,6 +548,6 @@ function wop_game() {
     doCommand,
     createPlayer,
     getPlayer,
-    addNewSpell,
+    addNewSpell
   };
 }
