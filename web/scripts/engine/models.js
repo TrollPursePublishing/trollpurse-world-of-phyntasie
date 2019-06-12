@@ -673,13 +673,14 @@ function wop_models() {
       instance.savedTarget = target;
 
       if (
-        instance.attributes.currentStanima > 0 &&
         instance.equipment.weapon &&
-        instance.equipment.weapon.durability > 0
+        instance.equipment.weapon.durability > 0 &&
+        instance.attributes.currentStanima > instance.equipment.weapon.stanimaCost
       ) {
         instance.equipment.weapon.durability =
           instance.equipment.weapon.durability - 1;
         instance.attributes.currentStanima =
+          instance.attributes.currentStanima -
           instance.equipment.weapon.stanimaCost;
         return target.defend(
           instance,
@@ -742,7 +743,7 @@ function wop_models() {
     instance.engage = function(target) {
       instance.savedTarget = target;
       instance.isInCombat = true;
-      return `${instance.fullName} has engaged combat with ${target.fullName}`;
+      return `${instance.fullName} has engaged combat with ${target.fullName}. ${target.description}`;
     };
 
     return instance;

@@ -388,7 +388,7 @@ function wop_game() {
       `I am in ${p.currentArea.name} and I may go to the following places.`,
       ...p.currentArea.locations.map(l => l.name),
       p.currentLocation.rooms && p.currentLocation.rooms.length
-        ? `${p.currentLocation} also has an entrance at ${
+        ? `${p.currentLocation.name} also has an entrance at ${
             p.currentLocation.rooms.find(r => r.isExit).name
           }`
         : "There are no rooms to go to.",

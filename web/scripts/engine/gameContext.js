@@ -12,7 +12,9 @@ function gameContext() {
     wop_inventory,
     wop_potion,
     wop_spell,
-    wop_playerAttribute
+    wop_playerAttribute,
+    wop_armor,
+    wop_weapon,
   } = wop_models();
 
   function heal(healthAmount, next = null) {
@@ -43,7 +45,7 @@ function gameContext() {
         target.attributes.currentHealth - damageAmount
       );
       const amount = Math.abs(target.attributes.currentHealth - oldHealth);
-      return text + `Caused ${amount} damage. `;
+      return text + `Caused ${amount} pain to ${target.fullName}! `;
     };
   }
 
