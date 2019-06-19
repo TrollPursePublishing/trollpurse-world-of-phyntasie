@@ -768,6 +768,7 @@ function wop_models() {
     description,
     isExit,
     chanceForRelic,
+    relics = [],
     linkedRoom = [],
     id = wop_id()
   }) {
@@ -776,6 +777,7 @@ function wop_models() {
       description,
       isExit,
       chanceForRelic,
+      relics: relics.map(r => wop_relic(r)),
       linkedRoom: linkedRoom.map(r => wop_room(r)),
       id
     };

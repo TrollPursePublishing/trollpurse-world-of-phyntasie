@@ -161,141 +161,135 @@ function gameContext() {
 
   allMonsters["Buffed Imp"].attributes.levelUp();
 
-  const defaultGameContext = () => {
-    return {
-      world: wop_world({
-        name: "Phyntasie",
-        description: "The world I love - or so they tell me.",
-        areas: [
-          wop_area({
-            name: "Buttleberry",
-            description: "A beautiful down upon the cliffs of an ocean.",
-            locations: [
-              wop_location({
-                name: "Town Square",
-                description: "A square in the town. I guess I should not have expected more than that.",
-                monsters: [
-                  allMonsters["Imp"],
-                  allMonsters["Sewer Turtle"],
-                  allMonsters["Large Rat"],
-                  allMonsters["Buffed Imp"]
-                ],
-                questGiver: wop_questGiver({
-                  name: 'Old Dirty Man',
-                  description: 'He sits there. Hunched. Smelly. Wrinkled.',
-                  quest: wop_quests({
-                    countNeeded: 1,
-                    description: "Imps are so Pesky! They must all DIE!",
-                    instructions: 'Kill 1 Imp',
-                    nameOfObject: 'Imp',
-                    gold: 2000,
-                    title: 'Pesky Imps Must Die',
-                    type: QUEST_TYPE.Kill,
-                  }),
-                }),
-                rooms: [
-                  wop_room({
-                    name: "Sewers",
-                    description:
-                      "It smells. Like shit. That is the long and short of it.",
-                    isExit: true,
-                    chanceForRelic: 0.05,
-                    linkedRoom: [
-                      wop_room({
-                        name: "Round Sewer Room",
-                        description:
-                          "A large cavernous space within the sewers. There is no light. It still smells like shit.",
-                        isExit: false,
-                        chanceForRelic: 0.06
-                      })
-                    ]
-                  })
-                ],
-                market: wop_market({
-                  inventory: wop_inventory({
-                    potions: [
-                      allPotions["Flaming Jar of Shit"],
-                      allPotions["Potion of Painlessness"],
-                      allPotions["Potion of Mana Empowerment"],
-                    ],
-                    armors: [
-                      wop_armor({
-                        name: 'Sandals',
-                        equipmentSlot: ARMOR_SLOTS.Feet,
-                        durability: 100,
-                        value: 50,
-                        armorRating: 1,
-                        description: "Thin, strappy, and pretty much useless. But they sure are trusty.",
-                      }),
-                      wop_armor({
-                        name: 'Plate with Straps',
-                        equipmentSlot: ARMOR_SLOTS.Torso,
-                        durability: 10,
-                        value: 50,
-                        armorRating: 2,
-                        description: 'A ceramic plate that covers my sternum. Seriously, this is armor.',
-                      }),
-                      wop_armor({
-                        name: 'Clothe Cap',
-                        equipmentSlot: ARMOR_SLOTS.Head,
-                        durability: 100,
-                        value: 50,
-                        armorRating: 1,
-                        description: "Yup, a cap. Yup, made of clothe. Keeps the sun off my face though.",
-                      }),
-                      wop_armor({
-                        name: 'Canvas Pants',
-                        equipmentSlot: ARMOR_SLOTS.Legs,
-                        durability: 50,
-                        value: 25,
-                        armorRating: 1,
-                        description: "They never say anything about no service without pants. But, they do keep prying eyes curious.",
-                      }),
-                      wop_armor({
-                        name: 'Greiving Gauntlets',
-                        equipmentSlot: ARMOR_SLOTS.Arm,
-                        durability: 200,
-                        value: 125,
-                        armorRating: 2,
-                        description: "This world was once cursed. When the curse was lifted, all that was left was an abundance of enchanted gauntlets. They weep, all day, all the time.",
-                      }),
-                    ],
-                    weapons: [
-                      wop_weapon({
-                        name: "Dumb Ass Stick",
-                        description: "A stupid peice of wood that has been sharpened.",
-                        damage: 1,
-                        criticalDamage: 2,
-                        durability: 10,
-                        stanimaCost: 0,
-                        value: 50,
-                      }),
-                    ],
-                  }),
+  const createWorld = () => {
+    return wop_world({
+      name: "Phyntasie",
+      description: "The world I love - or so they tell me.",
+      areas: [
+        wop_area({
+          name: "Buttleberry",
+          description: "A beautiful down upon the cliffs of an ocean.",
+          locations: [
+            wop_location({
+              name: "Town Square",
+              description: "A square in the town. I guess I should not have expected more than that.",
+              monsters: [
+                allMonsters["Imp"],
+                allMonsters["Sewer Turtle"],
+                allMonsters["Large Rat"],
+                allMonsters["Buffed Imp"]
+              ],
+              questGiver: wop_questGiver({
+                name: 'Old Dirty Man',
+                description: 'He sits there. Hunched. Smelly. Wrinkled.',
+                quest: wop_quests({
+                  countNeeded: 1,
+                  description: "Imps are so Pesky! They must all DIE!",
+                  instructions: 'Kill 1 Imp',
+                  nameOfObject: 'Imp',
+                  gold: 2000,
+                  title: 'Pesky Imps Must Die',
+                  type: QUEST_TYPE.Kill,
                 }),
               }),
-            ],
-          }),
-        ],
-      }),
-      relics: [],
-    };
+              rooms: [
+                wop_room({
+                  name: "Sewers",
+                  description:
+                    "It smells. Like shit. That is the long and short of it.",
+                  isExit: true,
+                  chanceForRelic: 0.05,
+                  relics: [
+                    wop_relic({
+                      name: 'Silver Chalice',
+                      description: 'A chalice made of silver. At least, it seems so.',
+                      value: 10,
+                    }),
+                  ],
+                  linkedRoom: [
+                    wop_room({
+                      name: "Round Sewer Room",
+                      description:
+                        "A large cavernous space within the sewers. There is no light. It still smells like shit.",
+                      isExit: false,
+                      chanceForRelic: 0.06
+                    })
+                  ]
+                })
+              ],
+              market: wop_market({
+                inventory: wop_inventory({
+                  potions: [
+                    allPotions["Flaming Jar of Shit"],
+                    allPotions["Potion of Painlessness"],
+                    allPotions["Potion of Mana Empowerment"],
+                  ],
+                  armors: [
+                    wop_armor({
+                      name: 'Sandals',
+                      equipmentSlot: ARMOR_SLOTS.Feet,
+                      durability: 100,
+                      value: 50,
+                      armorRating: 1,
+                      description: "Thin, strappy, and pretty much useless. But they sure are trusty.",
+                    }),
+                    wop_armor({
+                      name: 'Plate with Straps',
+                      equipmentSlot: ARMOR_SLOTS.Torso,
+                      durability: 10,
+                      value: 50,
+                      armorRating: 2,
+                      description: 'A ceramic plate that covers my sternum. Seriously, this is armor.',
+                    }),
+                    wop_armor({
+                      name: 'Clothe Cap',
+                      equipmentSlot: ARMOR_SLOTS.Head,
+                      durability: 100,
+                      value: 50,
+                      armorRating: 1,
+                      description: "Yup, a cap. Yup, made of clothe. Keeps the sun off my face though.",
+                    }),
+                    wop_armor({
+                      name: 'Canvas Pants',
+                      equipmentSlot: ARMOR_SLOTS.Legs,
+                      durability: 50,
+                      value: 25,
+                      armorRating: 1,
+                      description: "They never say anything about no service without pants. But, they do keep prying eyes curious.",
+                    }),
+                    wop_armor({
+                      name: 'Greiving Gauntlets',
+                      equipmentSlot: ARMOR_SLOTS.Arm,
+                      durability: 200,
+                      value: 125,
+                      armorRating: 2,
+                      description: "This world was once cursed. When the curse was lifted, all that was left was an abundance of enchanted gauntlets. They weep, all day, all the time.",
+                    }),
+                  ],
+                  weapons: [
+                    wop_weapon({
+                      name: "Dumb Ass Stick",
+                      description: "A stupid peice of wood that has been sharpened.",
+                      damage: 1,
+                      criticalDamage: 2,
+                      durability: 10,
+                      stanimaCost: 0,
+                      value: 50,
+                    }),
+                  ],
+                }),
+              }),
+            }),
+          ],
+        }),
+      ],
+    });
   };
-
-  function wop_gameContext({ world, relics }) {
-    const worldObj = wop_world(world);
-    const relicsArr = relics.map(r => wop_relic(r));
-    return {
-      world: worldObj,
-      relics: relicsArr
-    };
-  }
 
   return {
     allSpells,
     allMonsters,
     allPotions,
-    defaultGameContext,
-    wop_gameContext
+    createWorld,
   };
 }

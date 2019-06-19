@@ -9,8 +9,7 @@ function wop_game() {
     QUEST_TYPE,
   } = wop_models();
   const {
-    defaultGameContext,
-    wop_gameContext,
+    createWorld,
     allSpells,
     allPotions
   } = gameContext();
@@ -51,7 +50,7 @@ function wop_game() {
       : {};
   }
 
-  function postPlayerCombatAction(p, targetPlayer, gtx) {
+  function postPlayerCombatAction(p, targetPlayer) {
     const result = [];
     if (targetPlayer.attributes.currentHealth > 0) {
       result.push(targetPlayer.attack(p));
@@ -59,7 +58,6 @@ function wop_game() {
         result.push(p.onDeath());
         result.push(p.onCombatOver(targetPlayer));
         result.push(p.onRevive());
-        p.currentWorld = gtx.world;
         p.currentArea = p.currentWorld.areas[0];
         p.currentLocation = p.currentArea.locations[0];
         p.currentRoom = null;
@@ -74,6 +72,7 @@ function wop_game() {
       p.monstersSlain = p.monstersSlain + 1;
       p.quests.quests
         .filter(q => q.quest.type === QUEST_TYPE.Kill)
+        .filter(q => !q.isComplete())
         .filter(q => q.quest.nameOfObject.toLowerCase() === targetPlayer.name.toLowerCase())
         .forEach(q => {
           q.count = q.count + 1;
@@ -109,16 +108,16 @@ function wop_game() {
   }
   // End Utility functions
 
-  function attack(p, _, gtx) {
+  function attack(p, _) {
     if (p.isInCombat) {
       return [p.attack(p.savedTarget)].concat(
-        postPlayerCombatAction(p, p.savedTarget, gtx)
+        postPlayerCombatAction(p, p.savedTarget)
       );
     }
     return ["I am not in combat right now"];
   }
 
-  function buy(p, itemName, _gtx) {
+  function buy(p, itemName) {
     if (p.isInCombat || p.isInside) {
       return ["I cannot purchase anything at this time."];
     }
@@ -139,7 +138,7 @@ function wop_game() {
     }
   }
 
-  function cast(p, spellName, gtx) {
+  function cast(p, spellName) {
     const spell = p.spells.find(
       spell => spell.name.toLowerCase() === spellName.toLowerCase()
     );
@@ -148,7 +147,7 @@ function wop_game() {
         return [
           spell.description,
           p.castSpell(spell, p.savedTarget),
-          ...postPlayerCombatAction(p, p.savedTarget, gtx)
+          ...postPlayerCombatAction(p, p.savedTarget)
         ];
       } else {
         return [
@@ -160,7 +159,7 @@ function wop_game() {
     return [`I do not know how to cast ${spellName}`];
   }
 
-  function equip(p, itemName, _gameContext) {
+  function equip(p, itemName) {
     const equipment = p.inventory.getItem(itemName);
     if (equipment) {
       switch (equipment.slot) {
@@ -175,7 +174,7 @@ function wop_game() {
     return [`I do not have ${itemName} to equip.`];
   }
 
-  function exit(p, _params, _gameContext) {
+  function exit(p, _params) {
     if (p.isInCombat) {
       return ["I cannot leave while in combat."];
     }
@@ -204,15 +203,15 @@ function wop_game() {
     }
   }
 
-  function explore(p, _, gtx) {
+  function explore(p, _) {
     if (p.isInCombat) {
       return ["I cannot explore while in combat."];
     }
 
-    if (p.isInside) {
+    if ((p.isInside || p.isInRoom) && p.currentRoom) {
       if (Math.random() <= p.currentRoom.chanceForRelic) {
-        const index = Math.floor(Math.random() * Math.floor(gtx.relics.length));
-        return [p.addItemToInventory(gtx.relics[index])];
+        const index = Math.floor(Math.random() * Math.floor(p.currentRoom.length));
+        return [p.addItemToInventory(p.currentRoom.relics[index])];
       } else {
         return [rollEncounter(p, -1)];
       }
@@ -221,7 +220,7 @@ function wop_game() {
     return ["I can only explore in rooms."];
   }
 
-  function go(p, where, _gameContext) {
+  function go(p, where) {
     if (p.isInCombat) {
       return ["I cannot go anywhere when in combat."];
     }
@@ -301,11 +300,11 @@ function wop_game() {
     return [`I do not know where ${where} is.`];
   }
 
-  function map(p, _params, _gameContext) {
+  function map(p, _params) {
     return p.currentWorld.areas.map(area => area.name);
   }
 
-  function quest(p, start, _gameContext) {
+  function quest(p, start) {
     if (start && start.toLowerCase() === "start") {
       const cannotDo = ["There are no quest givers here."];
       if (!p.currentLocation.questGiver) {
@@ -345,7 +344,7 @@ function wop_game() {
         ];
   }
 
-  function rest(p, _params, _gameContext) {
+  function rest(p, _params) {
     if (p.isInRoom || p.isInside) {
       return ["I cannot rest here."];
     }
@@ -365,7 +364,7 @@ function wop_game() {
     ];
   }
 
-  function unequip(p, what, _gameContext) {
+  function unequip(p, what) {
     const armor = p.equipment.tryGetArmorFromName(what);
     if (armor) {
       return [p.unequipArmor(armor)];
@@ -381,7 +380,7 @@ function wop_game() {
     return [`I do not have a(n) ${what} to unequip`];
   }
 
-  function use(p, what, gtx) {
+  function use(p, what) {
     // Can only use potions at the moment
     const potion = p.inventory[INVENTORY_SLOTS.Potion].find(
       p => p.name.toLowerCase() === what.toLowerCase()
@@ -390,14 +389,14 @@ function wop_game() {
       if (p.isInCombat) {
         return [
           p.usePotion(potion, p.savedTarget),
-          ...postPlayerCombatAction(p, p.savedTarget, gtx)
+          ...postPlayerCombatAction(p, p.savedTarget)
         ];
       }
       return [p.usePotion(potion)];
     }
   }
 
-  function whereami(p, _params, _gameContext) {
+  function whereami(p, _params) {
     if (p.currentRoom && p.isInRoom) {
       return [
         `I am in ${p.currentRoom.name} and I can go to the following rooms.`
@@ -439,27 +438,20 @@ function wop_game() {
     whereami
   };
 
-  function help(_p, _, _gameContext) {
+  function help(_p, _) {
     return ["Here is what I can possibly do.", ...Object.keys(ACTIONS)];
   }
 
   ACTIONS.help = help;
 
-  function save({ Player, GameContext }, slotName = "autosave") {
-    const contextKey = `${slotName}:gameContext`;
+  function save({ Player }, slotName = "autosave") {
     const playerKey = `${slotName}:player`;
 
     localStorage.setItem(playerKey, JSON.stringify(Player));
-    localStorage.setItem(contextKey, JSON.stringify(GameContext));
   }
 
   function load(slotName = "autosave") {
-    const contextKey = `${slotName}:gameContext`;
     const playerKey = `${slotName}:player`;
-
-    const GameContext = localStorage.getItem(contextKey)
-      ? wop_gameContext(JSON.parse(localStorage.getItem(contextKey)))
-      : wop_gameContext(defaultGameContext());
 
     let PlayerObj = localStorage.getItem(playerKey);
     if (PlayerObj) {
@@ -480,7 +472,7 @@ function wop_game() {
           )
         : null;
 
-      return { GameContext, Player };
+      return { Player };
     }
     throw new Error(`No player for slot ${slotName}`);
   }
@@ -488,14 +480,14 @@ function wop_game() {
   function addNewSpell(spellName) {
     const spell = allSpells[spellName];
     if (spell) {
-      const { GameContext, Player } = load();
+      const { Player } = load();
       Player.spells.push({ ...spell, name: spellName });
-      save({ Player, GameContext });
+      save({ Player });
     }
   }
 
   function doCommand(parameters) {
-    const { GameContext, Player } = load();
+    const { Player } = load();
     let messages = [];
     const originalParameters = parameters;
 
@@ -507,11 +499,11 @@ function wop_game() {
         const params = parameters.split(" ");
         parameters = params.splice(0, 1)[0];
         messages = messages.concat(
-          ACTIONS[parameters](Player, params.join(" "), GameContext)
+          ACTIONS[parameters](Player, params.join(" "))
         );
       } else {
         messages = messages.concat(
-          ACTIONS[parameters](Player, null, GameContext)
+          ACTIONS[parameters](Player, null)
         );
       }
 
@@ -528,7 +520,7 @@ function wop_game() {
         .concat(help());
       console.error(err);
     } finally {
-      save({ GameContext, Player });
+      save({ Player });
     }
 
     return JSON.stringify({
@@ -547,21 +539,20 @@ function wop_game() {
   }
 
   function createPlayer(playerName) {
-    const newContext = defaultGameContext();
+    const currentWorld = createWorld();
     save({
       Player: wop_player({
         name: playerName,
         title: "Adventurer",
         description: "I am a mighty adventurer!",
-        currentWorld: newContext.world,
-        currentArea: newContext.world.areas[0],
-        currentLocation: newContext.world.areas[0].locations[0],
+        currentWorld,
+        currentArea: currentWorld.areas[0],
+        currentLocation: currentWorld.areas[0].locations[0],
         spells: [
           allSpells["Healing Touch"],
           allSpells["Fire Spit"],
         ],
       }),
-      GameContext: newContext
     });
   }
 
