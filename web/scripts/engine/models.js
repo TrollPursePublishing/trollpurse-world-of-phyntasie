@@ -10,7 +10,7 @@ function wop_models() {
     );
   }
 
-  function wop_acheivement({
+  function wop_achievement({
     name,
     description,
     player,
@@ -41,18 +41,6 @@ function wop_models() {
     };
   }
 
-  const ARMOR_TYPES = {
-    Head: 0,
-    Torso: 1,
-    Arm: 2,
-    Legs: 3,
-    Feet: 4
-  };
-
-  ARMOR_TYPES.VALUES = Object.keys(ARMOR_TYPES).map(function(key) {
-    return ARMOR_TYPES[key];
-  });
-
   const ARMOR_SLOTS = {
     Head: "head",
     Torso: "torso",
@@ -67,7 +55,7 @@ function wop_models() {
 
   function wop_armor({
     name,
-    type,
+    equipmentSlot,
     armorRating,
     durability,
     value,
@@ -78,21 +66,21 @@ function wop_models() {
     return {
       id,
       name,
-      type,
       armorRating,
       durability,
       value,
       description,
       slot,
+      equipmentSlot,
       clone: () =>
         wop_armor({
           name,
-          type,
           armorRating,
           durability,
           value,
           description,
-          slot
+          slot,
+          equipmentSlot,
         })
     };
   }
@@ -143,12 +131,12 @@ function wop_models() {
   }) {
     const instance = {
       id,
-      arm: wop_armor(arm || {}),
-      head: wop_armor(head || {}),
-      torso: wop_armor(torso || {}),
-      legs: wop_armor(legs || {}),
-      feet: wop_armor(feet || {}),
-      weapon: wop_weapon(weapon || {})
+      arm: arm ? wop_armor(arm) : null,
+      head: head ? wop_armor(head) : null,
+      torso: torso ? wop_armor(torso) : null,
+      legs: legs ? wop_armor(legs) : null,
+      feet: feet ? wop_armor(feet) : null,
+      weapon: weapon ? wop_weapon(weapon) : null,
     };
 
     instance.tryGetArmorFromName = function(armorName) {
@@ -269,18 +257,18 @@ function wop_models() {
   });
 
   function wop_playerAttribute({
-    currentStrength = 5,
-    currentMana = 10,
-    currentStamina = 10,
-    currentToughness = 2,
-    currentHealth = 12,
     strength = 5,
     mana = 10,
     stanima = 10,
     toughness = 2,
     health = 12,
+    currentStrength = null,
+    currentMana = null,
+    currentStamina = null,
+    currentToughness = null,
+    currentHealth = null,
     state = PLAYER_STATE.Alive,
-    experience = 0
+    experience = 0,
   }) {
     const instance = {
       Id: wop_id(),
@@ -290,11 +278,11 @@ function wop_models() {
       toughness,
       health,
       state,
-      currentStrength,
-      currentMana,
-      currentStamina,
-      currentToughness,
-      currentHealth,
+      currentStrength: currentStrength !== null ? currentStrength : strength,
+      currentMana: currentMana !== null ? currentMana : mana,
+      currentStamina: currentStamina !== null ? currentStamina : stanima,
+      currentToughness: currentToughness !== null ? currentToughness : toughness,
+      currentHealth: currentHealth !== null ? currentHealth : health,
       experience
     };
 
@@ -316,34 +304,18 @@ function wop_models() {
 
     instance.addExperience = function(value) {
       instance.experience = Math.max(0, instance.experience + value);
-      console.log(
-        `Power Level: ${instance.level()} / Experience: ${instance.experience}`
-      );
       const experienceNeeded = cubic_polynomial(100, instance.level());
-      console.log(`Experience Needed for Level Up: ${experienceNeeded}`);
       if (experienceNeeded < instance.experience) {
         instance.levelUp();
       }
     };
 
     instance.levelUp = function() {
-      console.log(
-        `Old Stats: ${instance.health}/${instance.mana}/${instance.strength}/${
-          instance.toughness
-        }`
-      );
-
-      instance.health = cubic_polynomial(12, instance.health);
-      instance.mana = cubic_polynomial(10, instance.mana);
-      instance.stanima = quadratic_polynomial(10, instance.stanima);
-      instance.strength = quadratic_polynomial(5, instance.strength);
-      instance.toughness = cubic_polynomial(2, instance.toughness);
-
-      console.log(
-        `New Stats: ${instance.health}/${instance.mana}/${instance.strength}/${
-          instance.toughness
-        }`
-      );
+      instance.health = Math.floor(cubic_polynomial(instance.health, 0.3));
+      instance.mana = Math.floor(cubic_polynomial(instance.mana, 0.25));
+      instance.stanima = Math.floor(quadratic_polynomial(instance.stanima, 0.2));
+      instance.strength = Math.floor(quadratic_polynomial(instance.strength, 0.25));
+      instance.toughness = Math.floor(cubic_polynomial(instance.toughness, 0.1));
       instance.resetStats();
     };
 
@@ -356,27 +328,30 @@ function wop_models() {
       const potency = magnitude([instance.mana, instance.strength]);
       const durability = magnitude([instance.toughness, instance.health]);
 
-      return Math.floor(
-        magnitude([magnitude([power, potency]), durability]) / 10
-      );
+      const total = (power + potency + durability) / 30;
+
+      return Math.floor(total);
     };
 
     return instance;
   }
 
-  function wop_playerQuestQuest({ quest, count = 0, complete = false }) {
-    return {
+  function wop_playerQuestQuest({ quest, count = 0 }) {
+    const instance = {
       id: wop_id(),
       quest,
-      count,
-      complete
+      count
     };
+    instance.isComplete = function () {
+      return instance.count >= instance.quest.countNeeded;
+    }
+    return instance;
   }
 
   function wop_playerQuests({ quests = [] }) {
     return {
       id: wop_id(),
-      quests
+      quests: quests.map(q => wop_playerQuestQuest(q)),
     };
   }
 
@@ -412,7 +387,7 @@ function wop_models() {
     nextQuest = null,
     id = wop_id()
   }) {
-    const instance = {
+    return {
       title,
       description,
       gold,
@@ -422,10 +397,6 @@ function wop_models() {
       countNeeded,
       nextQuest,
       id
-    };
-
-    instance.isComplete = function(currentCount) {
-      return currentCount >= instance.countNeeded;
     };
   }
 
@@ -447,7 +418,7 @@ function wop_models() {
     instance.canDoQuest = function(player) {
       if (instance.questsToUnlockThisQuestGiver) {
         const completed = player.quests.quests
-          .filter(q => q.complete)
+          .filter(q => q.isComplete())
           .map(q => q.name);
         if (completed) {
           return instance.questsToUnlockThisQuestGiver.every(q =>
@@ -456,8 +427,16 @@ function wop_models() {
         }
         return false;
       }
+
+      if (player.quests.quests.find(q => q.quest.title === instance.quest.title && q.isComplete())) {
+        return false;
+      }
+
+
       return true;
     };
+
+    return instance;
   }
 
   function wop_player({
@@ -483,7 +462,8 @@ function wop_models() {
     description = "",
     id = wop_id(),
     joinDate = new Date(),
-    monstersSlain = 0
+    monstersSlain = 0,
+    achievements = [],
   }) {
     const instance = {
       id,
@@ -503,22 +483,27 @@ function wop_models() {
       isInCombat,
       isInside,
       expireRoom,
-      quests: wop_playerQuests(quests || {}),
+      quests: wop_playerQuests(quests || []),
       myTurn,
       placesVisited,
       areasDiscovered,
       fullName: `${title} ${name}`,
       joinDate,
-      monstersSlain
+      monstersSlain,
+      achievements,
     };
 
     instance.onRevive = function() {
       instance.state = PLAYER_STATE.Alive;
       instance.attributes.resetStats();
-      instance.inventory.gold = instance.inventory.gold / 2;
-      instance.inventory.relics = [];
-      instance.inventory.potions = [];
-      instance.attributes.addExperience(-10 * instance.attributes.level());
+      instance.inventory.gold = Math.floor(instance.inventory.gold / 2);
+      if (instance.inventory.potions.length > 0) {
+        const index = Math.floor(
+          Math.random() * instance.inventory.potions.length
+        );
+        instance.inventory.potions.splice(index);
+      }
+      instance.attributes.addExperience(-5 * instance.attributes.level());
       instance.expireRoom = true;
       return `${instance.fullName} has been revived by the magic of the world.`;
     };
@@ -537,9 +522,9 @@ function wop_models() {
       if (instance.currentRoom != null) {
         const quest = instance.quests.quests.find(
           q =>
-            !q.complete &&
+            !q.isComplete() &&
             q.quest.type === QUEST_TYPE.GoTo &&
-            q.quest.nameOfObject === instance.currentRoom.name
+            q.quest.nameOfObject.toLowerCase() === instance.currentRoom.name.toLowerCase()
         );
 
         if (quest) {
@@ -549,14 +534,14 @@ function wop_models() {
 
       let qq = instance.quests.quests.find(
         q =>
-          !q.complete &&
+          !q.isComplete() &&
           q.quest.type === QUEST_TYPE.GoTo &&
           q.quest.nameOfObject === instance.currentLocation.name
       );
       if (!qq) {
         qq = instance.quests.quests.find(
           q =>
-            !q.complete &&
+            !q.isComplete() &&
             q.quest.type === QUEST_TYPE.GoTo &&
             q.quest.nameOfObject === instance.currentArea.name
         );
@@ -570,7 +555,7 @@ function wop_models() {
         instance.areasDiscovered = instance.placesVisited.push(where.name);
       }
 
-      return `I move forth to ${where.name}. ${where.description}`;
+      return `I move forth to ${where.name}. ${where.description}. ${(qq && qq.isComplete() ? `Completed ${qq.quest.title}!` : '')}`;
     };
 
     instance.addItemToInventory = function(item) {
@@ -578,7 +563,7 @@ function wop_models() {
       if (item.slot === INVENTORY_SLOTS.Relic) {
         const quest = instance.quests.quests.find(
           q =>
-            !quest.complete &&
+            !quest.isComplete() &&
             q.quest.type === QUEST_TYPE.Collect &&
             q.quest.nameOfObject === item.name
         );
@@ -593,10 +578,9 @@ function wop_models() {
     instance.buyItem = function(item) {
       if (instance.inventory.gold >= item.value) {
         instance.inventory.gold = instance.inventory.gold - item.value;
-        instance.addItemToInventory(item);
         return `Purchased ${item.name} for ${item.value}. I have ${
           instance.inventory.gold
-        } gold left.`;
+        } gold left. ${instance.addItemToInventory(item)}`;
       } else {
         return `I cannot afford this! I need ${item.value -
           instance.inventory.gold} more gold.`;
@@ -610,7 +594,7 @@ function wop_models() {
       if (item.slot === INVENTORY_SLOTS.Relic) {
         const quest = instance.quests.quests.find(
           q =>
-            !quest.complete &&
+            !quest.isComplete() &&
             q.quest.type === QUEST_TYPE.Collect &&
             q.quest.nameOfObject === item.name
         );
@@ -625,8 +609,6 @@ function wop_models() {
     instance.equipWeapon = function(weapon) {
       const old = instance.equipment.weapon;
       instance.equipment.weapon = weapon;
-      instance.addItemToInventory(old);
-      instance.removeItemFromInventory(weapon);
       return `${
         old ? instance.addItemToInventory(old) : ""
       } ${instance.removeItemFromInventory(weapon)} Equipped weapon ${
@@ -635,16 +617,16 @@ function wop_models() {
     };
 
     instance.equipArmor = function(armor) {
-      const old = instance.equipment[armor.slot];
-      instance.equipment[armor.slot] = armor;
+      const old = instance.equipment[armor.equipmentSlot];
+      instance.equipment[armor.equipmentSlot] = armor;
       return `${
         old ? instance.addItemToInventory(old) : ""
-      } ${instance.removeItemFromInventory(armor)} Equipped armor ${old.name}`;
+      } ${instance.removeItemFromInventory(armor)} Equipped armor ${armor.name}`;
     };
 
     instance.unequipArmor = function(armor) {
-      const old = instance.equipment[armor.slot];
-      instance.equipment[armor.slot] = null;
+      const old = instance.equipment[armor.equipmentSlot];
+      instance.equipment[armor.equipmentSlot] = null;
       return `${instance.addItemToInventory(old)} Unequipped armor ${old.name}`;
     };
 
@@ -660,8 +642,7 @@ function wop_models() {
       if (instance.attributes.currentMana >= spell.manaCost) {
         instance.savedTarget = target;
         const spellText = spell.apply(instance, target);
-        instance.attributes.currentMana =
-          instance.attributes.currentMana - spell.manaCost;
+        instance.attributes.currentMana = Math.max(0, instance.attributes.currentMana - spell.manaCost);
         return spellText;
       }
       return `${instance.attributes.currentMana} is not enough mana to cast ${
@@ -700,28 +681,34 @@ function wop_models() {
       instance.savedTarget = instigator;
       let totalArmorRating = 0;
 
+      const brokens = [];
+
       ARMOR_SLOTS.VALUES.forEach(slotName => {
         const armor = instance.equipment[slotName];
         if (armor && armor.durability > 0) {
           armor.durability = armor.durability - 1;
           totalArmorRating = totalArmorRating + armor.armorRating;
+          if (armor.durability <= 0) {
+            instance.unequipArmor(armor);
+            instance.removeItemFromInventory(armor);
+            brokens.push(`${armor.name} has broken!`);
+          }
         }
       });
 
       weaponDamage = Math.max(0, weaponDamage - totalArmorRating);
       physicalDamage = Math.max(
         1,
-        physicalDamage - instance.attributes.currentToughness
+        physicalDamage - instance.attributes.currentToughness - Math.floor(totalArmorRating / 2)
       );
       const totalDamage = weaponDamage + physicalDamage;
-      instance.attributes.currentHealth =
-        instance.attributes.currentHealth - totalDamage;
+      instance.attributes.currentHealth = Math.max(0, instance.attributes.currentHealth - totalDamage);
 
       return `${instigator.fullName} has caused ${totalDamage} pain to ${
         instance.fullName
       }. ${instance.fullName} has ${
         instance.attributes.currentHealth
-      } health remaining.`;
+      } health remaining. ${brokens.join(' ')}`;
     };
 
     instance.usePotion = function(potion, target) {
@@ -828,7 +815,7 @@ function wop_models() {
     wop_location,
     wop_inventory,
     wop_event,
-    wop_acheivement,
+    wop_achievement,
     wop_area,
     wop_armor,
     wop_weapon,
@@ -836,7 +823,7 @@ function wop_models() {
     PLAYER_STATE,
     CARDINAL_POINTS,
     ARMOR_SLOTS,
-    ARMOR_TYPES,
-    INVENTORY_SLOTS
+    INVENTORY_SLOTS,
+    QUEST_TYPE,
   };
 }

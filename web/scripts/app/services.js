@@ -41,7 +41,7 @@ angular
 
       notifications.getPlayerAcheivements = function(userId) {
         var q = $q.defer();
-        q.resolve([]);
+        q.resolve({ pairs: JSON.parse(getPlayer("autosave")).achievements });
         return q.promise;
       };
 

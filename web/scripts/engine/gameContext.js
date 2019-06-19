@@ -15,22 +15,31 @@ function gameContext() {
     wop_playerAttribute,
     wop_armor,
     wop_weapon,
+    wop_questGiver,
+    wop_quests,
+    ARMOR_SLOTS,
+    QUEST_TYPE,
   } = wop_models();
 
-  function heal(healthAmount, next = null) {
-    return function(instigator, target) {
+  function restore(attribute, value, next = null) {
+    return function (instigator, target) {
       let text = "";
       if (next) {
         text = next(instigator, target);
       }
-      const oldHealth = instigator.attributes.currentHealth;
-      instigator.attributes.currentHealth = Math.min(
-        instigator.attributes.health,
-        instigator.attributes.currentHealth + healthAmount
+      const captialized = attribute.charAt(0).toUpperCase() + attribute.substr(1);
+      const oldAttribute = instigator.attributes[`current${captialized}`];
+      instigator.attributes[`current${captialized}`] = Math.min(
+        instigator.attributes[attribute],
+        instigator.attributes[`current${captialized}`] + value
       );
-      const amount = instigator.attributes.currentHealth - oldHealth;
-      return text + `Healed ${amount} health. `;
-    };
+      const amount = instigator.attributes[`current${captialized}`] - oldAttribute;
+      return text + `Restored ${amount} ${attribute}. `;
+    }
+  }
+
+  function heal(healthAmount, next = null) {
+    return restore('health', healthAmount, next);
   }
 
   function damage(damageAmount, next = null) {
@@ -45,7 +54,9 @@ function gameContext() {
         target.attributes.currentHealth - damageAmount
       );
       const amount = Math.abs(target.attributes.currentHealth - oldHealth);
-      return text + `Caused ${amount} pain to ${target.fullName}! `;
+      return text + `Caused ${amount} pain to ${target.fullName}! ${target.fullName} has ${
+        target.attributes.currentHealth
+      } health remaining. `;
     };
   }
 
@@ -82,11 +93,17 @@ function gameContext() {
   };
 
   const allPotions = {
-    "Potion of Healing": wop_potion({
-      name: "Potion of Healing",
-      description: "It bubbles green and smells of kale.",
+    "Potion of Painlessness": wop_potion({
+      name: "Potion of Painlessness",
+      description: "It bubbles red and smells of sriracha.",
       value: 5,
       apply: heal(5)
+    }),
+    "Potion of Mana Empowerment": wop_potion({
+      name: "Potion of Mana Empowerment",
+      description: "A blue potion that is thick and slimy. I assume that when I drink it, it will feel as though a family of slugs slide down my throat.",
+      value: 8,
+      apply: restore('mana', 3),
     }),
     "Flaming Jar of Shit": wop_potion({
       name: "Flaming Jar of Shit",
@@ -103,6 +120,19 @@ function gameContext() {
       description:
         "A small creature with fangs and wings. It grins and drools. I find it ugly."
     }),
+    "Buffed Imp": wop_player({
+      name: "Imp",
+      title: "Buffed",
+      description:
+        "This dude is swoll! Still ugly as sin - but swoll none the less",
+      attributes: {
+        strength: 5,
+        mana: 10,
+        stanima: 10,
+        toughness: 2,
+        health: 12,
+      },
+    }),
     "Sewer Turtle": wop_player({
       name: "Turtle",
       title: "Sewer",
@@ -113,15 +143,29 @@ function gameContext() {
         health: 15,
         toughness: 3,
         stanima: 0
-      })
-    })
+      }),
+    }),
+    "Large Rat": wop_player({
+      name: "Rat",
+      title: "Large",
+      description: "Of course this creature makes an appearance.",
+      attributes: wop_playerAttribute({
+        strength: 8,
+        mana: 0,
+        health: 20,
+        toughness: 1,
+        stanima: 0,
+      }),
+    }),
   };
+
+  allMonsters["Buffed Imp"].attributes.levelUp();
 
   const defaultGameContext = () => {
     return {
       world: wop_world({
         name: "Phyntasie",
-        description: "The world I love",
+        description: "The world I love - or so they tell me.",
         areas: [
           wop_area({
             name: "Buttleberry",
@@ -129,8 +173,26 @@ function gameContext() {
             locations: [
               wop_location({
                 name: "Town Square",
-                description: "A square, in the town. Duh.",
-                monsters: [allMonsters["Imp"], allMonsters["Sewer Turtle"]],
+                description: "A square in the town. I guess I should not have expected more than that.",
+                monsters: [
+                  allMonsters["Imp"],
+                  allMonsters["Sewer Turtle"],
+                  allMonsters["Large Rat"],
+                  allMonsters["Buffed Imp"]
+                ],
+                questGiver: wop_questGiver({
+                  name: 'Old Dirty Man',
+                  description: 'He sits there. Hunched. Smelly. Wrinkled.',
+                  quest: wop_quests({
+                    countNeeded: 1,
+                    description: "Imps are so Pesky! They must all DIE!",
+                    instructions: 'Kill 1 Imp',
+                    nameOfObject: 'Imp',
+                    gold: 2000,
+                    title: 'Pesky Imps Must Die',
+                    type: QUEST_TYPE.Kill,
+                  }),
+                }),
                 rooms: [
                   wop_room({
                     name: "Sewers",
@@ -153,16 +215,70 @@ function gameContext() {
                   inventory: wop_inventory({
                     potions: [
                       allPotions["Flaming Jar of Shit"],
-                      allPotions["Potion of Healing"]
-                    ]
-                  })
-                })
-              })
-            ]
-          })
-        ]
+                      allPotions["Potion of Painlessness"],
+                      allPotions["Potion of Mana Empowerment"],
+                    ],
+                    armors: [
+                      wop_armor({
+                        name: 'Sandals',
+                        equipmentSlot: ARMOR_SLOTS.Feet,
+                        durability: 100,
+                        value: 50,
+                        armorRating: 1,
+                        description: "Thin, strappy, and pretty much useless. But they sure are trusty.",
+                      }),
+                      wop_armor({
+                        name: 'Plate with Straps',
+                        equipmentSlot: ARMOR_SLOTS.Torso,
+                        durability: 10,
+                        value: 50,
+                        armorRating: 2,
+                        description: 'A ceramic plate that covers my sternum. Seriously, this is armor.',
+                      }),
+                      wop_armor({
+                        name: 'Clothe Cap',
+                        equipmentSlot: ARMOR_SLOTS.Head,
+                        durability: 100,
+                        value: 50,
+                        armorRating: 1,
+                        description: "Yup, a cap. Yup, made of clothe. Keeps the sun off my face though.",
+                      }),
+                      wop_armor({
+                        name: 'Canvas Pants',
+                        equipmentSlot: ARMOR_SLOTS.Legs,
+                        durability: 50,
+                        value: 25,
+                        armorRating: 1,
+                        description: "They never say anything about no service without pants. But, they do keep prying eyes curious.",
+                      }),
+                      wop_armor({
+                        name: 'Greiving Gauntlets',
+                        equipmentSlot: ARMOR_SLOTS.Arm,
+                        durability: 200,
+                        value: 125,
+                        armorRating: 2,
+                        description: "This world was once cursed. When the curse was lifted, all that was left was an abundance of enchanted gauntlets. They weep, all day, all the time.",
+                      }),
+                    ],
+                    weapons: [
+                      wop_weapon({
+                        name: "Dumb Ass Stick",
+                        description: "A stupid peice of wood that has been sharpened.",
+                        damage: 1,
+                        criticalDamage: 2,
+                        durability: 10,
+                        stanimaCost: 0,
+                        value: 50,
+                      }),
+                    ],
+                  }),
+                }),
+              }),
+            ],
+          }),
+        ],
       }),
-      relics: []
+      relics: [],
     };
   };
 

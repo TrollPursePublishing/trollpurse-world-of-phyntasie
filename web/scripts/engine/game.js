@@ -1,7 +1,13 @@
 "use strict";
 
 function wop_game() {
-  const { wop_player, INVENTORY_SLOTS } = wop_models();
+  const {
+    wop_player,
+    wop_playerQuestQuest,
+    wop_achievement,
+    INVENTORY_SLOTS,
+    QUEST_TYPE,
+  } = wop_models();
   const {
     defaultGameContext,
     wop_gameContext,
@@ -60,10 +66,22 @@ function wop_game() {
       }
     } else {
       p.attributes.addExperience(targetPlayer.attributes.level() * 30);
+      p.inventory.gold = p.inventory.gold + targetPlayer.attributes.level() * 10;
       result.push(targetPlayer.onDeath());
       targetPlayer.onRevive(); //Do not post this message.
       result.push(p.onCombatOver(targetPlayer));
+
       p.monstersSlain = p.monstersSlain + 1;
+      p.quests.quests
+        .filter(q => q.quest.type === QUEST_TYPE.Kill)
+        .filter(q => q.quest.nameOfObject.toLowerCase() === targetPlayer.name.toLowerCase())
+        .forEach(q => {
+          q.count = q.count + 1;
+          if (q.isComplete()) {
+            p.inventory.gold = p.inventory.gold + q.quest.gold;
+            result.push(`Completed ${q.quest.title}!`);
+          }
+        });
     }
     targetPlayer.savedTarget = null; //clear monster's saved target
     return result;
@@ -72,10 +90,17 @@ function wop_game() {
   function rollEncounter(p, oneThroughFive) {
     const roll = Math.floor(Math.random() * Math.floor(5));
     if (roll > oneThroughFive) {
+      let pool = p.currentLocation.monsters
+        .filter(m => p.attributes.level() >= m.attributes.level());
+
+      if (pool.length <= 0) {
+        pool = p.currentLocation.monsters;
+      }
+
       const index = Math.floor(
-        Math.random() * p.currentLocation.monsters.length
+        Math.random() * pool.length
       );
-      const monster = p.currentLocation.monsters[index];
+      const monster = pool[index];
       if (monster) {
         return p.engage(monster);
       }
@@ -103,7 +128,7 @@ function wop_game() {
     if (market) {
       const item = market.inventory.getItem(itemName);
       if (item) {
-        return [p.buyItem(item.clone())];
+        return [p.buyItem(item.clone()), item.description];
       }
       return [
         "I can buy the following.",
@@ -166,8 +191,8 @@ function wop_game() {
           p.currentLocation.description
         ];
 
-        if (p.currentLocation.questGiver) {
-          result.push(`${p.currentLocation.questGiver} is here.`);
+        if (p.currentLocation.questGiver && p.currentLocation.questGiver.canDoQuest(p)) {
+          result.push(`${p.currentLocation.questGiver.name} is here.`);
           result.push(p.currentLocation.questGiver.description);
         }
 
@@ -189,11 +214,7 @@ function wop_game() {
         const index = Math.floor(Math.random() * Math.floor(gtx.relics.length));
         return [p.addItemToInventory(gtx.relics[index])];
       } else {
-        const index = Math.floor(
-          Math.random() * Math.floor(p.currentLocation.monsters.length)
-        );
-        const monster = p.currentLocation.monsters[index];
-        return [p.engage(monster)];
+        return [rollEncounter(p, -1)];
       }
     }
 
@@ -297,14 +318,14 @@ function wop_game() {
         q => q.quest.title === p.currentLocation.questGiver.quest.title
       );
       if (accepted) {
-        if (accepted.isComplete) {
-          return [`I have already completed ${accepted.title}`];
+        if (accepted.isComplete()) {
+          return [`I have already completed ${accepted.quest.title}`];
         }
-        return [`I have already accepted ${accepted.title}`];
+        return [`I have already accepted ${accepted.quest.title}`];
       }
 
       p.quests.quests.push(
-        playerQuestQuest(player.currentLocation.questGiver.quest)
+        wop_playerQuestQuest({ quest: p.currentLocation.questGiver.quest })
       );
       return [
         `I accept ${p.currentLocation.questGiver.quest.title}`,
@@ -314,10 +335,10 @@ function wop_game() {
     }
 
     const active = p.quests.quests
-      .filter(q => !q.isComplete)
+      .filter(q => !q.isComplete())
       .flatMap(q => [q.quest.title, q.quest.instructions]);
 
-    active.length
+    return active.length
       ? active
       : [
           "I have not taken on any quests lately, am I a coward? Lazy? I think not! Forth I go to collect and complete quests!"
@@ -325,6 +346,10 @@ function wop_game() {
   }
 
   function rest(p, _params, _gameContext) {
+    if (p.isInRoom || p.isInside) {
+      return ["I cannot rest here."];
+    }
+
     if (p.currentLocation.hasMarket) {
       p.attributes.resetStats();
       return [
@@ -451,7 +476,7 @@ function wop_game() {
 
       Player.savedTarget = Player.savedTarget
         ? Player.currentLocation.monsters.find(
-            m => m.name === Player.savedTarget.name
+            m => m.fullName === Player.savedTarget.fullName
           )
         : null;
 
@@ -474,7 +499,10 @@ function wop_game() {
     let messages = [];
     const originalParameters = parameters;
 
+
     try {
+      const uncompletedQuests = Player.quests.quests.filter(q => !q.isComplete());
+
       if (parameters.includes(" ")) {
         const params = parameters.split(" ");
         parameters = params.splice(0, 1)[0];
@@ -486,6 +514,14 @@ function wop_game() {
           ACTIONS[parameters](Player, null, GameContext)
         );
       }
+
+      const completedQuests = uncompletedQuests.filter(q => q.isComplete());
+      const achievements = completedQuests.map(q => wop_achievement({
+        name: 'Quest Completed',
+        description: `Completed the quest: ${q.quest.title}. ${q.quest.description}. ${q.quest.instructions}`,
+      }));
+
+      Player.achievements = Player.achievements.concat(achievements);
     } catch (err) {
       messages = messages
         .concat([`I do not know how to ${originalParameters}`])
@@ -497,7 +533,7 @@ function wop_game() {
 
     return JSON.stringify({
       player: playerBridge(Player),
-      messages
+      messages,
     });
   }
 

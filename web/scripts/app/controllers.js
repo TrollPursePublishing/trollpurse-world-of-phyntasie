@@ -130,7 +130,7 @@ angular
     "gamename",
     function(
       $scope,
-      gamename
+      gamename,
     ) {
       $scope.$root.title = gamename;
       $scope.items = {};
@@ -217,16 +217,23 @@ angular
       $scope,
       $location,
       UserService,
+      notifications,
       gamename
     ) {
       $scope.$root.title = gamename;
       $scope.user = {};
-      $scope.acheivements = {};
+      $scope.acheivements = {}
+
 
       function activate() {
         if (!UserService.isLoggedIn()) {
           $location.path("/login");
         }
+
+        notifications.getPlayerAcheivements()
+          .then(function (data) {
+            $scope.acheivements = data;
+          });
 
         UserService.getPlayerData().then(
           function(data) {
