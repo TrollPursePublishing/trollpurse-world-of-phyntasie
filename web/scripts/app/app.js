@@ -9,13 +9,6 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider
-        .when('/credits', {
-            templateUrl: 'view/credits.html'
-        })
-        .when('/events', {
-            templateUrl: 'view/events.html',
-            controller: 'HomeCtrl'
-        })
         .when('/manual', {
             templateUrl: 'view/manual.html'
         })
@@ -24,18 +17,11 @@ angular.module('app', ['ngRoute', 'app.filters', 'app.services', 'app.directives
             controller: 'CommandCtrl'
         })
         .when('/', {
-            templateUrl: 'view/main.html',
+            redirectTo: '/login',
         })
         .when('/login', {
             templateUrl: 'view/login.html',
             controller: 'LoginCtrl'
-        })
-        .when('/signup', {
-            redirectTo: 'login'
-        })
-        .when('/userwelcome', {
-            templateUrl: 'view/welcome.html',
-            controller: 'UserCtrl',
         })
         .when('/404', {
             templateUrl: 'view/404.html'

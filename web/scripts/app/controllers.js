@@ -43,6 +43,8 @@ angular
 
       activate();
 
+      $scope.viewTab = "potions";
+
       $scope.messages = [];
 
       $scope.submit = function(data) {
@@ -107,6 +109,10 @@ angular
         $scope.submit(cmd + " " + what);
       };
 
+      $scope.changeTab = function(tabName) {
+        $scope.viewTab = tabName;
+      }
+
       $scope.reverse = function(arr) {
         return angular.copy(arr).reverse();
       };
@@ -138,15 +144,6 @@ angular
     }
   ])
 
-  // Path: /about
-  .controller("AboutCtrl", [
-    "$scope",
-    "gamename",
-    function($scope, gamename) {
-      $scope.$root.title = gamename + " | About";
-    }
-  ])
-
   // Path: /login
   .controller("LoginCtrl", [
     "$scope",
@@ -163,7 +160,7 @@ angular
 
       function activate() {
         if (UserService.isLoggedIn()) {
-          $location.path("/userwelcome");
+          $location.path("/play");
         }
       }
 
@@ -191,7 +188,7 @@ angular
             $scope.registered = true;
             $scope.hasClicked = false;
             $scope.userName = "";
-            $location.path("/userwelcome");
+            $location.path("/play");
           },
           function(error) {
             $scope.hasError = true;
@@ -206,53 +203,6 @@ angular
     }
   ])
 
-  // Path: /userwelcome
-  .controller("UserCtrl", [
-    "$scope",
-    "$location",
-    "UserService",
-    "NotificationService",
-    "gamename",
-    function(
-      $scope,
-      $location,
-      UserService,
-      notifications,
-      gamename
-    ) {
-      $scope.$root.title = gamename;
-      $scope.user = {};
-      $scope.acheivements = {}
-
-
-      function activate() {
-        if (!UserService.isLoggedIn()) {
-          $location.path("/login");
-        }
-
-        notifications.getPlayerAcheivements()
-          .then(function (data) {
-            $scope.acheivements = data;
-          });
-
-        UserService.getPlayerData().then(
-          function(data) {
-            $scope.user = data;
-          },
-          function (error) {
-            console.error(error);
-            $location.path("/login");
-          }
-        );
-      }
-
-      activate();
-
-      $scope.adventurenew = function() {
-        $location.path("/play");
-      };
-    }
-  ])
 
   // Path: /error/404
   .controller("Error404Ctrl", [
