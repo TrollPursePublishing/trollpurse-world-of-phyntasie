@@ -125,7 +125,7 @@
                         <span><image class="img-responsive" src="images/public/icon/swap-bag.png" />Bag</span>
                     </uib-tab-heading>
                     <div class="row">
-                        <div class="col-sm-3 row">
+                        <div class="col-sm-12 col-md-3 row">
                             <div class="col-sm-12">
                                 <ul class="nav nav-tabs nav-stacked nav-pills" role="tablist">
                                     <li data-ng-class="{'active': viewTab == 'potions'}">
@@ -218,7 +218,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-12 col-md-9">
                             <div class="tab-content">
                                 <div class="tab-pane row" data-ng-class="{ 'active': viewTab === 'potions' }">
                                     <div class="col-sm-4" data-ng-click="do('use', iter.name)" uib-tooltip-template=" 'invTooltipTemplate.html' " tooltip-placement=" bottom" ng-repeat="iter in user.inventory.potions track by $index">
