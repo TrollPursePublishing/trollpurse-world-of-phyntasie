@@ -1,55 +1,29 @@
-﻿<nav class="nav navbar navbar-default navbar-fixed-top" style="padding-top:50px; z-index:9;" role="navigation" ng-if=" !layout ">
-    <div class="container">
-        <div class="navbar-header">
-            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#gamenavbar" aria-controls="gamenavbar">
-                <span class="sr-only">Toggle Stats Menu</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-brand">
-                {{user.FullName}}
-            </div>
-        </div>
-        <div id="gamenavbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="" data-uib-tooltip="Health" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img style="float:left" class="img-responsive" src="images/public/icon/heart-beats.png" /><span> {{user.attributes.currentHealth}}/{{user.attributes.health}}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" data-uib-tooltip="Mana" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img style ="float:left" class="img-responsive" src="images/public/icon/star-pupil.png" /><span> {{user.attributes.currentMana}} / {{user.attributes.mana}}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" data-uib-tooltip="Stamina" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img style ="float:left" class="img-responsive" src="images/public/icon/power-lightning.png" /><span> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" data-uib-tooltip="Strength" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img style ="float:left" class="img-responsive" src="images/public/icon/muscle-up.png" /><span> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="" data-uib-tooltip="Toughness" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
-                        <img style ="float:left" class="img-responsive" src="images/public/icon/kevlar.png" /><span> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<img class="img-responsive bg-location" data-ng-src="{{user.navigation.currentArea.imagepath}}" />
-<div style="padding-top:64px;" class="container-fluid">
+﻿<img class="img-responsive bg-location" data-ng-src="{{user.navigation.currentArea.imagepath}}" />
+<div class="container-fluid">
     <div class="row">
-        <div class="col-xs-6">
-            <p data-ng-repeat="message in reverse(messages) track by $index"><b>{{message}}</b></p>
-        </div>
-        <div class="col-xs-6">
-            <div class="row">
+        <div class="col-md-4 col-sm-3">
+            <div class="col-xs-3">
+                <a class="col-sm-12" href="" data-uib-tooltip="Health" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                    <div><img class="img-responsive inline" src="images/public/icon/heart-beats.png" /> {{user.attributes.currentHealth}} / {{user.attributes.health}}</div>
+                </a>
+                <a class="col-sm-12" href="" data-uib-tooltip="Mana" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                    <div><img class="img-responsive inline" src="images/public/icon/star-pupil.png" /> {{user.attributes.currentMana}} / {{user.attributes.mana}}</div>
+                </a>
+                <a class="col-sm-12" href="" data-uib-tooltip="Stamina" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                    <div><img class="img-responsive inline" src="images/public/icon/power-lightning.png" /> {{user.attributes.currentStanima}} / {{user.attributes.stanima}}</div>
+                </a>
+                <a class="col-sm-12" href="" data-uib-tooltip="Strength" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                    <div><img class="img-responsive inline" src="images/public/icon/muscle-up.png" /> {{user.attributes.currentStrength}} / {{user.attributes.strength}}</div>
+                </a>
+                <a class="col-sm-12" href="" data-uib-tooltip="Toughness" data-tooltip-placement="bottom" data-tooltip-trigger="mouseenter">
+                    <div><img class="img-responsive inline" src="images/public/icon/kevlar.png" /> {{user.attributes.currentToughness}} / {{user.attributes.toughness}}</div>
+                </a>
+            </div>
+            <div class="col-xs-9">
+                <p data-ng-repeat="message in messages track by $index"><b>{{message}}</b></p>
+                <p data-ng-repeat="message in oldMessages track by $index">{{message}}</p>
+            </div>
+            <div class="col-xs-12">
                 <div class="col-xs-3">
                     <button type="button" class="btn btn-block" data-ng-click="submit('attack')"><img style="float:left"  class="img-responsive" src="images/public/icon/quick-slash.png" /><span> Attack</span></button>
                 </div>
@@ -67,13 +41,27 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <button type="button" class="btn btn-block" data-ng-click="submit('quest')"><span><img style="float:left"  class="img-responsive" src="images/public/icon/bookmarklet.png" /> Current Quests</span></button>
+                    <button type="button" class="btn btn-block" data-ng-click="submit('quest')"><span><img style="float:left"  class="img-responsive" src="images/public/icon/bookmarklet.png" /> Quests</span></button>
                 </div>
                 <div class="col-xs-3">
                     <button type="button" class="btn btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
                 </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-block" data-ng-click="submit('whereami')"><img style="float:left"  class="img-responsive" src="images/public/icon/worried-eyes.png" /><span> Where Am I?</span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button class="btn btn-block" data-ng-click="do('quest', 'start')"><img style="float:left"  class="img-responsive" src="images/public/icon/tied-scroll.png" /><span> Accept Quest</span></button>
+                </div>
             </div>
-            <uib-tabset data-ng-show="showmenu" active="activeJustified">
+        </div>
+        <div data-ng-show="showmenu" class="col-md-8 col-sm-9">
+            <uib-tabset active="activeJustified">
                 <uib-tab>
                     <uib-tab-heading>
                         <span class="text-center"><img class="img-responsive" src="images/public/icon/treasure-map.png" />Map</span>
@@ -83,12 +71,6 @@
                             <h3 class="text-capitalize text-info">
                                 {{user.navigation.currentArea.name}} / {{user.navigation.currentLocation.name}} / {{user.navigation.currentRoom.name}}
                             </h3>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-3"><button class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></a></div>
-                            <div class="col-xs-3"><button class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></a></div>
-                            <div class="col-xs-3"><button class="btn btn-block" data-ng-click="submit('whereami')"><img style="float:left"  class="img-responsive" src="images/public/icon/worried-eyes.png" /><span> Where Am I?</span></a></div>
-                            <div class="col-xs-3"><button class="btn btn-block" data-ng-click="do('quest', 'start')"><img style="float:left"  class="img-responsive" src="images/public/icon/tied-scroll.png" /><span> Accept Quest</span></a></div>
                         </div>
                         <div class="row">
                             <h3>Available Areas</h3>

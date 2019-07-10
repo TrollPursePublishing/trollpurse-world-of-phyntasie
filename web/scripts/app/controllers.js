@@ -46,17 +46,14 @@ angular
       $scope.viewTab = "potions";
 
       $scope.messages = [];
+      $scope.oldMessages = [];
 
       $scope.submit = function(data) {
         CommandService.submit(data, $scope.user.Id).then(
           function(data) {
             var d = data;
-            if (
-              $location.path().indexOf("play") > -1 &&
-              d.messages != undefined
-            ) {
-              d.messages.reverse();
-            }
+            $scope.oldMessages = $scope.messages;
+            $scope.messages = [];
             for (var i = 0; i < d.messages.length; i++) {
               $scope.messages.push(d.messages[i]);
             }
