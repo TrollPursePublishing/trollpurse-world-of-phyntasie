@@ -47,11 +47,15 @@ angular
 
       $scope.messages = [];
       $scope.oldMessages = [];
+      $scope.olderMessages = [];
+      $scope.oldestMessages = [];
 
       $scope.submit = function(data) {
         CommandService.submit(data, $scope.user.Id).then(
           function(data) {
             var d = data;
+            $scope.oldestMessages = $scope.olderMessages;
+            $scope.olderMessages = $scope.oldMessages;
             $scope.oldMessages = $scope.messages;
             $scope.messages = [];
             for (var i = 0; i < d.messages.length; i++) {

@@ -27,12 +27,6 @@
     padding-top: 30px;
   }
 
-  .game-container {
-    padding-top: 100px;
-    height: 100%;
-    max-height: 100%;
-  }
-
   .bag {
     padding-left: 5%;
     opacity: 0.75;
@@ -47,12 +41,6 @@
     position: fixed;
     width: 50%;
     max-width: 50%;
-  }
-
-  .game-container {
-    padding-top: 150px;
-    height: 100%;
-    max-height: 100%;
   }
 
   .bag {

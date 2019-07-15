@@ -1,5 +1,13 @@
-div.row.row-bottom {
-  position:absolute;
-  bottom: 0px;
-  margin-top: 10px;
+div.container.game-container {
+  height: 100%;
+  padding-top: 0;
+}
+
+div.container-fluid.game-container {
+  height: 100%;
+  padding-top: 0;
+}
+
+button.btn.btn-block.btn-cluster {
+  margin-top: 0.5em;
 }

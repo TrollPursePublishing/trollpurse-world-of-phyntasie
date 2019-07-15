@@ -1,0 +1,31 @@
+{
+  "name": "trollpurse-world-of-phyntasie-web",
+  "version": "1.0.0",
+  "description": "World of Phyntasie browswer adventure game. Created by Troll Purse.",
+  "main": "Index.html",
+  "scripts": {
+    "build": "gulp build",
+    "test": "echo \"no tests\"",
+    "dev": "http-server",
+    "dev-build": "npm run build && http-server ./built"
+  },
+  "keywords": [
+    "trollpurse",
+    "web",
+    "adventure",
+    "game",
+    "world",
+    "of",
+    "phyntasie"
+  ],
+  "author": "Troll Purse",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "del": "2.2.2",
+    "gulp": "4.0.2",
+    "gulp-clean-css": "4.2.0",
+    "gulp-htmlmin": "3.0.0",
+    "gulp-imagemin": "6.0.0",
+    "gulp-minify": "3.1.0"
+  }
+}

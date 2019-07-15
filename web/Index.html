@@ -5,18 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title ng-bind="title" data-game-name></title>
     <meta name="description" content="World of Phyntasie by Troll Purse" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="styles/hint.min.css" rel="stylesheet"/>
+    <link href="styles/hint.css" rel="stylesheet"/>
     <link href="styles/img.css" rel="stylesheet"/>
     <link href="styles/ui-bootstrap-csp.css"/>
     <link href="styles/game.css"/>
+
+    <link href="https://worldofphyntasie.com" rel="canonical" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="World of Phyntasie" />
+	<meta name="twitter:site" content="@trollpurse" />
+	<meta name="twitter:creator" content="@trollpurse" />
+	<meta name="twitter:url" content="https://worldofphyntasie.com/index.html" />
+	<meta name="twitter:image" content="https://worldofphyntasie.com/images/logos/logo_small.png" />
+	<meta name="twitter:description" content="World of Phyntasie. An adventure game for the adventurous." />
+
+	<meta name="description" content="World of Phyntasie. An adventure game for the adventurous.">
+
+	<meta property="og:title" content="World of Phyntasie" />
+	<meta property="og:type" content="website" />
+	<meta property="og:description" content="World of Phyntasie. An adventure game for the adventurous." />
+	<meta property="og:url" content="https://worldofphyntasie.com/index.html" />
+	<meta property="og:image" content="https://worldofphyntasie.com/images/logos/logo_small.png" />
+
+	<meta name="author" content="Troll Purse" />
 </head>
-<body>
+<body style="height: 100vh">
     <nav class="nav navbar navbar-inverse navbar-fixed-top" role="navigation" ng-if=" !layout " style="z-index:1000;">
         <div class="container">
             <div class="navbar-header">
@@ -33,14 +53,11 @@
                     <li>
                         <a href="#/manual">Manual</a>
                     </li>
-                    <li>
-                        <a href="#/credits">Credits</a>
-                    </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div ng-view style="padding-top:50px;">
+    <div ng-view style="padding-top:50px; height:100%;">
     </div>
     <script src="scripts/engine/models.js"></script>
     <script src="scripts/engine/gameContext.js"></script>
