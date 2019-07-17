@@ -16,7 +16,7 @@ gulp.task('minifyHTML', function() {
 });
 
 gulp.task('minifyIndex', function() {
-	return gulp.src(['Index.html'])
+	return gulp.src(['index.html'])
 		.pipe(minifyHTML({collapseWhitespace: true}))
 		.pipe(gulp.dest('built/'));
 });
@@ -34,7 +34,7 @@ gulp.task('copyRobots', function() {
 });
 
 gulp.task('minifyJS', function() {
-	return gulp.src('scripts/*.js')
+	return gulp.src('scripts/**/*.js')
 		.pipe(minifyJS({
 			ext: {
 				src:'.js',
@@ -52,7 +52,7 @@ gulp.task('importEngine', function () {
 				min: '.js'
 			}
 		}))
-		.pipe(gulp.dest('built/scripts/'));
+		.pipe(gulp.dest('built/scripts/engine'));
 });
 
 gulp.task('minifyIMG', function() {
