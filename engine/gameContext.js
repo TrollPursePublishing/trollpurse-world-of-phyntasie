@@ -161,6 +161,10 @@ function gameContext() {
 
   allMonsters["Buffed Imp"].attributes.levelUp();
 
+  const questGivers = {
+    ButtleberryHerald:
+  }
+
   const createWorld = () => {
     return wop_world({
       name: "Phyntasie",
@@ -171,15 +175,9 @@ function gameContext() {
           description: "A beautiful down upon the cliffs of an ocean.",
           locations: [
             wop_location({
-              name: "Town Square",
-              description: "A square in the town. I guess I should not have expected more than that.",
-              monsters: [
-                allMonsters["Imp"],
-                allMonsters["Sewer Turtle"],
-                allMonsters["Large Rat"],
-                allMonsters["Buffed Imp"]
-              ],
-              questGiver: wop_questGiver({
+              name: 'Tax Plaza',
+              description: 'The place of one of the certian things in life.',
+              questGiver:  wop_questGiver({
                 name: 'Old Dirty Man',
                 description: 'He sits there. Hunched. Smelly. Wrinkled.',
                 quest: wop_quests({
@@ -191,6 +189,29 @@ function gameContext() {
                   title: 'Pesky Imps Must Die',
                   type: QUEST_TYPE.Kill,
                 }),
+              }),
+            }),
+            wop_location({
+              name: "Town Square",
+              description: "A square in the town. I guess I should not have expected more than that.",
+              monsters: [
+                allMonsters["Imp"],
+                allMonsters["Sewer Turtle"],
+                allMonsters["Large Rat"],
+                allMonsters["Buffed Imp"]
+              ],
+              questGiver:  wop_questGiver({
+                name: 'Buttleberry Herald',
+                description: 'He stands there, smug, with his uniform sporting a large orange berry. His myraid colours truly relay his job - a herald. Town crier, the easiest job of late. A true slacker. However, it seems he has a job for me.',
+                quest: wop_quests({
+                  title: 'The Imp Menace',
+                  description: 'Hear ye! Hear ye, there are most abundant collections of nasty creatures within our dungeon that are of most import to remove from the vacinity. Rewards, a-plenty. Honor, a-plenty. All bestowed upon the completion of this boon from our most merciful Lord Buttleberry!',
+                  gold: 3500,
+                  instructions: 'Kill 3 Imps',
+                  type: QUEST_TYPE.Kill,
+                  nameOfObject: 'Imp',
+                  countNeeded: 3,
+                })
               }),
               rooms: [
                 wop_room({
