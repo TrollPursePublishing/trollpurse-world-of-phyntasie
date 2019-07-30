@@ -4,19 +4,19 @@ phases:
   install:
     runtime-versions:
       nodejs: 10
-    commands:
-      - npm i npm@latest -g
-      - pip install --upgrade pip
-      - pip install --upgrade awscli
   pre_build:
     commands:
+      - cd web
       - npm ci
   build:
     commands:
       - npm run build
-  post_build:
-    commands:
-      - aws s3 sync ./built $WEBSITE_BUCKET
+artifacts:
+  name: BuildOutput
+  files:
+    - '**/*'
+  discard-paths: no
+  base-directory: 'web/built'
 cache:
   paths:
     - ./node_modules
