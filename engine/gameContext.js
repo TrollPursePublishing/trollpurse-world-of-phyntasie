@@ -201,10 +201,10 @@ function gameContext() {
             wop_location({
               ...intlText.Places.townSquareLocation,
               monsters: [
-                ...allMonsters[intlText.Monsters.peskyImp.key],
-                ...allMonsters[intlText.Monsters.sewerTurtle.key],
-                ...allMonsters[intlText.Monsters.largeRate.key],
-                ...allMonsters[intlText.Monsters.buffedImp.key]
+                allMonsters[intlText.Monsters.peskyImp.key],
+                allMonsters[intlText.Monsters.sewerTurtle.key],
+                allMonsters[intlText.Monsters.largeRate.key],
+                allMonsters[intlText.Monsters.buffedImp.key]
               ],
               questGiver: questGivers.ButtleberryHerald,
               rooms: [

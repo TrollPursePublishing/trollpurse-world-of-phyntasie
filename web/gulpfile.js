@@ -21,6 +21,11 @@ gulp.task('minifyIndex', function() {
 		.pipe(gulp.dest('built/'));
 });
 
+gulp.task('copyFavicon', function () {
+	return gulp.src(['favicon.ico'])
+		.pipe(gulp.dest('built/'));
+});
+
 
 gulp.task('minifyCSS', function(){
 	return gulp.src(['styles/*.css'])
@@ -62,7 +67,7 @@ gulp.task('minifyIMG', function() {
 
 });
 
-gulp.task('mini-copy', gulp.parallel('importEngine', 'minifyHTML', 'minifyJS', 'minifyCSS', 'minifyIndex', 'minifyIMG', 'copyRobots'));
+gulp.task('mini-copy', gulp.parallel('importEngine', 'minifyHTML', 'minifyJS', 'minifyCSS', 'minifyIndex', 'minifyIMG', 'copyFavicon', 'copyRobots'));
 
 gulp.task('build', gulp.series('cleanDest', 'mini-copy', function(done){
 	done();
