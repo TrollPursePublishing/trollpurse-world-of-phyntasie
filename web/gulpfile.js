@@ -34,7 +34,7 @@ gulp.task('copyRobots', function() {
 });
 
 gulp.task('minifyJS', function() {
-	return gulp.src('scripts/**/*.js')
+	return gulp.src(['scripts/**/*.js', 'scripts/**/*.map'])
 		.pipe(minifyJS({
 			ext: {
 				src:'.js',
