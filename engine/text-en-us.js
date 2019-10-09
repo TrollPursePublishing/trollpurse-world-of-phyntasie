@@ -26,6 +26,30 @@ const intlText = {
       description: "The old man wanted to see this back at Reedton Wharf.",
       instructions: "Go to Reedton Wharf",
       nameOfObject: "Reedton Wharf"
+    },
+    failingFields: {
+      title: 'Failing Fields',
+      description: "\"Thank the spiritual entities that you are here adventurer! How do I know are one? Look at your garb! Enough idle talk. I am in the need of your assistance. It seems that the rivalry with Reedton has gone a too far this time! Some of our crops have gone bad and the farmers swear that the fields were poisoned. I need you to confront the Lord of Reedton, Alexander, about this and report to me the details. Hurry, go, Buttleberry will be most in your debt.\"",
+      instructions: "Go to the Grand Hall in Reedton Castle",
+      nameOfObject: "Grand Hall"
+    },
+    speakingOfFarmFields: {
+      title: "Speaking of Farm Fields",
+      description: "I confronted Lord Alexander Reedton about the poisoned farm fields in Buttleberry and Lord Buttleberry's concerns. His face nearly exploded as he exclaimed, \"You.. HE dares to accuse me! Just yesterday our farmers brought to me the same complaints! Do you challenge my authority!? Go, see for yourself.\"",
+      instructions: "Go to the Farm Fields in Reedton Grassland",
+      nameOfObject: "Farm Fields"
+    },
+    lostSouls: {
+      title: "Lost Souls",
+      description: "The only words I could hear from him were repeated, \"They were here, but not, then the rest were not, gone, like ghosts, gone, gone... gone\". Eerie to say the least.",
+      instructions: "Go to a haunted place",
+      nameOfObject: "The Tall Tree",
+    },
+    puttingSoulsToRest: {
+      title: "Putting Souls to Rest",
+      description: "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping, speaks in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispers to me, \"Release us... defeat the Souls that... harm... pain\". After that she weeps with a mighty wail. Her small shoulders rapidly rising and falling twice with each sob.",
+      instructions: "Slay ten Souls",
+      nameOfObject: "Soul",
     }
   },
   Characters: {
@@ -47,6 +71,10 @@ const intlText = {
       name: "Lord Buttleberry",
       description:
         "Lord Buttleberry stands at his Manor, clearly agitated. He paces, his leather boots echo across the manor grounds"
+    },
+    agitatedFarmer: {
+      name: "Agitated Farmer",
+      description: "He looks... lost, as if he has no purpose left in life. His eyes look at I, but it is as if he does not see me.",
     }
   },
   Monsters: {
@@ -70,7 +98,7 @@ const intlText = {
       title: "Sewer",
       description: "Small and hard... sounds familiar."
     },
-    largeRate: {
+    largeRat: {
       key: "Large Rat",
       name: "Rat",
       title: "Large",
@@ -118,6 +146,71 @@ const intlText = {
       name: "Buttleberry",
       description: "A beautiful town upon the cliffs of an ocean."
     },
+    marbleManorLocation: {
+      name: "The Marble Manor",
+      description: "Within Buttleberry is a large manor. Its walls are carved from a solid mammoth cut of marble. How such was acheived is only known by the original owners, long passed away. Although impressive, the building resembles a block with holes cut into it for windows and doors. Guards partrol the area, looking for nefarious individuals.",
+    },
+    groveOfTheElderLocation: {
+      name: "Grove of the Elder",
+      description: "These woods contain many mysteries. This is one of them. It is said that child sacrifice and the birth of demons took place here. The rituals too unspeakable to speak anymore of. It looks peacefull now, with the exception of the blood stained stone table resting in the middle of the grove. It speaks to me, calling my name.",
+    },
+    tallTreeLocation: {
+      name: "The Tall Tree",
+      description: "Of all the trees in this forest, this particular specimen seems to know the most. Its presence unsettles me. Sweat begins dripping down my eyes, stinging. However, I can't help but feel that it is this wooden creature before me, crying through my soul.",
+    },
+    widowerColossusLocation: {
+      name: "The Widower Colossus",
+      description: "Being the only sentitent being left in these wastes, I cannot help but feel a sense of lonliness emanate from the statue. It looks across the desert, peering, waiting for it's lover's return.",
+    },
+    cityGateLocation: {
+      name: "City Gate",
+      description: "Two large stone griffins peer into my eyes as I approach the iron-wrought gates of Buttleberry. They promise swift vengeance to evil-doers.",
+    },
+    dungeonLocation: {
+      name: "Dungeons",
+      description: "Well, it looks frightening enough. I wonder if there are any dragons. Yeah, what an adventure - dragons in dungeons.",
+    },
+    marketLocation: {
+      name: "Market",
+      description: "A bustling venue filled with various shops and treats. To the left are some amazing artists of puppetry and to the right more sweet shops. Children run up to me in awe, while mothers wink from a distance.",
+    },
+    castleLocation: {
+      name: "Castle Reedton",
+      description: "Large and forboding, this castle overlooks the town and surrounding oceaon. Flags whip about as the wind vicously strikes them. These standards signal the occupancy of the royalty. Perhaps paying them a visit will prove worthwhile.",
+    },
+    grasslandsLocation: {
+      name: "Grasslands",
+      description: "From coast to coast of this small island, outside the walls of the town of Reedton, there is the Grasslands. They stretch far. Where farmer has not settled, creatures have. Who knows what has been lost in this vast ocean of green fertile land.",
+    },
+    wharfLocation: {
+      name: "Wharf",
+      description: "The only way on or off this island legally. It controls the imports and exports of this island. It is said that one woman owns it all, and thus owns the island.",
+    },
+    sewersLocation: {
+      name: "Sewers",
+      description: "All the waste, and who knows what else, runs into these large caverns and into the ocean from the other side of the island. An engineering miracle.",
+    },
+    sewersRoom: {
+      name: "Sewers",
+      description: "It smells. That is the long and short of it."
+    },
+    roundSewerRoom: {
+      name: "Round Sewer Room",
+      description:
+        "A large cavernous space within the sewers. There is no light. It still smells."
+    },
+    baronWastesArea: {
+      name: "The Baron Wastes",
+      description: "The moans of the dead ride the howling wind in this arid plane. Naught but my soul and those of the perished remain here. For miles, nothing can be seen. This is what remains of the Great War. The result of the combined wrath of the Lords and Ladies of Reedton and Buttleberry. Together they crushed the Baron of Lightwatch. Wasted by dark magic - nothing will grow here for millenia. Of Lightwatch itself - gone. Not even my map shows its final resting place.",
+    },
+    hauntedForestArea: {
+      name: "Haunted Forest",
+      description: "As always, this forest is haunted, filled with the nightmares born of the surrounding villagers suuperstitions and fears. It looms ahead, gaping, a maw ready to devour my soul. Have any ever made it through alive? Have any ever even attempted such a trail? Why not take the path?",
+    },
+    reedtonArea: {
+      name: "Reedton",
+      description: "A small town precariously nestled above the cliffs of a small island. It looks fragile, as if the first gust will take it - and it's inhabitants - into the deep blue. There seems to be more here and they share a friendly rivalry with Buttleberry."
+    },
     taxPlazaLocation: {
       name: "Tax Plaza",
       description: "The place of one of the certian things in life."
@@ -127,15 +220,47 @@ const intlText = {
       description:
         "A square in the town. I guess I should not have expected more than that."
     },
-    sewersRoom: {
-      name: "Sewers",
-      description: "It smells. Like shit. That is the long and short of it."
+    entranceRoom: {
+      name: "Entrance",
+      description: "A dank, smelly, cold room filled with other rooms. Oddly enough, entrances are also exits.",
     },
-    roundSewerRoom: {
-      name: "Round Sewer Room",
-      description:
-        "A large cavernous space within the sewers. There is no light. It still smells like shit."
-    }
+    sewerEntranceRoom: {
+      name: "Sewer Entrance",
+      description: "A hole in the ground covered by a large copper plate. Easily set aside. Down I go!",
+    },
+    sewerHallwayRoom: {
+      name: "Sewer Hallway",
+      description: "A long, dank, smelly, place. What could possibly be here?",
+    },
+    sewerCavern: {
+      name: "Sewer Cavern",
+      description: "Chunks of the sewer has fallen away and something has burrowed in. Dare I see who is home?",
+    },
+    sewerCrossroads: {
+      name: "Sewer Crossroads",
+      description: "Many other sewer hallways connect here, making for one large cesspool. Blech! What drove me here?",
+    },
+    castleEntranceRoom: {
+      name: "Castle Entrance",
+      description: "Majestic gates stand before me and wary guards' eyes wander over my exteriior, best stow the weapons... for now.",
+    },
+    grandHallRoom: {
+      name: "Grand Hall",
+      description: "Large, ornate, and full of loot. Best get started.",
+    },
+    farmFieldsRoom: {
+      name: "Farm Fields",
+      description: "The wind lazily pushes the large strands of wheat around. They sway as if drunk on the sunlight. The only menacing feeling I have is the wonder of what could hide beneath the stalks.",
+    },
+    burnedHomeRoom: {
+      name: "Burned Home",
+      description: "I gather this buliding used to house a family. Now, telling by the sorcerous scortches upon the skeletons and foundation, it houses only the souls of the deceased.",
+    },
+    overlookHillRoom: {
+      name: "Overlook Hill",
+      description: "Looming in the distance the opposite of the island, I can see Reedton. So interesting, a bustling city, diminished to such a puny size by something as simple as distance. I look down and note: This hill... it does not seem natural."
+    },
+
   },
   Items: {
     sandals: {

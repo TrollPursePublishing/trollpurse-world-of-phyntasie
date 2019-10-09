@@ -288,7 +288,7 @@ function wop_game() {
       if (destination) {
         if (p.currentLocation.isExit) {
           p.currentArea = destination;
-          p.currentLocation = p.currentArea.find(area => area.isExit);
+          p.currentLocation = destination.locations.find(area => area.isExit);
           return [p.onMove(destination)];
         }
         return [

@@ -134,8 +134,8 @@ function gameContext() {
         stanima: 0
       })
     }),
-    [intlText.Monsters.largeRate.key]: wop_player({
-      ...intlText.Monsters.largeRate,
+    [intlText.Monsters.largeRat.key]: wop_player({
+      ...intlText.Monsters.largeRat,
       attributes: wop_playerAttribute({
         strength: 8,
         mana: 0,
@@ -154,7 +154,7 @@ function gameContext() {
       quest: wop_quests({
         ...intlText.Quests.theImpMenace,
         countNeeded: 1,
-        gold: 4500,
+        gold: 450,
         type: QUEST_TYPE.Kill
       })
     }),
@@ -163,130 +163,263 @@ function gameContext() {
       quest: wop_quests({
         ...intlText.Quests.peskyImpsMustDie,
         countNeeded: 1,
-        gold: 2000,
+        gold: 5,
         type: QUEST_TYPE.Kill
       })
     }),
     DyingGentleman: wop_questGiver({
       ...intlText.Characters.dyingGentleman,
       quest: wop_quests({
-        ... intlText.Quests.oneLastGlimpse,
+        ...intlText.Quests.oneLastGlimpse,
         type: QUEST_TYPE.Collect,
         countNeeded: 1,
         gold: 0,
         nextQuest: wop_quests({
           ...intlText.Quests.oneFinalTreasure,
           type: QUEST_TYPE.GoTo,
-          gold: 1000,
+          gold: 100,
           countNeeded: 1
         })
       })
     }),
     LordButtleberry: wop_questGiver({
-      ...intlText.Characters.lordButtleberry
+      ...intlText.Characters.lordButtleberry,
+      quest: wop_quests({
+        ...intlText.Quests.failingFields,
+        type: QUEST_TYPE.GoTo,
+        gold: 150,
+        countNeeded: 1,
+        nextQuest: wop_quests({
+          ...intlText.Quests.speakingOfFarmFields,
+          type: QUEST_TYPE.GoTo,
+          gold: 100,
+          countNeeded: 1
+        })
+      })
     })
   };
+
+  questGivers.CrazedFarmer = wop_questGiver({
+    ...intlText.Characters.agitatedFarmer,
+    questsToUnlockThisQuestGiver: [questGivers.LordButtleberry.quest.nextQuest],
+    quest: wop_quests({
+      ...intlText.Quests.lostSouls,
+      type: QUEST_TYPE.GoTo,
+      gold: 10,
+      countNeeded: 1,
+      nextQuest: wop_quests({
+        ...intlText.Quests.puttingSoulsToRest,
+        type: QUEST_TYPE.Kill,
+        gold: 100,
+        countNeeded: 1
+      })
+    })
+  });
+
+  const Reedton = wop_area({
+    ...intlText.Places.reedtonArea,
+    locations: [
+      wop_location({
+        ...intlText.Places.wharfLocation,
+        isExit: true
+      }),
+      wop_location({
+        ...intlText.Places.marketLocation,
+        market: wop_market({
+          inventory: wop_inventory({
+            potions: [],
+            armors: [],
+            weapons: []
+          })
+        })
+      }),
+      wop_location({
+        ...intlText.Places.grasslandsLocation,
+        monsters: [allMonsters[intlText.Monsters.largeRat.key]],
+        questGiver: questGivers.CrazedFarmer,
+        rooms: [
+          wop_room({
+            ...intlText.Places.farmFieldsRoom,
+            isExit: true,
+            linkedRoom: [
+              wop_room({
+                ...intlText.Places.burnedHomeRoom
+              }),
+              wop_room({
+                ...intlText.Places.overlookHillRoom
+              })
+            ]
+          })
+        ]
+      }),
+      wop_location({
+        ...intlText.Places.castleLocation,
+        rooms: [
+          wop_room({
+            ...intlText.Places.castleEntranceRoom,
+            isExit: true,
+            linkedRoom: [
+              wop_room({
+                ...intlText.Places.grandHallRoom
+              })
+            ]
+          })
+        ]
+      }),
+      wop_location({
+        ...intlText.Places.sewersLocation,
+        rooms: [
+          wop_room({
+            ...intlText.Places.sewerEntranceRoom,
+            isExit: true,
+            linkedRoom: [
+              wop_room({
+                ...intlText.Places.sewerHallwayRoom,
+                linkedRoom: [
+                  wop_room({
+                    ...intlText.Places.sewerCrossroads,
+                    linkedRoom: [
+                      wop_room({
+                        ...intlText.Places.sewerCavern
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+
+  const Buttleberry = wop_area({
+    ...intlText.Places.buttleberryArea,
+    locations: [
+      wop_location({
+        ...intlText.Places.marbleManorLocation,
+        questGiver: questGivers.LordButtleberry
+      }),
+      wop_location({
+        ...intlText.Places.taxPlazaLocation,
+        questGiver: questGivers.OldDirtyMan
+      }),
+      wop_location({
+        ...intlText.Places.cityGateLocation,
+        isExit: true
+      }),
+      wop_location({
+        ...intlText.Places.dungeonLocation,
+        monsters: [
+          allMonsters[intlText.Monsters.peskyImp.key],
+          allMonsters[intlText.Monsters.largeRat.key]
+        ],
+        rooms: [
+          wop_room({
+            ...intlText.Places.entranceRoom,
+            isExit: true
+          })
+        ]
+      }),
+      wop_location({
+        ...intlText.Places.townSquareLocation,
+        monsters: [
+          allMonsters[intlText.Monsters.peskyImp.key],
+          allMonsters[intlText.Monsters.sewerTurtle.key],
+          allMonsters[intlText.Monsters.largeRat.key],
+          allMonsters[intlText.Monsters.buffedImp.key]
+        ],
+        questGiver: questGivers.ButtleberryHerald,
+        rooms: [
+          wop_room({
+            ...intlText.Places.sewersRoom,
+            isExit: true,
+            chanceForRelic: 0.05,
+            relics: [
+              wop_relic({
+                ...intlText.Items.silverChalice,
+                value: 10
+              })
+            ],
+            linkedRoom: [
+              wop_room({
+                ...intlText.Places.roundSewerRoom,
+                isExit: false,
+                chanceForRelic: 0.06,
+                relics: [
+                  wop_relic({
+                    ...intlText.Items.silverChalice,
+                    value: 10
+                  })
+                ]
+              })
+            ]
+          })
+        ],
+        market: wop_market({
+          inventory: wop_inventory({
+            potions: [
+              allPotions[intlText.Potions.flamingJarOfShit.name],
+              allPotions[intlText.Potions.potionOfPainlessness.name],
+              allPotions[intlText.Potions.potionOfManaEmpowerment.name]
+            ],
+            armors: [
+              wop_armor({
+                ...intlText.Items.sandals,
+                equipmentSlot: ARMOR_SLOTS.Feet,
+                durability: 100,
+                value: 50,
+                armorRating: 1
+              }),
+              wop_armor({
+                ...intlText.Items.plateWithStraps,
+                equipmentSlot: ARMOR_SLOTS.Torso,
+                durability: 10,
+                value: 50,
+                armorRating: 2
+              }),
+              wop_armor({
+                ...intlText.Items.clotheCap,
+                equipmentSlot: ARMOR_SLOTS.Head,
+                durability: 100,
+                value: 50,
+                armorRating: 1
+              }),
+              wop_armor({
+                ...intlText.Items.canvasPants,
+                equipmentSlot: ARMOR_SLOTS.Legs,
+                durability: 50,
+                value: 25,
+                armorRating: 1
+              }),
+              wop_armor({
+                ...intlText.Items.greivingGauntlets,
+                equipmentSlot: ARMOR_SLOTS.Arm,
+                durability: 200,
+                value: 125,
+                armorRating: 2
+              })
+            ],
+            weapons: [
+              wop_weapon({
+                ...intlText.Items.dumbAssStick,
+                damage: 1,
+                criticalDamage: 2,
+                durability: 10,
+                stanimaCost: 0,
+                value: 50
+              })
+            ]
+          })
+        })
+      })
+    ]
+  });
 
   const createWorld = () => {
     return wop_world({
       ...intlText.Places.phyntasieWorld,
-      areas: [
-        wop_area({
-          ...intlText.Places.buttleberryArea,
-          locations: [
-            wop_location({
-              ...intlText.Places.taxPlazaLocation,
-              questGiver: questGivers.OldDirtyMan
-            }),
-            wop_location({
-              ...intlText.Places.townSquareLocation,
-              monsters: [
-                allMonsters[intlText.Monsters.peskyImp.key],
-                allMonsters[intlText.Monsters.sewerTurtle.key],
-                allMonsters[intlText.Monsters.largeRate.key],
-                allMonsters[intlText.Monsters.buffedImp.key]
-              ],
-              questGiver: questGivers.ButtleberryHerald,
-              rooms: [
-                wop_room({
-                  ...intlText.Places.sewersRoom,
-                  isExit: true,
-                  chanceForRelic: 0.05,
-                  relics: [
-                    wop_relic({
-                      ...intlText.Items.silverChalice,
-                      value: 10
-                    })
-                  ],
-                  linkedRoom: [
-                    wop_room({
-                      ...intlText.Places.roundSewerRoom,
-                      isExit: false,
-                      chanceForRelic: 0.06
-                    })
-                  ]
-                })
-              ],
-              market: wop_market({
-                inventory: wop_inventory({
-                  potions: [
-                    allPotions[intlText.Potions.flamingJarOfShit.name],
-                    allPotions[intlText.Potions.potionOfPainlessness.name],
-                    allPotions[intlText.Potions.potionOfManaEmpowerment.name],
-                  ],
-                  armors: [
-                    wop_armor({
-                      ...intlText.Items.sandals,
-                      equipmentSlot: ARMOR_SLOTS.Feet,
-                      durability: 100,
-                      value: 50,
-                      armorRating: 1,
-                    }),
-                    wop_armor({
-                      ...intlText.Items.plateWithStraps,
-                      equipmentSlot: ARMOR_SLOTS.Torso,
-                      durability: 10,
-                      value: 50,
-                      armorRating: 2,
-                    }),
-                    wop_armor({
-                      ...intlText.Items.clotheCap,
-                      equipmentSlot: ARMOR_SLOTS.Head,
-                      durability: 100,
-                      value: 50,
-                      armorRating: 1,
-                    }),
-                    wop_armor({
-                      ...intlText.Items.canvasPants,
-                      equipmentSlot: ARMOR_SLOTS.Legs,
-                      durability: 50,
-                      value: 25,
-                      armorRating: 1,
-                    }),
-                    wop_armor({
-                      ...intlText.Items.greivingGauntlets,
-                      equipmentSlot: ARMOR_SLOTS.Arm,
-                      durability: 200,
-                      value: 125,
-                      armorRating: 2,
-                    })
-                  ],
-                  weapons: [
-                    wop_weapon({
-                      ...intlText.Items.dumbAssStick,
-                      damage: 1,
-                      criticalDamage: 2,
-                      durability: 10,
-                      stanimaCost: 0,
-                      value: 50
-                    })
-                  ]
-                })
-              })
-            })
-          ]
-        })
-      ]
+      areas: [Reedton, Buttleberry]
     });
   };
 
