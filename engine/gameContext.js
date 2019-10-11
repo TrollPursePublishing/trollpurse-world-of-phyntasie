@@ -17,10 +17,12 @@ function gameContext() {
     wop_weapon,
     wop_questGiver,
     wop_quests,
+    wop_equipment,
     ARMOR_SLOTS,
     QUEST_TYPE
   } = wop_models();
 
+//Spells
   function restore(attribute, value, next = null) {
     return function(instigator, target) {
       let text = "";
@@ -112,6 +114,113 @@ function gameContext() {
     })
   };
 
+// Equipment
+  const tierOneArmor = [
+    wop_armor({
+      ...intlText.Items.sandals,
+      equipmentSlot: ARMOR_SLOTS.Feet,
+      durability: 100,
+      value: 50,
+      armorRating: 1
+    }),
+    wop_armor({
+      ...intlText.Items.plateWithStraps,
+      equipmentSlot: ARMOR_SLOTS.Torso,
+      durability: 10,
+      value: 50,
+      armorRating: 2
+    }),
+    wop_armor({
+      ...intlText.Items.clotheCap,
+      equipmentSlot: ARMOR_SLOTS.Head,
+      durability: 100,
+      value: 50,
+      armorRating: 1
+    }),
+    wop_armor({
+      ...intlText.Items.canvasPants,
+      equipmentSlot: ARMOR_SLOTS.Legs,
+      durability: 50,
+      value: 25,
+      armorRating: 1
+    }),
+    wop_armor({
+      ...intlText.Items.greivingGauntlets,
+      equipmentSlot: ARMOR_SLOTS.Arm,
+      durability: 200,
+      value: 125,
+      armorRating: 2
+    })
+  ];
+
+  const tierTwoArmor = [
+    wop_armor({
+      ...intlText.Items.boots,
+      equipmentSlot: ARMOR_SLOTS.Feet,
+      durability: 120,
+      value: 120,
+      armorRating: 2
+    }),
+    wop_armor({
+      ...intlText.Items.cuirass,
+      equipmentSlot: ARMOR_SLOTS.Torso,
+      durability: 15,
+      value: 220,
+      armorRating: 4
+    }),
+    wop_armor({
+      ...intlText.Items.corinthianHelmet,
+      equipmentSlot: ARMOR_SLOTS.Head,
+      durability: 120,
+      value: 120,
+      armorRating: 2
+    }),
+    wop_armor({
+      ...intlText.Items.greaves,
+      equipmentSlot: ARMOR_SLOTS.Legs,
+      durability: 60,
+      value: 55,
+      armorRating: 2
+    }),
+    wop_armor({
+      ...intlText.Items.gauntlets,
+      equipmentSlot: ARMOR_SLOTS.Arm,
+      durability: 300,
+      value: 200,
+      armorRating: 3
+    })
+  ];
+
+  const tierOneWeapons = [
+    wop_weapon({
+      ...intlText.Items.dumbAssStick,
+      damage: 1,
+      criticalDamage: 2,
+      durability: 10,
+      stanimaCost: 0,
+      value: 50
+    })
+  ];
+
+  const tierTwoWeapons = [
+    wop_weapon({
+      ...intlText.Items.spikedWoodClub,
+      damage: 3,
+      criticalDamage: 5,
+      durability: 20,
+      stanimaCost: 1,
+      value: 75,
+    }),
+    wop_weapon({
+      ...intlTest.Items.sharpenedMetalPole,
+      damage: 2,
+      criticalDamage: 3,
+      durability: 15,
+      stanimaCost: 0,
+      value: 65,
+    })
+  ];
+// Actors
   const allMonsters = {
     [intlText.Monsters.peskyImp.key]: wop_player(intlText.Monsters.peskyImp),
     [intlText.Monsters.buffedImp.key]: wop_player({
@@ -143,7 +252,61 @@ function gameContext() {
         toughness: 1,
         stanima: 0
       })
-    })
+    }),
+    [intlText.Monsters.groveGuardian.key]: wop_player({
+      ...intlText.Monsters.groveGuardian,
+      attributes: wop_playerAttribute({
+        strength: 2,
+        mana: 0,
+        health: 30,
+        toughness: 4,
+        stanima: 0,
+      }),
+    }),
+    [intlText.Monsters.vengefulSouls.key]: wop_player({
+      ...intlText.Monsters.vengefulSouls,
+      attributes: wop_playerAttribute({
+        strength: 1,
+        mana: 100,
+        health: 10,
+        toughness: 1,
+        stanima: 0,
+      })
+    }),
+    [intlText.Monsters.hunchedSheet.key]: wop_player({
+      ...intlText.Monsters.hunchedSheet,
+      attributes: wop_playerAttribute({
+        strength: 1,
+        mana: 120,
+        health: 12,
+        toughness: 3,
+        stanima: 0,
+      })
+    }),
+    [intlText.Monsters.skinlessSkeleton.key]: wop_player({
+      ...intlText.Monsters.skinlessSkeleton,
+      attributes: wop_playerAttribute({
+        strength: 8,
+        mana: 20,
+        health: 25,
+        toughness: 3,
+        stanima: 40,
+      }),
+      equipment: wop_equipment({
+        head: wop_equipment(tierOneArmor[2]),
+        weapon: wop_weapon(tierTwoWeapons[1]),
+      })
+    }),
+    [intlText.Monsters.cryingBoy]: wop_player({
+      ...intlText.Monsters.cryingBoy,
+      attributes: wop_playerAttribute({
+        strength: 12,
+        mana: 0,
+        health: 30,
+        toughness: 5,
+        stanima: 0,
+      }),
+    }),
   };
 
   allMonsters[intlText.Monsters.buffedImp.key].attributes.levelUp();
@@ -216,26 +379,70 @@ function gameContext() {
     })
   });
 
+  const HauntedForest = wop_area({
+    ...intlText.Places.hauntedForestArea,
+    locations: [
+      wop_location({
+        ...intlText.Places.groveOfTheElderLocation,
+        isExit: true,
+        monsters: [
+          allMonsters[intlText.Monsters.groveGuardian.key],
+        ]
+      }),
+      wop_location({
+        ...intlText.Places.tallTreeLocation,
+        monsters: [
+          allMonsters[intlText.Monsters.vengefulSouls.key],
+          allMonsters[intlText.Monsters.hunchedSheet.key],
+          allMonsters[intlText.Monsters.skinlessSkeleton.key],
+          allMonsters[intlText.Monsters.cryingBoy.key],
+        ],
+      })
+    ]
+  });
+
+  const TheBarrenWastes = wop_area({
+    ...intlText.Places.baronWastesArea,
+    locations: [
+      wop_location({
+        ...intlText.Places.widowerColossusLocation,
+        isExit: true,
+        monsters: [
+          allMonsters[intlText.Monsters.largeRat.key],
+        ]
+      })
+    ]
+  });
+
   const Reedton = wop_area({
     ...intlText.Places.reedtonArea,
     locations: [
       wop_location({
         ...intlText.Places.wharfLocation,
-        isExit: true
+        isExit: true,
+        questGiver: questGivers.DyingGentleman,
       }),
       wop_location({
         ...intlText.Places.marketLocation,
         market: wop_market({
           inventory: wop_inventory({
-            potions: [],
-            armors: [],
-            weapons: []
-          })
-        })
+            potions: Object.keys(allPotions).map(key => allPotions[key]),
+            armors: [
+              ...tierOneArmor,
+              ...tierTwoArmor,
+            ],
+            weapons: [
+              ...tierOneWeapons,
+              ...tierTwoWeapons,
+            ],
+          }),
+        }),
       }),
       wop_location({
         ...intlText.Places.grasslandsLocation,
-        monsters: [allMonsters[intlText.Monsters.largeRat.key]],
+        monsters: [
+          allMonsters[intlText.Monsters.largeRat.key],
+        ],
         questGiver: questGivers.CrazedFarmer,
         rooms: [
           wop_room({
@@ -268,6 +475,10 @@ function gameContext() {
       }),
       wop_location({
         ...intlText.Places.sewersLocation,
+        monsters: [
+          allMonsters[intlText.Monsters.largeRat.key],
+          allMonsters[intlText.Monsters.buffedImp.key],
+        ],
         rooms: [
           wop_room({
             ...intlText.Places.sewerEntranceRoom,
@@ -363,53 +574,8 @@ function gameContext() {
               allPotions[intlText.Potions.potionOfPainlessness.name],
               allPotions[intlText.Potions.potionOfManaEmpowerment.name]
             ],
-            armors: [
-              wop_armor({
-                ...intlText.Items.sandals,
-                equipmentSlot: ARMOR_SLOTS.Feet,
-                durability: 100,
-                value: 50,
-                armorRating: 1
-              }),
-              wop_armor({
-                ...intlText.Items.plateWithStraps,
-                equipmentSlot: ARMOR_SLOTS.Torso,
-                durability: 10,
-                value: 50,
-                armorRating: 2
-              }),
-              wop_armor({
-                ...intlText.Items.clotheCap,
-                equipmentSlot: ARMOR_SLOTS.Head,
-                durability: 100,
-                value: 50,
-                armorRating: 1
-              }),
-              wop_armor({
-                ...intlText.Items.canvasPants,
-                equipmentSlot: ARMOR_SLOTS.Legs,
-                durability: 50,
-                value: 25,
-                armorRating: 1
-              }),
-              wop_armor({
-                ...intlText.Items.greivingGauntlets,
-                equipmentSlot: ARMOR_SLOTS.Arm,
-                durability: 200,
-                value: 125,
-                armorRating: 2
-              })
-            ],
-            weapons: [
-              wop_weapon({
-                ...intlText.Items.dumbAssStick,
-                damage: 1,
-                criticalDamage: 2,
-                durability: 10,
-                stanimaCost: 0,
-                value: 50
-              })
-            ]
+            armors: tierOneArmor,
+            weapons: tierOneWeapons,
           })
         })
       })
@@ -419,7 +585,12 @@ function gameContext() {
   const createWorld = () => {
     return wop_world({
       ...intlText.Places.phyntasieWorld,
-      areas: [Reedton, Buttleberry]
+      areas: [
+        HauntedForest,
+        Reedton,
+        Buttleberry,
+        TheBarrenWastes,
+      ]
     });
   };
 

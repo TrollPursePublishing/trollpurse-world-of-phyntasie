@@ -671,28 +671,33 @@ function wop_models() {
       });
     };
 
-    instance.attack = function(target) {
-      instance.savedTarget = target;
-
+    instance.calcAttack = function () {
       if (
         instance.equipment.weapon &&
         instance.equipment.weapon.durability > 0 &&
         instance.attributes.currentStanima >
           instance.equipment.weapon.stanimaCost
       ) {
+        return {
+          physicalDamage: instance.attributes.currentStrength,
+          weaponDamage: instance.equipment.weapon.damage,
+        }
+      } else {
+        return { physicalDamage: instance.attributes.currentStrength };
+      }
+    }
+
+    instance.attack = function(target) {
+      instance.savedTarget = target;
+      const { physicalDamage, weaponDamage } = calcAttack();
+      if (weaponDamage) {
         instance.equipment.weapon.durability =
           instance.equipment.weapon.durability - 1;
         instance.attributes.currentStanima =
           instance.attributes.currentStanima -
           instance.equipment.weapon.stanimaCost;
-        return target.defend(
-          instance,
-          instance.attributes.currentStrength,
-          instance.equipment.weapon.damage
-        );
-      } else {
-        return target.defend(instance, instance.attributes.currentStrength);
       }
+      return target.defend(instance, physicalDamage, weaponDamage);
     };
 
     instance.defend = function(
@@ -832,6 +837,44 @@ function wop_models() {
       description,
       areas: areas.map(a => wop_area(a))
     };
+  }
+
+  function wop_npcPlayerDecorator(player) {
+    const npc = player;
+
+    npc.defendDamageHistory = [];
+
+    npc.attack = function(target) {
+      instance.savedTarget = target;
+      const actionToTake = 'attack';
+
+      // Do I have spells?
+
+      //// Which heal?
+
+      //// Which harm?
+
+
+      // Do I have potions?
+
+      //// Which heal?
+
+      //// Which harm?
+
+
+      // Will my next attack kill?
+
+
+      // Will the player kill me next turn?
+
+      switch (actionToTake) {
+        case 'attack':
+        default:
+          return player.attack(target);
+      }
+    };
+
+    return npc;
   }
 
   return {

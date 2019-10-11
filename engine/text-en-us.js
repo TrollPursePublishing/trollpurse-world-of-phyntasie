@@ -103,6 +103,36 @@ const intlText = {
       name: "Rat",
       title: "Large",
       description: "Of course this creature makes an appearance."
+    },
+    groveGuardian: {
+      key: "Grove Guardian",
+      name: "Guardian",
+      title: "Grove",
+      description: "It exists there, willowy, green and brown mottled about the bark skin."
+    },
+    vengefulSouls: {
+      key: "Vengeful Soul",
+      name: "Soul",
+      title: "Vengeful",
+      description: "A sad creature filled with hatred. It takes revenge upon the living from the afterlife. It takes on all horrific forms.",
+    },
+    hunchedSheet: {
+      key: "Hunched Sheet",
+      name: "Sheet",
+      title: "Hunched",
+      description: "It really is just a bed sheet, but something is beneath it."
+    },
+    skinlessSkeleton: {
+      key: "Skinless Skeleton",
+      name: "Skeleton",
+      title: "Skinless",
+      description: "A pile of bones held together with sinew and muscle."
+    },
+    cryingBoy: {
+      key: 'Crying Boy',
+      name: "Boy",
+      title: "Crying",
+      description: "A boy that crys. However, I can see through this apparition. As I stare, his face contorts and becomes a row of fangs and pincers."
     }
   },
   Spells: {
