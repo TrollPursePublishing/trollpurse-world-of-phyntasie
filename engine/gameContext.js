@@ -25,7 +25,7 @@ function gameContext() {
 
   //Spells
   function restore(attribute, value, next = null) {
-    return function(instigator, target) {
+    return function (instigator, target) {
       let text = "";
       if (next) {
         text = next(instigator, target);
@@ -48,7 +48,7 @@ function gameContext() {
   }
 
   function damage(damageAmount, next = null) {
-    return function(instigator, target) {
+    return function (instigator, target) {
       let text = intlText.Empty;
       if (next) {
         text = next(instigator, target);
@@ -71,7 +71,7 @@ function gameContext() {
   }
 
   function requiresCombat(next) {
-    return function(instigator, target) {
+    return function (instigator, target) {
       if (instigator.isInCombat && target) {
         return next(instigator, target);
       }
@@ -223,6 +223,22 @@ function gameContext() {
   ];
   // Actors
   const allMonsters = {
+    [intlText.Monsters.darkVampire.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.darkVampire,
+        spells: [allSpells[intlText.Spells.vampiricBite.name]],
+        attributes: wop_playerAttribute({
+          strength: 1,
+          mana: 20,
+          health: 15,
+          toughness: 2,
+          stanima: 0,
+        }),
+      }),
+      {
+        spellCastingWeight: 1.0,
+      }
+    ),
     [intlText.Monsters.peskyImp.key]: wop_npcPlayerDecorator(
       wop_player({
         ...intlText.Monsters.peskyImp,
@@ -243,7 +259,10 @@ function gameContext() {
           toughness: 2,
           health: 12
         }
-      })
+      }),
+      {
+        spellCastingWeight: 0.8
+      }
     ),
     [intlText.Monsters.sewerTurtle.key]: wop_npcPlayerDecorator(
       wop_player({
@@ -336,6 +355,9 @@ function gameContext() {
   };
 
   allMonsters[intlText.Monsters.buffedImp.key].attributes.levelUp();
+
+  //Log as last
+  Object.keys(allMonsters).forEach(monster => console.log(`${allMonsters[monster].fullName} is level ${allMonsters[monster].attributes.level()}`));
 
   const questGivers = {
     ButtleberryHerald: wop_questGiver({
@@ -431,7 +453,10 @@ function gameContext() {
       wop_location({
         ...intlText.Places.widowerColossusLocation,
         isExit: true,
-        monsters: [allMonsters[intlText.Monsters.largeRat.key]]
+        monsters: [
+          allMonsters[intlText.Monsters.largeRat.key],
+          allMonsters[intlText.Monsters.darkVampire.key],
+        ]
       })
     ]
   });
@@ -537,7 +562,7 @@ function gameContext() {
         ...intlText.Places.dungeonLocation,
         monsters: [
           allMonsters[intlText.Monsters.peskyImp.key],
-          allMonsters[intlText.Monsters.largeRat.key]
+          allMonsters[intlText.Monsters.buffedImp.key]
         ],
         rooms: [
           wop_room({

@@ -78,6 +78,12 @@ const intlText = {
     }
   },
   Monsters: {
+    darkVampire: {
+      key: "Lord Vampire",
+      name: "Vampire",
+      title: "Lord",
+      description: "Classic, fangs, cape, widows peak... man or woman I cannot tell. Also - big bat wings and lots of screeching."
+    },
     peskyImp: {
       key: "Pesky Imp",
       name: "Imp",

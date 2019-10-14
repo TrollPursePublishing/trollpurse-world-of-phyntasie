@@ -363,6 +363,7 @@ function wop_models() {
   }
 
   function wop_potion({
+    hint,
     name,
     description,
     value,
@@ -373,6 +374,7 @@ function wop_models() {
     id = wop_id()
   }) {
     return {
+      hint,
       id,
       name,
       description,
@@ -701,7 +703,7 @@ function wop_models() {
           weaponDamage: instance.equipment.weapon.damage
         };
       } else {
-        return { physicalDamage: instance.attributes.currentStrength };
+        return { physicalDamage: instance.attributes.currentStrength, weaponDamage: 0 };
       }
     };
 
@@ -1007,8 +1009,9 @@ function wop_models() {
     };
   }
 
-  function wop_spell({ name, description, manaCost, apply = null }) {
+  function wop_spell({ name, description, manaCost, hint, apply = null }) {
     return {
+      hint,
       name,
       description,
       manaCost,

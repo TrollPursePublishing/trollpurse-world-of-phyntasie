@@ -30,6 +30,7 @@ function wop_game() {
             level: player.attributes.level()
           },
           navigation: {
+            areaNames: player.currentWorld.areas.map(area => area.name),
             currentWorld: player.currentWorld,
             currentArea: player.currentArea,
             currentLocation: {
@@ -93,7 +94,7 @@ function wop_game() {
     const roll = Math.floor(Math.random() * Math.floor(5));
     if (roll > oneThroughFive) {
       let pool = p.currentLocation.monsters
-        .filter(m => p.attributes.level() >= m.attributes.level());
+        .filter(m => p.attributes.level() >= (m.attributes.level() - 2 /*range of levels are allowed*/));
 
       if (pool.length <= 0) {
         pool = p.currentLocation.monsters;

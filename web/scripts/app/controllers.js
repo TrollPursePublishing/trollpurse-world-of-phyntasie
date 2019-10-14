@@ -121,14 +121,6 @@ angular
       $scope.togglemenu = function() {
         $scope.showmenu = !$scope.showmenu;
       };
-
-      $scope.temphcodeareas = [
-        "Haunted Forest",
-        "Vast Desert",
-        "Buttleberry",
-        "Reedton",
-        "The Barren Wastes"
-      ];
     }
   ])
 

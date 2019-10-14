@@ -113,7 +113,7 @@
                         <div class="row">
                             <h3>Available Areas</h3>
                             <div class="col-sm-3" data-ng-show="user.navigation.currentLocation.isExit">
-                                <div style="cursor: pointer" data-ng-click="do('go', area)" ng-repeat="area in temphcodeareas">
+                                <div style="cursor: pointer" data-ng-click="do('go', area)" ng-repeat="area in user.navigation.areaNames">
                                     {{area}}
                                 </div>
                             </div>
