@@ -137,16 +137,19 @@ const intlText = {
   },
   Spells: {
     healingTouch: {
+      hint: 'restore,health',
       name: "Healing Touch",
       description:
         "With cold clammy hands I rest my hand upon my breast. I feel goosebumps and feel somewhat better"
     },
     fireSpit: {
+      hint: 'damage,combat',
       name: "Fire Spit",
       description:
         "I open my mouth and small flecks of flaming spittle burst forth, consuming my foe in flickers of flame."
     },
     vampiricBite: {
+      hint: 'damage,combat,restore,health',
       name: "Vampiric Bite",
       description:
         "I open my mouth, canines extending. I bite hard on my foe and suck deep the life force."
@@ -154,15 +157,18 @@ const intlText = {
   },
   Potions: {
     potionOfPainlessness: {
+      hint: "restore,health",
       name: "Potion of Painlessness",
       description: "It bubbles red and smells of sriracha."
     },
     potionOfManaEmpowerment: {
+      hint: "restore,mana",
       name: "Potion of Mana Empowerment",
       description:
         "A blue potion that is thick and slimy. I assume that when I drink it, it will feel as though a family of slugs slide down my throat."
     },
     flamingJarOfShit: {
+      hint: "damage,combat",
       name: "Flaming Jar of Shit",
       description: "It smells bad and it burns - seems legit"
     }

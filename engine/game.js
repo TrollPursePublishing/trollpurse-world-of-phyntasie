@@ -83,6 +83,9 @@ function wop_game() {
         });
     }
     targetPlayer.savedTarget = null; //clear monster's saved target
+    if (p.savedTarget) {
+      p.savedTarget.savedTarget = null;
+    }
     return result;
   }
 

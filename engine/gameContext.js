@@ -13,6 +13,7 @@ function gameContext() {
     wop_potion,
     wop_spell,
     wop_playerAttribute,
+    wop_npcPlayerDecorator,
     wop_armor,
     wop_weapon,
     wop_questGiver,
@@ -22,7 +23,7 @@ function gameContext() {
     QUEST_TYPE
   } = wop_models();
 
-//Spells
+  //Spells
   function restore(attribute, value, next = null) {
     return function(instigator, target) {
       let text = "";
@@ -114,7 +115,7 @@ function gameContext() {
     })
   };
 
-// Equipment
+  // Equipment
   const tierOneArmor = [
     wop_armor({
       ...intlText.Items.sandals,
@@ -209,104 +210,129 @@ function gameContext() {
       criticalDamage: 5,
       durability: 20,
       stanimaCost: 1,
-      value: 75,
+      value: 75
     }),
     wop_weapon({
-      ...intlTest.Items.sharpenedMetalPole,
+      ...intlText.Items.sharpenedMetalPole,
       damage: 2,
       criticalDamage: 3,
       durability: 15,
       stanimaCost: 0,
-      value: 65,
+      value: 65
     })
   ];
-// Actors
+  // Actors
   const allMonsters = {
-    [intlText.Monsters.peskyImp.key]: wop_player(intlText.Monsters.peskyImp),
-    [intlText.Monsters.buffedImp.key]: wop_player({
-      ...intlText.Monsters.buffedImp,
-      attributes: {
-        strength: 5,
-        mana: 10,
-        stanima: 10,
-        toughness: 2,
-        health: 12
+    [intlText.Monsters.peskyImp.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.peskyImp,
+        spells: [allSpells[intlText.Spells.fireSpit.name]]
+      }),
+      {
+        spellCastingWeight: 0.9
       }
-    }),
-    [intlText.Monsters.sewerTurtle.key]: wop_player({
-      ...intlText.Monsters.sewerTurtle,
-      attributes: wop_playerAttribute({
-        strength: 4,
-        mana: 0,
-        health: 15,
-        toughness: 3,
-        stanima: 0
+    ),
+    [intlText.Monsters.buffedImp.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.buffedImp,
+        spells: [allSpells[intlText.Spells.fireSpit.name]],
+        attributes: {
+          strength: 5,
+          mana: 10,
+          stanima: 10,
+          toughness: 2,
+          health: 12
+        }
       })
-    }),
-    [intlText.Monsters.largeRat.key]: wop_player({
-      ...intlText.Monsters.largeRat,
-      attributes: wop_playerAttribute({
-        strength: 8,
-        mana: 0,
-        health: 20,
-        toughness: 1,
-        stanima: 0
+    ),
+    [intlText.Monsters.sewerTurtle.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.sewerTurtle,
+        attributes: wop_playerAttribute({
+          strength: 4,
+          mana: 0,
+          health: 15,
+          toughness: 3,
+          stanima: 0
+        })
       })
-    }),
-    [intlText.Monsters.groveGuardian.key]: wop_player({
-      ...intlText.Monsters.groveGuardian,
-      attributes: wop_playerAttribute({
-        strength: 2,
-        mana: 0,
-        health: 30,
-        toughness: 4,
-        stanima: 0,
-      }),
-    }),
-    [intlText.Monsters.vengefulSouls.key]: wop_player({
-      ...intlText.Monsters.vengefulSouls,
-      attributes: wop_playerAttribute({
-        strength: 1,
-        mana: 100,
-        health: 10,
-        toughness: 1,
-        stanima: 0,
+    ),
+    [intlText.Monsters.largeRat.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.largeRat,
+        attributes: wop_playerAttribute({
+          strength: 8,
+          mana: 0,
+          health: 20,
+          toughness: 1,
+          stanima: 0
+        })
       })
-    }),
-    [intlText.Monsters.hunchedSheet.key]: wop_player({
-      ...intlText.Monsters.hunchedSheet,
-      attributes: wop_playerAttribute({
-        strength: 1,
-        mana: 120,
-        health: 12,
-        toughness: 3,
-        stanima: 0,
+    ),
+    [intlText.Monsters.groveGuardian.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.groveGuardian,
+        attributes: wop_playerAttribute({
+          strength: 2,
+          mana: 0,
+          health: 30,
+          toughness: 4,
+          stanima: 0
+        })
       })
-    }),
-    [intlText.Monsters.skinlessSkeleton.key]: wop_player({
-      ...intlText.Monsters.skinlessSkeleton,
-      attributes: wop_playerAttribute({
-        strength: 8,
-        mana: 20,
-        health: 25,
-        toughness: 3,
-        stanima: 40,
-      }),
-      equipment: wop_equipment({
-        head: wop_equipment(tierOneArmor[2]),
-        weapon: wop_weapon(tierTwoWeapons[1]),
+    ),
+    [intlText.Monsters.vengefulSouls.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.vengefulSouls,
+        attributes: wop_playerAttribute({
+          strength: 1,
+          mana: 100,
+          health: 10,
+          toughness: 1,
+          stanima: 0
+        })
       })
-    }),
-    [intlText.Monsters.cryingBoy]: wop_player({
-      ...intlText.Monsters.cryingBoy,
-      attributes: wop_playerAttribute({
-        strength: 12,
-        mana: 0,
-        health: 30,
-        toughness: 5,
-        stanima: 0,
-      }),
-    }),
+    ),
+    [intlText.Monsters.hunchedSheet.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.hunchedSheet,
+        attributes: wop_playerAttribute({
+          strength: 1,
+          mana: 120,
+          health: 12,
+          toughness: 3,
+          stanima: 0
+        })
+      })
+    ),
+    [intlText.Monsters.skinlessSkeleton.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.skinlessSkeleton,
+        attributes: wop_playerAttribute({
+          strength: 8,
+          mana: 20,
+          health: 25,
+          toughness: 3,
+          stanima: 40
+        }),
+        equipment: wop_equipment({
+          head: wop_equipment(tierOneArmor[2]),
+          weapon: wop_weapon(tierTwoWeapons[1])
+        })
+      })
+    ),
+    [intlText.Monsters.cryingBoy.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.cryingBoy,
+        attributes: wop_playerAttribute({
+          strength: 12,
+          mana: 0,
+          health: 30,
+          toughness: 5,
+          stanima: 0
+        })
+      })
+    )
   };
 
   allMonsters[intlText.Monsters.buffedImp.key].attributes.levelUp();
@@ -385,9 +411,7 @@ function gameContext() {
       wop_location({
         ...intlText.Places.groveOfTheElderLocation,
         isExit: true,
-        monsters: [
-          allMonsters[intlText.Monsters.groveGuardian.key],
-        ]
+        monsters: [allMonsters[intlText.Monsters.groveGuardian.key]]
       }),
       wop_location({
         ...intlText.Places.tallTreeLocation,
@@ -395,8 +419,8 @@ function gameContext() {
           allMonsters[intlText.Monsters.vengefulSouls.key],
           allMonsters[intlText.Monsters.hunchedSheet.key],
           allMonsters[intlText.Monsters.skinlessSkeleton.key],
-          allMonsters[intlText.Monsters.cryingBoy.key],
-        ],
+          allMonsters[intlText.Monsters.cryingBoy.key]
+        ]
       })
     ]
   });
@@ -407,9 +431,7 @@ function gameContext() {
       wop_location({
         ...intlText.Places.widowerColossusLocation,
         isExit: true,
-        monsters: [
-          allMonsters[intlText.Monsters.largeRat.key],
-        ]
+        monsters: [allMonsters[intlText.Monsters.largeRat.key]]
       })
     ]
   });
@@ -420,29 +442,21 @@ function gameContext() {
       wop_location({
         ...intlText.Places.wharfLocation,
         isExit: true,
-        questGiver: questGivers.DyingGentleman,
+        questGiver: questGivers.DyingGentleman
       }),
       wop_location({
         ...intlText.Places.marketLocation,
         market: wop_market({
           inventory: wop_inventory({
             potions: Object.keys(allPotions).map(key => allPotions[key]),
-            armors: [
-              ...tierOneArmor,
-              ...tierTwoArmor,
-            ],
-            weapons: [
-              ...tierOneWeapons,
-              ...tierTwoWeapons,
-            ],
-          }),
-        }),
+            armors: [...tierOneArmor, ...tierTwoArmor],
+            weapons: [...tierOneWeapons, ...tierTwoWeapons]
+          })
+        })
       }),
       wop_location({
         ...intlText.Places.grasslandsLocation,
-        monsters: [
-          allMonsters[intlText.Monsters.largeRat.key],
-        ],
+        monsters: [allMonsters[intlText.Monsters.largeRat.key]],
         questGiver: questGivers.CrazedFarmer,
         rooms: [
           wop_room({
@@ -477,7 +491,7 @@ function gameContext() {
         ...intlText.Places.sewersLocation,
         monsters: [
           allMonsters[intlText.Monsters.largeRat.key],
-          allMonsters[intlText.Monsters.buffedImp.key],
+          allMonsters[intlText.Monsters.buffedImp.key]
         ],
         rooms: [
           wop_room({
@@ -575,7 +589,7 @@ function gameContext() {
               allPotions[intlText.Potions.potionOfManaEmpowerment.name]
             ],
             armors: tierOneArmor,
-            weapons: tierOneWeapons,
+            weapons: tierOneWeapons
           })
         })
       })
@@ -585,12 +599,7 @@ function gameContext() {
   const createWorld = () => {
     return wop_world({
       ...intlText.Places.phyntasieWorld,
-      areas: [
-        HauntedForest,
-        Reedton,
-        Buttleberry,
-        TheBarrenWastes,
-      ]
+      areas: [HauntedForest, Reedton, Buttleberry, TheBarrenWastes]
     });
   };
 

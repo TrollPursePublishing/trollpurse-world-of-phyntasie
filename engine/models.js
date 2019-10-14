@@ -222,7 +222,7 @@ function wop_models() {
       name,
       description,
       rooms: rooms.map(r => wop_room(r)),
-      monsters: monsters.map(m => wop_player(m)),
+      monsters: monsters.map(m => wop_npcPlayerDecorator(wop_player(m), m)),
       isExit,
       market: market ? wop_market(market) : null,
       hasMarket: market !== null && market !== undefined,
@@ -567,7 +567,7 @@ function wop_models() {
       return intlText.ActionResults.moveFmt({
         ...where,
         questComplete: qq && qq.isComplete(),
-        questTitle: qq ? qq.quest.title : intlText.Empty,
+        questTitle: qq ? qq.quest.title : intlText.Empty
       });
     };
 
@@ -591,13 +591,15 @@ function wop_models() {
     instance.buyItem = function(item) {
       if (instance.inventory.gold >= item.value) {
         instance.inventory.gold = instance.inventory.gold - item.value;
-        return intlText.ActionResults.itemBoughtFmt({
-          ...item,
-          inventoryGold: instance.inventory.gold,
-        }) + instance.addItemToInventory(item);
+        return (
+          intlText.ActionResults.itemBoughtFmt({
+            ...item,
+            inventoryGold: instance.inventory.gold
+          }) + instance.addItemToInventory(item)
+        );
       } else {
         return intlText.ActionResults.itemMoreGoldFmt({
-          goldNeeded: item.value - instance.inventory.gold,
+          goldNeeded: item.value - instance.inventory.gold
         });
       }
     };
@@ -625,34 +627,50 @@ function wop_models() {
       const old = instance.equipment.weapon;
       instance.equipment.weapon = weapon;
       if (old) {
-        return instance.addItemToInventory(old) +
+        return (
+          instance.addItemToInventory(old) +
           instance.removeItemFromInventory(weapon) +
-          intlText.ActionResults.weaponEquippedFmt(weapon);
+          intlText.ActionResults.weaponEquippedFmt(weapon)
+        );
       }
-      return instance.removeItemFromInventory(weapon) + intlText.ActionResults.weaponEquippedFmt(weapon);
+      return (
+        instance.removeItemFromInventory(weapon) +
+        intlText.ActionResults.weaponEquippedFmt(weapon)
+      );
     };
 
     instance.equipArmor = function(armor) {
       const old = instance.equipment[armor.equipmentSlot];
       instance.equipment[armor.equipmentSlot] = armor;
       if (old) {
-        return instance.addItemToInventory(old) +
+        return (
+          instance.addItemToInventory(old) +
           instance.removeItemFromInventory(armor) +
-          intlText.ActionResults.armorEquippedFmt(armor);
+          intlText.ActionResults.armorEquippedFmt(armor)
+        );
       }
-      return instance.removeItemFromInventory(armor) + intlText.ActionResults.armorEquippedFmt(armor);
+      return (
+        instance.removeItemFromInventory(armor) +
+        intlText.ActionResults.armorEquippedFmt(armor)
+      );
     };
 
     instance.unequipArmor = function(armor) {
       const old = instance.equipment[armor.equipmentSlot];
       instance.equipment[armor.equipmentSlot] = null;
-      return instance.addItemToInventory(old) + intlText.ActionResults.armorUnequippedFmt(old);
+      return (
+        instance.addItemToInventory(old) +
+        intlText.ActionResults.armorUnequippedFmt(old)
+      );
     };
 
     instance.unequipWeapon = function(_weapon) {
       const old = instance.equipment.weapon;
       instance.equipment.weapon = null;
-      return instance.addItemToInventory(old) + intlText.ActionResults.weaponUnequippedFmt(old);
+      return (
+        instance.addItemToInventory(old) +
+        intlText.ActionResults.weaponUnequippedFmt(old)
+      );
     };
 
     instance.castSpell = function(spell, target) {
@@ -667,11 +685,11 @@ function wop_models() {
       }
       return intlText.ActionResults.spellRequiresMoreManaFmt({
         currentMana: instance.attributes.currentMana,
-        spellName: spell.name,
+        spellName: spell.name
       });
     };
 
-    instance.calcAttack = function () {
+    instance.calcAttack = function() {
       if (
         instance.equipment.weapon &&
         instance.equipment.weapon.durability > 0 &&
@@ -680,16 +698,16 @@ function wop_models() {
       ) {
         return {
           physicalDamage: instance.attributes.currentStrength,
-          weaponDamage: instance.equipment.weapon.damage,
-        }
+          weaponDamage: instance.equipment.weapon.damage
+        };
       } else {
         return { physicalDamage: instance.attributes.currentStrength };
       }
-    }
+    };
 
     instance.attack = function(target) {
       instance.savedTarget = target;
-      const { physicalDamage, weaponDamage } = calcAttack();
+      const { physicalDamage, weaponDamage } = instance.calcAttack();
       if (weaponDamage) {
         instance.equipment.weapon.durability =
           instance.equipment.weapon.durability - 1;
@@ -700,26 +718,13 @@ function wop_models() {
       return target.defend(instance, physicalDamage, weaponDamage);
     };
 
-    instance.defend = function(
-      instigator,
-      physicalDamage = 1,
-      weaponDamage = 0
-    ) {
-      instance.savedTarget = instigator;
+    instance.calcDefend = function (physicalDamage = 1, weaponDamage) {
       let totalArmorRating = 0;
-
-      const brokens = [];
 
       ARMOR_SLOTS.VALUES.forEach(slotName => {
         const armor = instance.equipment[slotName];
         if (armor && armor.durability > 0) {
-          armor.durability = armor.durability - 1;
           totalArmorRating = totalArmorRating + armor.armorRating;
-          if (armor.durability <= 0) {
-            instance.unequipArmor(armor);
-            instance.removeItemFromInventory(armor);
-            brokens.push(intlText.ActionResults.armorBrokenFmt(armor));
-          }
         }
       });
 
@@ -731,6 +736,31 @@ function wop_models() {
           Math.floor(totalArmorRating / 2)
       );
       const totalDamage = weaponDamage + physicalDamage;
+      return totalDamage;
+    };
+
+    instance.defend = function(
+      instigator,
+      physicalDamage = 1,
+      weaponDamage = 0
+    ) {
+      instance.savedTarget = instigator;
+
+      const brokens = [];
+
+      ARMOR_SLOTS.VALUES.forEach(slotName => {
+        const armor = instance.equipment[slotName];
+        if (armor && armor.durability > 0) {
+          armor.durability = armor.durability - 1;
+          if (armor.durability <= 0) {
+            instance.unequipArmor(armor);
+            instance.removeItemFromInventory(armor);
+            brokens.push(intlText.ActionResults.armorBrokenFmt(armor));
+          }
+        }
+      });
+
+      const totalDamage = instance.calcDefend(physicalDamage, weaponDamage);
       instance.attributes.currentHealth = Math.max(
         0,
         instance.attributes.currentHealth - totalDamage
@@ -741,15 +771,17 @@ function wop_models() {
         totalDamage,
         instanceFullName: instance.fullName,
         instanceCurrentHealth: instance.attributes.currentHealth,
-        brokens,
-      })
+        brokens
+      });
     };
 
     instance.usePotion = function(potion, target) {
       if (target) {
         instance.savedTarget = target;
       }
-      return instance.removeItemFromInventory(potion) + potion.apply(this, target);
+      return (
+        instance.removeItemFromInventory(potion) + potion.apply(this, target)
+      );
     };
 
     instance.onCombatOver = function(target) {
@@ -757,7 +789,7 @@ function wop_models() {
       instance.isInCombat = false;
       return intlText.ActionResults.combatOverFmt({
         instanceFullName: instance.fullName,
-        targetFullName: target.fullName,
+        targetFullName: target.fullName
       });
     };
 
@@ -767,11 +799,165 @@ function wop_models() {
       return intlText.ActionResults.engageFmt({
         instanceFullName: instance.fullName,
         targetFullName: target.fullName,
-        targetDescription: target.description,
+        targetDescription: target.description
       });
     };
 
     return instance;
+  }
+
+  function wop_npcPlayerDecorator(
+    player,
+    {
+      spellCastingWeight = 0,
+      useItemWeight = 0.25,
+      useHealingDivisor = 4
+    } = { spellCastingWeight: 0, useItemWeight: 0.25, useHealingDivisor: 4 }/* npc traits */
+  ) {
+    const npc = {
+      ...player,
+      spellCastingWeight,
+      useItemWeight,
+      useHealingDivisor,
+    };
+
+    npc.defendDamageHistory = [];
+
+    npc.defend = function(instance, physicalDamage, weaponDamage) {
+      if (npc.defendDamageHistory.length >= 10) {
+        npc.attackDamageHistory = [];
+      }
+      npc.defendDamageHistory.push(
+        npc.calcDefend(physicalDamage, weaponDamage)
+      );
+      return player.defend(instance, physicalDamage, weaponDamage);
+    };
+
+    npc.attack = function(target) {
+      const ACTIONS = {
+        ATTACK: "attack",
+        CAST: "cast",
+        USE: "use"
+      };
+
+      let actionToTake = ACTIONS.ATTACK;
+      let useOrCastWhat = "weapon";
+
+      const canCast =
+        npc.attributes.currentMana > 0 && npc.spells && npc.spells.length;
+
+      const canPotionUp = npc.inventory[INVENTORY_SLOTS.Potion].length;
+
+      if (canPotionUp) {
+        function fischer_yates_shuffle(array) {
+          let i = array.length - 1;
+          for (i; i > 0; i--) {
+            const j = Math.floor(Math.random() * i);
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
+          return array;
+        }
+
+        const healingPotions = fischer_yates_shuffle(
+          npc.inventory[INVENTORY_SLOTS.Potion].filter(
+            potion =>
+              potion.hint.includes("restore") && potion.hint.inclues("health")
+          )
+        );
+
+        const combatPotions = fischer_yates_shuffle(
+          npc.inventory[INVENTORY_SLOTS.Potion].filter(potion =>
+            potion.hint.includes("damage")
+          )
+        );
+
+        if (combatPotions.length > 0 && Math.random() < useItemWeight) {
+          actionToTake = ACTIONS.USE;
+          useOrCastWhat = combatPotions[0];
+        }
+
+        if (healingPotions.length > 0) {
+          if (
+            npc.defendDamageHistory.filter(
+              value => value >= npc.attributes.currentHealth
+            ).length > 0 ||
+            (npc.attributes.currentHealth < npc.attributes.health &&
+              Math.random() < useItemWeight / useHealingDivisor)
+          ) {
+            actionToTake = ACTIONS.USE;
+            useOrCastWhat = combatPotions[0];
+          }
+        }
+      }
+
+      if (canCast) {
+        const healingSpells = npc.spells
+          .filter(
+            spell =>
+              spell.hint.includes("restore") && spell.hint.includes("health")
+          )
+          .filter(spell => spell.manaCost <= npc.attributes.currentMana);
+
+        const attackSpells = npc.spells
+          .filter(spell => spell.hint.includes("damage"))
+          .filter(spell => spell.manaCost <= npc.attributes.currentMana);
+
+        function selectBestSpell(spellPool) {
+          actionToTake = ACTIONS.CAST;
+          let idx = 1;
+          useOrCastWhat = spellPool[0];
+          while (
+            idx < spellPool.length &&
+            useOrCastWhat[idx].manaCost <= npc.attributes.currentMana
+          ) {
+            useOrCastWhat = spellPool[idx];
+            idx = idx + 1;
+          }
+        }
+
+        if (attackSpells.length > 0 && Math.random() < spellCastingWeight) {
+          selectBestSpell(attackSpells);
+        }
+
+        if (healingSpells.length > 0) {
+          if (
+            npc.defendDamageHistory.filter(
+              value => value >= npc.attributes.currentHealth
+            ).length > 0 ||
+            (npc.attributes.currentHealth < npc.attributes.health &&
+              Math.random() < spellCastingWeight / useHealingDivisor)
+          ) {
+            selectBestSpell(healingSpells);
+          }
+        }
+      }
+
+      // Always attack if it means we will kill the player
+      const { physicalDamage, weaponDamage } = player.calcAttack();
+      const nextDamage = target.calcDefend(physicalDamage, weaponDamage);
+      if (nextDamage >= target.attributes.currentHealth) {
+        actionToTake = ACTIONS.ATTACK;
+        useOrCastWhat = "weapon";
+      }
+
+      console.log(
+        `${npc.fullName} has decided to ${actionToTake} the player with ${useOrCastWhat}.`
+      );
+
+      switch (actionToTake) {
+        case ACTIONS.CAST:
+          return player.castSpell(target, useOrCastWhat);
+        case ACTIONS.USE:
+          return player.usePotion(useOrCastWhat, target);
+        case ACTIONS.ATTACK:
+        default:
+          return player.attack(target);
+      }
+    };
+
+    return npc;
   }
 
   function wop_relic({
@@ -839,44 +1025,6 @@ function wop_models() {
     };
   }
 
-  function wop_npcPlayerDecorator(player) {
-    const npc = player;
-
-    npc.defendDamageHistory = [];
-
-    npc.attack = function(target) {
-      instance.savedTarget = target;
-      const actionToTake = 'attack';
-
-      // Do I have spells?
-
-      //// Which heal?
-
-      //// Which harm?
-
-
-      // Do I have potions?
-
-      //// Which heal?
-
-      //// Which harm?
-
-
-      // Will my next attack kill?
-
-
-      // Will the player kill me next turn?
-
-      switch (actionToTake) {
-        case 'attack':
-        default:
-          return player.attack(target);
-      }
-    };
-
-    return npc;
-  }
-
   return {
     wop_world,
     wop_spell,
@@ -889,6 +1037,7 @@ function wop_models() {
     wop_playerQuestQuest,
     wop_playerAttribute,
     wop_player,
+    wop_npcPlayerDecorator,
     wop_market,
     wop_location,
     wop_inventory,
