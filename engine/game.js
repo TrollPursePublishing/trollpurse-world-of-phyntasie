@@ -579,7 +579,7 @@ function wop_game() {
       messages: Player.currentLocation.market
         ? Player.currentLocation.market.inventory
             .allItems()
-            .map(({ name, value }) => `${name}&${value}`)
+            .map(({ name, value, armorRating, damage, criticalDamage, durability, hint }) => `${name}&${value}&${ durability ? `${armorRating ? 'AR: ' : 'Dmg: '}${armorRating || damage}${criticalDamage ? ` CD: ${criticalDamage}`: ''}&${durability}`: `${hint}&1 Use`}`)
         : []
     });
   }
