@@ -114,7 +114,7 @@
                     <button type="button" class="btn btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
                 </div>
                 <div class="col-xs-3">
-                    <button data-ng-disabled="!user.navigation.currentRoom || !user.isInCombat" class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
+                    <button data-ng-disabled="!user.navigation.currentRoom || user.isInCombat" class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
                 </div>
                 <div class="col-xs-3">
                     <button data-ng-disabled="!user.navigation.currentLocation.hasMarket || user.isInCombat" class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></button>

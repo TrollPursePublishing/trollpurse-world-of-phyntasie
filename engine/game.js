@@ -88,6 +88,13 @@ function wop_game() {
           if (q.isComplete()) {
             p.inventory.gold = p.inventory.gold + q.quest.gold;
             result.push(`Completed ${q.quest.title}!`);
+            if (q.nextQuest) {
+              p.quests.quests.push(
+                wop_playerQuestQuest({ quest: q.nextQuest })
+              );
+              result.push(q.nextQuest.description);
+              result.push(q.nextQuest.instructions);
+            }
           }
         });
     }

@@ -570,6 +570,16 @@ function wop_models() {
         instance.areasDiscovered = instance.placesVisited.push(where.name);
       }
 
+      if (qq && qq.isComplete()) {
+        if (qq.nextQuest) {
+          p.quests.quests.push(
+            wop_playerQuestQuest({ quest: qq.nextQuest })
+          );
+          result.push(qq.nextQuest.description);
+          result.push(qq.nextQuest.instructions);
+        }
+      }
+
       return intlText.ActionResults.moveFmt({
         ...where,
         questComplete: qq && qq.isComplete(),
