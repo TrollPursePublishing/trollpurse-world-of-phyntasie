@@ -850,6 +850,8 @@ function wop_models() {
 
       const canPotionUp = npc.inventory[INVENTORY_SLOTS.Potion].length;
 
+      console.log(`NPC Stats: ${JSON.stringify(npc.attributes)}, canPotionUp=${canPotionUp}, canCast=${canCast}, Target Stats: ${JSON.stringify(target.attributes)}`);
+
       if (canPotionUp) {
         function fischer_yates_shuffle(array) {
           let i = array.length - 1;

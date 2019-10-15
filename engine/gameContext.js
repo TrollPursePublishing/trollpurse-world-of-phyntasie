@@ -433,7 +433,9 @@ function gameContext() {
       wop_location({
         ...intlText.Places.groveOfTheElderLocation,
         isExit: true,
-        monsters: [allMonsters[intlText.Monsters.groveGuardian.key]]
+        monsters: [
+          allMonsters[intlText.Monsters.groveGuardian.key],
+        ]
       }),
       wop_location({
         ...intlText.Places.tallTreeLocation,
