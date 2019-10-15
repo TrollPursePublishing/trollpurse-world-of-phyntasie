@@ -63,12 +63,37 @@
             </div>
             <div class="col-xs-12 fill-height-10">
                 <div class="col-xs-3">
-                    <button type="button" class="btn btn-block" data-ng-click="submit('attack')"><img style="float:left"  class="img-responsive" src="images/public/icon/quick-slash.png" /><span> Attack</span></button>
+                    <button data-ng-disabled="!user.isInCombat" type="button" class="btn btn-block" data-ng-click="submit('attack')"><img style="float:left"  class="img-responsive" src="images/public/icon/quick-slash.png" /><span> Attack</span></button>
+                </div>
+                <div class="col-xs-3">
+                    <div class="dropdown dropup">
+                        <button data-ng-disabled="user.isInCombat" type="button" class="btn dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img style="float:left" aria-label="Go To" class="img-responsive" src="images/public/icon/worried-eyes.png" />
+                            Go To <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li data-ng-hide="user.navigation.currentRoom" style="cursor: pointer" class="btn" data-ng-click="do('go', area)" data-ng-repeat="area in user.navigation.areaNames">
+                                {{area}}
+                            </li>
+                            <div style="border-bottom: 1px solid black"></div>
+                            <li data-ng-hide="user.navigation.currentRoom" style="cursor: pointer" class="btn" data-ng-click="do('go', location.name)" data-ng-repeat="location in user.navigation.currentArea.locations" data-ng-class="{market: location.hasMarket, exit: location.isExit}">
+                                {{location.name}}
+                            </li>
+                            <div style="border-bottom: 1px solid black"></div>
+                            <li style="cursor: pointer" data-ng-click="do('go', room.name)" class="btn" data-ng-repeat="room in user.navigation.currentLocation.rooms" data-ng-class="{entrance: room.isExit}">
+                                {{room.name}}
+                            </li>
+                            <div style="border-bottom: 1px solid black"></div>
+                            <li data-ng-show="user.navigation.currentRoom.isExit" style="cursor:pointer" class="btn" data-ng-click="do('exit', '')">
+                                EXIT
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-xs-3">
                     <div class="dropdown dropup">
                         <button type="button" class="btn dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img style="float:left"  class="img-responsive" src="images/public/icon/magic-swirl.png" />
+                            <img style="float:left" aria-label="Cast" class="img-responsive" src="images/public/icon/magic-swirl.png" />
                             Cast <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
@@ -79,22 +104,20 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <button type="button" class="btn btn-block" data-ng-click="submit('quest')"><span><img style="float:left"  class="img-responsive" src="images/public/icon/bookmarklet.png" /> Quests</span></button>
+                    <button type="button" class="btn btn-block" data-ng-click="user.navigation.currentArea.questGiver ? do('quest', 'start') : submit('quest')">
+                    <span>
+                        <img style="float:left"  class="img-responsive" src="images/public/icon/bookmarklet.png" />{{user.navigation.currentArea.questGiver ? 'Start Quest' : 'View Quests'}}
+                    </span>
+                    </button>
                 </div>
                 <div class="col-xs-3">
                     <button type="button" class="btn btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
                 </div>
                 <div class="col-xs-3">
-                    <button class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
+                    <button data-ng-disabled="!user.navigation.currentRoom || user.isInCombat" class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
                 </div>
                 <div class="col-xs-3">
-                    <button class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></button>
-                </div>
-                <div class="col-xs-3">
-                    <button class="btn btn-block" data-ng-click="submit('whereami')"><img style="float:left"  class="img-responsive" src="images/public/icon/worried-eyes.png" /><span> Where Am I?</span></button>
-                </div>
-                <div class="col-xs-3">
-                    <button class="btn btn-block" data-ng-click="do('quest', 'start')"><img style="float:left"  class="img-responsive" src="images/public/icon/tied-scroll.png" /><span> Accept Quest</span></button>
+                    <button data-ng-disabled="!user.navigation.currentLocation.hasMarket && !user.isInCombat" class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></button>
                 </div>
             </div>
         </div>
