@@ -97,7 +97,7 @@ function wop_game() {
       let pool = p.currentLocation.monsters.filter(
         m =>
           p.attributes.level() >=
-          m.attributes.level() - 2 /*range of levels are allowed*/
+          m.attributes.level()
       );
 
       if (pool.length <= 0) {
