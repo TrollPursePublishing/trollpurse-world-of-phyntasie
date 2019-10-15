@@ -703,7 +703,10 @@ function wop_models() {
           weaponDamage: instance.equipment.weapon.damage
         };
       } else {
-        return { physicalDamage: instance.attributes.currentStrength, weaponDamage: 0 };
+        return {
+          physicalDamage: instance.attributes.currentStrength,
+          weaponDamage: 0
+        };
       }
     };
 
@@ -720,7 +723,7 @@ function wop_models() {
       return target.defend(instance, physicalDamage, weaponDamage);
     };
 
-    instance.calcDefend = function (physicalDamage = 1, weaponDamage) {
+    instance.calcDefend = function(physicalDamage = 1, weaponDamage) {
       let totalArmorRating = 0;
 
       ARMOR_SLOTS.VALUES.forEach(slotName => {
@@ -810,17 +813,17 @@ function wop_models() {
 
   function wop_npcPlayerDecorator(
     player,
-    {
-      spellCastingWeight = 0,
-      useItemWeight = 0.25,
-      useHealingDivisor = 4
-    } = { spellCastingWeight: 0, useItemWeight: 0.25, useHealingDivisor: 4 }/* npc traits */
+    { spellCastingWeight = 0, useItemWeight = 0.25, useHealingDivisor = 4 } = {
+      spellCastingWeight: 0,
+      useItemWeight: 0.25,
+      useHealingDivisor: 4
+    } /* npc traits */
   ) {
     const npc = {
       ...player,
       spellCastingWeight,
       useItemWeight,
-      useHealingDivisor,
+      useHealingDivisor
     };
 
     npc.defendDamageHistory = [];
@@ -835,9 +838,9 @@ function wop_models() {
       return player.defend(instance, physicalDamage, weaponDamage);
     };
 
-    npc.attack = function (target) {
+    npc.attack = function(target) {
       const weapon = {
-        name: player.equipment.weapon || 'melee attacks',
+        name: player.equipment.weapon || "melee attacks"
       };
       player.isInCombat = true;
       const ACTIONS = {
@@ -854,7 +857,13 @@ function wop_models() {
 
       const canPotionUp = npc.inventory[INVENTORY_SLOTS.Potion].length;
 
-      console.log(`NPC Stats: ${JSON.stringify(npc.attributes)}, canPotionUp=${canPotionUp}, canCast=${canCast}, Target Stats: ${JSON.stringify(target.attributes)}`);
+      console.log(
+        `NPC Stats: ${JSON.stringify(
+          npc.attributes
+        )}, canPotionUp=${canPotionUp}, canCast=${canCast}, Target Stats: ${JSON.stringify(
+          target.attributes
+        )}`
+      );
 
       if (canPotionUp) {
         function fischer_yates_shuffle(array) {
@@ -956,15 +965,21 @@ function wop_models() {
 
       switch (actionToTake) {
         case ACTIONS.CAST:
-          return `${useOrCastWhat.description} ${player.castSpell(useOrCastWhat, target)}`
-            .replace('I', player.fullName)
-            .replace('my', `it's`)
-            .replace('me', 'itself')
+          return `${useOrCastWhat.description} ${player.castSpell(
+            useOrCastWhat,
+            target
+          )}`
+            .replace(/\bI\b/g, player.fullName)
+            .replace(/\bmy\b/g, `it's`)
+            .replace(/\bme\b/g, "it");
         case ACTIONS.USE:
-          return `${useOrCastWhat.description} ${player.usePotion(useOrCastWhat, target)}`
-            .replace('I', player.fullName)
-            .replace('my', `it's`)
-            .replace('me', 'itself')
+          return `${useOrCastWhat.description} ${player.usePotion(
+            useOrCastWhat,
+            target
+          )}`
+            .replace(/\bI\b/g, player.fullName)
+            .replace(/\bmy\b/g, `it's`)
+            .replace(/\bme\b/g, "it");
         case ACTIONS.ATTACK:
         default:
           return player.attack(target);
