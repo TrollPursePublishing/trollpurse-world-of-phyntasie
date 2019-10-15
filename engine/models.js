@@ -836,7 +836,10 @@ function wop_models() {
     };
 
     npc.attack = function (target) {
-      npc.isInCombat = true;
+      const weapon = {
+        name: player.equipment.weapon || 'melee attacks',
+      };
+      player.isInCombat = true;
       const ACTIONS = {
         ATTACK: "attack",
         CAST: "cast",
@@ -844,7 +847,7 @@ function wop_models() {
       };
 
       let actionToTake = ACTIONS.ATTACK;
-      let useOrCastWhat = "weapon";
+      let useOrCastWhat = weapon;
 
       const canCast =
         npc.attributes.currentMana > 0 && npc.spells && npc.spells.length;
@@ -944,18 +947,24 @@ function wop_models() {
       const nextDamage = target.calcDefend(physicalDamage, weaponDamage);
       if (nextDamage >= target.attributes.currentHealth) {
         actionToTake = ACTIONS.ATTACK;
-        useOrCastWhat = "weapon";
+        useOrCastWhat = weapon;
       }
 
       console.log(
-        `${npc.fullName} has decided to ${actionToTake} the player with ${useOrCastWhat}.`
+        `${npc.fullName} has decided to ${actionToTake} the player with ${useOrCastWhat.name}.`
       );
 
       switch (actionToTake) {
         case ACTIONS.CAST:
-          return player.castSpell(useOrCastWhat, target).replace('I', player.fullName);
+          return `${useOrCastWhat.description} ${player.castSpell(useOrCastWhat, target)}`
+            .replace('I', player.fullName)
+            .replace('my', `it's`)
+            .replace('me', 'itself')
         case ACTIONS.USE:
-          return player.usePotion(useOrCastWhat, target).replace('I', player.fullName);
+          return `${useOrCastWhat.description} ${player.usePotion(useOrCastWhat, target)}`
+            .replace('I', player.fullName)
+            .replace('my', `it's`)
+            .replace('me', 'itself')
         case ACTIONS.ATTACK:
         default:
           return player.attack(target);
