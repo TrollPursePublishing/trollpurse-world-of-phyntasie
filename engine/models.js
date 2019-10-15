@@ -1,5 +1,7 @@
 "use strict";
 
+const CRITICAL_CHANCE = 0.15;
+
 function wop_models() {
   function wop_id() {
     return (
@@ -58,11 +60,12 @@ function wop_models() {
     equipmentSlot,
     armorRating,
     durability,
-    value,
     description,
     slot = INVENTORY_SLOTS.Armor,
     id = name + wop_id()
   }) {
+    const value = Math.round(Math.max(5, armorRating * (durability / 10)));
+
     return {
       id,
       name,
@@ -92,10 +95,11 @@ function wop_models() {
     criticalDamage,
     durability,
     stanimaCost,
-    value,
     slot = INVENTORY_SLOTS.Weapon,
     id = name + wop_id()
   }) {
+    const value = Math.round(Math.max(10, (damage + criticalDamage * CRITICAL_CHANCE) * durability - (100 / stanimaCost)))
+
     return {
       id,
       name,
@@ -719,6 +723,9 @@ function wop_models() {
         instance.attributes.currentStanima =
           instance.attributes.currentStanima -
           instance.equipment.weapon.stanimaCost;
+        if (Math.random() < CRITICAL_CHANCE) {
+          return target.defend(instance, physicalDamage, instance.equipment.weapon.criticalDamage);
+        }
       }
       return target.defend(instance, physicalDamage, weaponDamage);
     };

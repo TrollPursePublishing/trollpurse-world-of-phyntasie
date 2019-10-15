@@ -78,6 +78,12 @@ const intlText = {
     }
   },
   Monsters: {
+    alchemist: {
+      key: "Old Alchemist",
+      name: "Alchemist",
+      title: "Old",
+      description: "Once a human, now a hunched bag of wrinkles and metal.",
+    },
     darkVampire: {
       key: "Lord Vampire",
       name: "Vampire",
@@ -139,6 +145,12 @@ const intlText = {
       name: "Boy",
       title: "Crying",
       description: "A boy that crys. However, I can see through this apparition. As I stare, his face contorts and becomes a row of fangs and pincers."
+    },
+    infinity: {
+      key: 'The Infinity',
+      name: "Infinity",
+      title: "The",
+      description: "I see nothing. I feel nothing. Am I nothing?",
     }
   },
   Spells: {
@@ -159,7 +171,12 @@ const intlText = {
       name: "Vampiric Bite",
       description:
         "I open my mouth, canines extending. I bite hard on my foe and suck deep the life force."
-    }
+    },
+    alphaOmegaLight: {
+      hint: 'damage,combat,restore,health,stanima,strength,toughness',
+      name: "Light of the Alpha, Night of the Omega",
+      description: "Heed the words as they resonate within your mind as light dims and the depths of your mind begin to form within the world."
+    },
   },
   Potions: {
     potionOfPainlessness: {
@@ -180,6 +197,18 @@ const intlText = {
     }
   },
   Places: {
+    theVoid: {
+      name: "The Void",
+      description: "A place where only the dead can see",
+    },
+    eventHorizon: {
+      name: "The Event Horizon",
+      description: "The edge of space and time."
+    },
+    theBlackhole: {
+      name: "The Black Hole",
+      description: "A swirling miasma of space, time, and light",
+    },
     phyntasieWorld: {
       name: "Phyntasie",
       description: "The world I love - or so they tell me."
@@ -302,7 +331,6 @@ const intlText = {
       name: "Overlook Hill",
       description: "Looming in the distance the opposite of the island, I can see Reedton. So interesting, a bustling city, diminished to such a puny size by something as simple as distance. I look down and note: This hill... it does not seem natural."
     },
-
   },
   Items: {
     sandals: {
@@ -332,12 +360,68 @@ const intlText = {
     },
     dumbAssStick: {
       name: "Dumb Ass Stick",
-      description: "A stupid peice of wood that has been sharpened."
+      description: "A stupid piece of wood that has been sharpened."
     },
     silverChalice: {
       name: "Silver Chalice",
       description: "A chalice made of silver. At least, it seems so."
-    }
+    },
+    boots: {
+      name: "Boots",
+      description: "Leather knee high boots, fit for combat. At least, more so that sandals."
+    },
+    cuirass: {
+      name: "Cuirass",
+      description: "A plate of metal made to wrap arround my chest and back. It is a snug fit, but a safe fit."
+    },
+    corinthianHelmet: {
+      name: "Corinthian Helmet",
+      description: `I am not sure who this "Corinthian" is, but her helmet sure is a beauty. It has nice metal cheek and nose guards. The mane is a bit osentatious, but I like it.`
+    },
+    greaves: {
+      name: "Greaves",
+      description: "Metal plates that strap to my bulky calves."
+    },
+    gauntlets: {
+      name: "Gauntlets",
+      description: "Metal gloves. Simple as that."
+    },
+    lance: {
+      name: "Lance",
+      description: "A one time use tree sharpened to a point. It causes massive damage."
+    },
+    spikedWoodClub: {
+      name: 'Spiked Wood Club',
+      description: "A stump of wood with old nails pounded through to the other side. Brutally effective.",
+    },
+    sharpenedMetalPole: {
+      name: "Sharpened Metal Pole",
+      description: "An old peice of building support, weaponized.",
+    },
+    infinityPlate: {
+      name: "Infinity Plate",
+      description: "A plate of armor made from solid rainbows.",
+    },
+    infinityGloves: {
+      name: "Gloves of the Infinite Grasping",
+      description: "Gloves that enable the ability to grasp what does not exsist."
+    },
+    infinityBoots: {
+      name: "Boots of the Void Walker",
+      description: "Pure light that fuses upon the soles of feet. Flight is now possible."
+    },
+    infinityHelmet: {
+      name: "Hat of Omniscience",
+      description: "42",
+    },
+    infinityPants: {
+      name: "Overalls of the Traveler",
+      description: "Pants and straps made from the dreams of toddlers and the nightmares of dogs."
+    },
+    infinityWeapon: {
+      name: "U1dOb0lHSnBiaUJrYVdVZ1JYaHBjM1JsYm5vZ1pHVnlJRlZ1Wlc1a2JHbGphR3RsYVhRZ2RXNWtJSFpsY25OMVkyaGxMQ0JrWVhNc0lIZGhjeUJwWTJnZ1oyVmliM0psYmlCb1lXSmxMQ0I2ZFhMRHZHTnJlblZuWlhkcGJtNWxiZz09",
+      description: "U1dOb0lHSnBiaUJrYVdVZ1JYaHBjM1JsYm5vZ1pHVnlJRlZ1Wlc1a2JHbGphR3RsYVhRZ2RXNWtJSFpsY25OMVkyaGxMQ0JrWVhNc0lIZGhjeUJwWTJnZ1oyVmliM0psYmlCb1lXSmxMQ0I2ZFhMRHZHTnJlblZuWlhkcGJtNWxiZz09",
+    },
   },
   ActionResults: {
     reviveFmt: function({ fullName }) {

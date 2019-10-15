@@ -8,7 +8,7 @@ function wop_game() {
     INVENTORY_SLOTS,
     QUEST_TYPE
   } = wop_models();
-  const { createWorld, allSpells, allPotions } = gameContext();
+  const { createWorld, allSpells, allPotions, TheVoid } = gameContext();
 
   // Begin Utility functions
   function playerBridge(player) {
@@ -58,6 +58,13 @@ function wop_game() {
         p.currentArea = p.currentWorld.areas[0];
         p.currentLocation = p.currentArea.locations[0];
         p.currentRoom = null;
+        if (
+          !p.currentWorld.areas.filter(
+            area => area.name === TheVoid.name
+          ).length
+        ) {
+          p.currentWorld.areas.push(TheVoid);
+        }
       }
     } else {
       p.attributes.addExperience(targetPlayer.attributes.level() * 30);
@@ -95,9 +102,7 @@ function wop_game() {
     const roll = Math.floor(Math.random() * Math.floor(5));
     if (roll > oneThroughFive) {
       let pool = p.currentLocation.monsters.filter(
-        m =>
-          p.attributes.level() >=
-          m.attributes.level()
+        m => p.attributes.level() >= m.attributes.level()
       );
 
       if (pool.length <= 0) {

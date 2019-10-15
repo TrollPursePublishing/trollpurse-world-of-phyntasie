@@ -25,7 +25,7 @@ function gameContext() {
 
   //Spells
   function restore(attribute, value, next = null) {
-    return function (instigator, target) {
+    return function(instigator, target) {
       let text = "";
       if (next) {
         text = next(instigator, target);
@@ -48,7 +48,7 @@ function gameContext() {
   }
 
   function damage(damageAmount, next = null) {
-    return function (instigator, target) {
+    return function(instigator, target) {
       let text = intlText.Empty;
       if (next) {
         text = next(instigator, target);
@@ -71,7 +71,7 @@ function gameContext() {
   }
 
   function requiresCombat(next) {
-    return function (instigator, target) {
+    return function(instigator, target) {
       if (instigator.isInCombat && target) {
         return next(instigator, target);
       }
@@ -94,6 +94,22 @@ function gameContext() {
       ...intlText.Spells.vampiricBite,
       apply: requiresCombat(damage(4, heal(3))),
       manaCost: 3
+    }),
+    [intlText.Spells.alphaOmegaLight.name]: wop_spell({
+      ...intlText.Spells.alphaOmegaLight,
+      apply: requiresCombat(
+        damage(
+          500,
+          heal(
+            100,
+            restore(
+              "stanima",
+              10,
+              restore("strength", 10, restore("toughtness", 10))
+            )
+          )
+        )
+      )
     })
   };
 
@@ -121,35 +137,30 @@ function gameContext() {
       ...intlText.Items.sandals,
       equipmentSlot: ARMOR_SLOTS.Feet,
       durability: 100,
-      value: 50,
       armorRating: 1
     }),
     wop_armor({
       ...intlText.Items.plateWithStraps,
       equipmentSlot: ARMOR_SLOTS.Torso,
       durability: 10,
-      value: 50,
       armorRating: 2
     }),
     wop_armor({
       ...intlText.Items.clotheCap,
       equipmentSlot: ARMOR_SLOTS.Head,
       durability: 100,
-      value: 50,
       armorRating: 1
     }),
     wop_armor({
       ...intlText.Items.canvasPants,
       equipmentSlot: ARMOR_SLOTS.Legs,
       durability: 50,
-      value: 25,
       armorRating: 1
     }),
     wop_armor({
       ...intlText.Items.greivingGauntlets,
       equipmentSlot: ARMOR_SLOTS.Arm,
       durability: 200,
-      value: 125,
       armorRating: 2
     })
   ];
@@ -159,35 +170,30 @@ function gameContext() {
       ...intlText.Items.boots,
       equipmentSlot: ARMOR_SLOTS.Feet,
       durability: 120,
-      value: 120,
       armorRating: 2
     }),
     wop_armor({
       ...intlText.Items.cuirass,
       equipmentSlot: ARMOR_SLOTS.Torso,
       durability: 15,
-      value: 220,
       armorRating: 4
     }),
     wop_armor({
       ...intlText.Items.corinthianHelmet,
       equipmentSlot: ARMOR_SLOTS.Head,
       durability: 120,
-      value: 120,
       armorRating: 2
     }),
     wop_armor({
       ...intlText.Items.greaves,
       equipmentSlot: ARMOR_SLOTS.Legs,
       durability: 60,
-      value: 55,
       armorRating: 2
     }),
     wop_armor({
       ...intlText.Items.gauntlets,
       equipmentSlot: ARMOR_SLOTS.Arm,
       durability: 300,
-      value: 200,
       armorRating: 3
     })
   ];
@@ -198,8 +204,7 @@ function gameContext() {
       damage: 1,
       criticalDamage: 2,
       durability: 10,
-      stanimaCost: 0,
-      value: 50
+      stanimaCost: 0
     })
   ];
 
@@ -209,20 +214,105 @@ function gameContext() {
       damage: 3,
       criticalDamage: 5,
       durability: 20,
-      stanimaCost: 1,
-      value: 75
+      stanimaCost: 1
     }),
     wop_weapon({
       ...intlText.Items.sharpenedMetalPole,
       damage: 2,
       criticalDamage: 3,
       durability: 15,
-      stanimaCost: 0,
-      value: 65
+      stanimaCost: 0
+    }),
+    wop_weapon({
+      ...intlText.Items.lance,
+      damage: 15,
+      criticalDamage: 25,
+      durability: 1,
+      stanimaCost: 5
     })
   ];
+
   // Actors
   const allMonsters = {
+    [intlText.Monsters.alchemist.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.alchemist,
+        spells: [
+          allSpells[intlText.Spells.healingTouch.name],
+          allSpells[intlText.Spells.fireSpit.name]
+        ],
+        attributes: wop_playerAttribute({
+          strength: 1,
+          mana: 20,
+          health: 10,
+          toughness: 0,
+          stanima: 0
+        }),
+        inventory: wop_inventory({
+          potions: new Array(12).fill(
+            allPotions[intlText.Potions.flamingJarOfShit.name]
+          )
+        })
+      })
+    ),
+    [intlText.Monsters.infinity.key]: wop_npcPlayerDecorator(
+      wop_player({
+        ...intlText.Monsters.infinity,
+        spells: Object.keys(allSpells).map(key => allSpells[key]),
+        attributes: wop_playerAttribute({
+          strength: 500,
+          mana: 1000,
+          health: 1500,
+          toughness: 200,
+          stanima: 1000
+        }),
+        equipment: wop_equipment({
+          arm: wop_armor({
+            ...intlText.Items.infinityGloves,
+            equipmentSlot: ARMOR_SLOTS.Arm,
+            armorRating: 100,
+            durability: 10000,
+            value: -1
+          }),
+          head: wop_armor({
+            ...intlText.Items.infinityHelmet,
+            equipmentSlot: ARMOR_SLOTS.Arm,
+            armorRating: 100,
+            durability: 10000,
+            value: -1
+          }),
+          torso: wop_armor({
+            ...intlText.Items.infinityPlate,
+            equipmentSlot: ARMOR_SLOTS.Arm,
+            armorRating: 100,
+            durability: 10000,
+            value: -1
+          }),
+          legs: wop_armor({
+            ...intlText.Items.infinityPants,
+            equipmentSlot: ARMOR_SLOTS.Arm,
+            armorRating: 100,
+            durability: 10000,
+            value: -1
+          }),
+          feet: wop_armor({
+            ...intlText.Items.infinityBoots,
+            equipmentSlot: ARMOR_SLOTS.Arm,
+            armorRating: 100,
+            durability: 10000,
+            value: -1
+          }),
+          weapon: wop_weapon({
+            ...intlText.Items.infinityWeapon,
+            criticalDamage: 100000000,
+            damage: 250,
+            durability: 10000,
+            stanimaCost: -20,
+            value: -1
+          })
+        })
+      })
+    ),
     [intlText.Monsters.darkVampire.key]: wop_npcPlayerDecorator(
       wop_player({
         ...intlText.Monsters.darkVampire,
@@ -232,11 +322,11 @@ function gameContext() {
           mana: 20,
           health: 15,
           toughness: 2,
-          stanima: 0,
-        }),
+          stanima: 0
+        })
       }),
       {
-        spellCastingWeight: 1.0,
+        spellCastingWeight: 1.0
       }
     ),
     [intlText.Monsters.peskyImp.key]: wop_npcPlayerDecorator(
@@ -357,7 +447,13 @@ function gameContext() {
   allMonsters[intlText.Monsters.buffedImp.key].attributes.levelUp();
 
   //Log as last
-  Object.keys(allMonsters).forEach(monster => console.log(`${allMonsters[monster].fullName} is level ${allMonsters[monster].attributes.level()}`));
+  Object.keys(allMonsters).forEach(monster =>
+    console.log(
+      `${allMonsters[monster].fullName} is level ${allMonsters[
+        monster
+      ].attributes.level()}`
+    )
+  );
 
   const questGivers = {
     ButtleberryHerald: wop_questGiver({
@@ -433,9 +529,7 @@ function gameContext() {
       wop_location({
         ...intlText.Places.groveOfTheElderLocation,
         isExit: true,
-        monsters: [
-          allMonsters[intlText.Monsters.groveGuardian.key],
-        ]
+        monsters: [allMonsters[intlText.Monsters.groveGuardian.key]]
       }),
       wop_location({
         ...intlText.Places.tallTreeLocation,
@@ -457,7 +551,7 @@ function gameContext() {
         isExit: true,
         monsters: [
           allMonsters[intlText.Monsters.largeRat.key],
-          allMonsters[intlText.Monsters.darkVampire.key],
+          allMonsters[intlText.Monsters.darkVampire.key]
         ]
       })
     ]
@@ -502,6 +596,10 @@ function gameContext() {
       }),
       wop_location({
         ...intlText.Places.castleLocation,
+        monsters: [
+          allMonsters[intlText.Monsters.largeRat.key],
+          allMonsters[intlText.Monsters.alchemist.key]
+        ],
         rooms: [
           wop_room({
             ...intlText.Places.castleEntranceRoom,
@@ -539,6 +637,24 @@ function gameContext() {
                 ]
               })
             ]
+          })
+        ]
+      })
+    ]
+  });
+
+  const TheVoid = wop_area({
+    ...intlText.Places.theVoid,
+    locations: [
+      wop_location({
+        ...intlText.Places.eventHorizon,
+        isExit: true,
+        monsters: [allMonsters[intlText.Monsters.infinity.key]],
+        rooms: [
+          wop_room({
+            isExit: true,
+            ...intlText.Places.theBlackhole,
+            chanceForRelic: 0
           })
         ]
       })
@@ -626,7 +742,7 @@ function gameContext() {
   const createWorld = () => {
     return wop_world({
       ...intlText.Places.phyntasieWorld,
-      areas: [HauntedForest, Reedton, Buttleberry, TheBarrenWastes]
+      areas: [HauntedForest, Reedton, Buttleberry, TheBarrenWastes],
     });
   };
 
@@ -634,6 +750,7 @@ function gameContext() {
     allSpells,
     allMonsters,
     allPotions,
-    createWorld
+    createWorld,
+    TheVoid,
   };
 }
