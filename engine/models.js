@@ -835,7 +835,8 @@ function wop_models() {
       return player.defend(instance, physicalDamage, weaponDamage);
     };
 
-    npc.attack = function(target) {
+    npc.attack = function (target) {
+      npc.isInCombat = true;
       const ACTIONS = {
         ATTACK: "attack",
         CAST: "cast",
@@ -952,9 +953,9 @@ function wop_models() {
 
       switch (actionToTake) {
         case ACTIONS.CAST:
-          return player.castSpell(target, useOrCastWhat);
+          return player.castSpell(useOrCastWhat, target).replace('I', player.fullName);
         case ACTIONS.USE:
-          return player.usePotion(useOrCastWhat, target);
+          return player.usePotion(useOrCastWhat, target).replace('I', player.fullName);
         case ACTIONS.ATTACK:
         default:
           return player.attack(target);

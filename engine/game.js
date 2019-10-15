@@ -6,13 +6,9 @@ function wop_game() {
     wop_playerQuestQuest,
     wop_achievement,
     INVENTORY_SLOTS,
-    QUEST_TYPE,
+    QUEST_TYPE
   } = wop_models();
-  const {
-    createWorld,
-    allSpells,
-    allPotions
-  } = gameContext();
+  const { createWorld, allSpells, allPotions } = gameContext();
 
   // Begin Utility functions
   function playerBridge(player) {
@@ -65,7 +61,8 @@ function wop_game() {
       }
     } else {
       p.attributes.addExperience(targetPlayer.attributes.level() * 30);
-      p.inventory.gold = p.inventory.gold + targetPlayer.attributes.level() * 10;
+      p.inventory.gold =
+        p.inventory.gold + targetPlayer.attributes.level() * 10;
       result.push(targetPlayer.onDeath());
       targetPlayer.onRevive(); //Do not post this message.
       result.push(p.onCombatOver(targetPlayer));
@@ -74,7 +71,11 @@ function wop_game() {
       p.quests.quests
         .filter(q => q.quest.type === QUEST_TYPE.Kill)
         .filter(q => !q.isComplete())
-        .filter(q => q.quest.nameOfObject.toLowerCase() === targetPlayer.name.toLowerCase())
+        .filter(
+          q =>
+            q.quest.nameOfObject.toLowerCase() ===
+            targetPlayer.name.toLowerCase()
+        )
         .forEach(q => {
           q.count = q.count + 1;
           if (q.isComplete()) {
@@ -93,16 +94,17 @@ function wop_game() {
   function rollEncounter(p, oneThroughFive) {
     const roll = Math.floor(Math.random() * Math.floor(5));
     if (roll > oneThroughFive) {
-      let pool = p.currentLocation.monsters
-        .filter(m => p.attributes.level() >= (m.attributes.level() - 2 /*range of levels are allowed*/));
+      let pool = p.currentLocation.monsters.filter(
+        m =>
+          p.attributes.level() >=
+          m.attributes.level() - 2 /*range of levels are allowed*/
+      );
 
       if (pool.length <= 0) {
         pool = p.currentLocation.monsters;
       }
 
-      const index = Math.floor(
-        Math.random() * pool.length
-      );
+      const index = Math.floor(Math.random() * pool.length);
       const monster = pool[index];
       if (monster) {
         return p.engage(monster);
@@ -154,10 +156,7 @@ function wop_game() {
           ...postPlayerCombatAction(p, p.savedTarget)
         ];
       } else {
-        return [
-          spell.description,
-          p.castSpell(spell),
-        ];
+        return [spell.description, p.castSpell(spell)];
       }
     }
     return [`I do not know how to cast ${spellName}`];
@@ -194,7 +193,10 @@ function wop_game() {
           p.currentLocation.description
         ];
 
-        if (p.currentLocation.questGiver && p.currentLocation.questGiver.canDoQuest(p)) {
+        if (
+          p.currentLocation.questGiver &&
+          p.currentLocation.questGiver.canDoQuest(p)
+        ) {
           result.push(`${p.currentLocation.questGiver.name} is here.`);
           result.push(p.currentLocation.questGiver.description);
         }
@@ -214,7 +216,9 @@ function wop_game() {
 
     if ((p.isInside || p.isInRoom) && p.currentRoom) {
       if (Math.random() <= p.currentRoom.chanceForRelic) {
-        const index = Math.floor(Math.random() * Math.floor(p.currentRoom.length));
+        const index = Math.floor(
+          Math.random() * Math.floor(p.currentRoom.length)
+        );
         return [p.addItemToInventory(p.currentRoom.relics[index])];
       } else {
         return [rollEncounter(p, -1)];
@@ -277,9 +281,7 @@ function wop_game() {
         p.currentLocation = destination;
         if (destination.questGiver && destination.questGiver.canDoQuest(p)) {
           results.push(
-            `${destination.questGiver.name} is here. ${
-              destination.questGiver.description
-            }`
+            `${destination.questGiver.name} is here. ${destination.questGiver.description}`
           );
         }
         results.push(rollEncounter(p, 3));
@@ -356,15 +358,11 @@ function wop_game() {
     if (p.currentLocation.hasMarket) {
       p.attributes.resetStats();
       return [
-        `Resting at the ${
-          p.currentLocation.name
-        } Inn. The bed was hard, the bread was hard, and my coin purse seems softer.`
+        `Resting at the ${p.currentLocation.name} Inn. The bed was hard, the bread was hard, and my coin purse seems softer.`
       ];
     }
     return [
-      `${
-        p.currentLocation.name
-      } does not have an Inn. I must find a place with a Market to find an Inn and rest.`
+      `${p.currentLocation.name} does not have an Inn. I must find a place with a Market to find an Inn and rest.`
     ];
   }
 
@@ -476,6 +474,17 @@ function wop_game() {
           )
         : null;
 
+      if (Player.savedTarget) {
+        Player.savedTarget.spells = Player.savedTarget.spells.map(
+          spell => allSpells[spell.name]
+        );
+        Player.savedTarget.inventory[
+          INVENTORY_SLOTS.Potion
+        ] = Player.savedTarget.inventory[INVENTORY_SLOTS.Potion].map(potion =>
+          allPotions[potion.name].clone()
+        );
+      }
+
       return { Player };
     }
     throw new Error(`No player for slot ${slotName}`);
@@ -495,9 +504,10 @@ function wop_game() {
     let messages = [];
     const originalParameters = parameters;
 
-
     try {
-      const uncompletedQuests = Player.quests.quests.filter(q => !q.isComplete());
+      const uncompletedQuests = Player.quests.quests.filter(
+        q => !q.isComplete()
+      );
 
       if (parameters.includes(" ")) {
         const params = parameters.split(" ");
@@ -506,16 +516,16 @@ function wop_game() {
           ACTIONS[parameters](Player, params.join(" "))
         );
       } else {
-        messages = messages.concat(
-          ACTIONS[parameters](Player, null)
-        );
+        messages = messages.concat(ACTIONS[parameters](Player, null));
       }
 
       const completedQuests = uncompletedQuests.filter(q => q.isComplete());
-      const achievements = completedQuests.map(q => wop_achievement({
-        name: 'Quest Completed',
-        description: `Completed the quest: ${q.quest.title}. ${q.quest.description}. ${q.quest.instructions}`,
-      }));
+      const achievements = completedQuests.map(q =>
+        wop_achievement({
+          name: "Quest Completed",
+          description: `Completed the quest: ${q.quest.title}. ${q.quest.description}. ${q.quest.instructions}`
+        })
+      );
 
       Player.achievements = Player.achievements.concat(achievements);
     } catch (err) {
@@ -529,7 +539,7 @@ function wop_game() {
 
     return JSON.stringify({
       player: playerBridge(Player),
-      messages,
+      messages
     });
   }
 
@@ -552,11 +562,8 @@ function wop_game() {
         currentWorld,
         currentArea: currentWorld.areas[0],
         currentLocation: currentWorld.areas[0].locations[0],
-        spells: [
-          allSpells["Healing Touch"],
-          allSpells["Fire Spit"],
-        ],
-      }),
+        spells: [allSpells["Healing Touch"], allSpells["Fire Spit"]]
+      })
     });
   }
 
