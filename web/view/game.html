@@ -72,7 +72,7 @@
                             Go To <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li data-ng-hide="user.navigation.currentRoom" style="cursor: pointer" class="btn" data-ng-click="do('go', area)" data-ng-repeat="area in user.navigation.areaNames">
+                            <li data-ng-hide="user.navigation.currentRoom || !user.navigation.currentLocation.isExit" style="cursor: pointer" class="btn" data-ng-click="do('go', area)" data-ng-repeat="area in user.navigation.areaNames">
                                 {{area}}
                             </li>
                             <div style="border-bottom: 1px solid black"></div>
