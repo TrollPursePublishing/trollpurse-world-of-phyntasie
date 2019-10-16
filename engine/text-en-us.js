@@ -50,9 +50,19 @@ const intlText = {
       description: "It seems that the souls the farmer spoke of were here all along. They seem miserable, trapped. One, a small spectre, weeping, speaks in the faintest of whispers. From the sillhouette, I could tell it was once a small child. She whispers to me, \"Release us... defeat the Souls that... harm... pain\". After that she weeps with a mighty wail. Her small shoulders rapidly rising and falling twice with each sob.",
       instructions: "Slay ten Souls",
       nameOfObject: "Soul",
-    }
+    },
+    collectSoulsFmt: (fullName) => ({
+      title: `Collect Souls: ${fullName}`,
+      description: `Collect the soul of ${fullName} to redeem yourself.`,
+      instructions: `Slay 1 ${fullName}`,
+      nameOfObject: fullName,
+    })
   },
   Characters: {
+    soulCollector: {
+      name: "The Soul Collector",
+      description: "A thin gray creature with long limbs, oval almond eyes, and a smooth surface. I cannot tell if it is wearing armor, clothes, or is in the buff. It opens a scroll urging me to do what I must. While the paper is blank, I understand what it says. I must accept."
+    },
     buttleberryHerald: {
       name: "Town Herald",
       description:
@@ -333,6 +343,10 @@ const intlText = {
     },
   },
   Items: {
+    infinityShardRelic: {
+      name: 'Infinity Shard',
+      description: 'Made from pure time. I cannot comprehend any other thing this is made of.'
+    },
     sandals: {
       name: "Sandals",
       description:
@@ -423,6 +437,17 @@ const intlText = {
       description: "U1dOb0lHSnBiaUJrYVdVZ1JYaHBjM1JsYm5vZ1pHVnlJRlZ1Wlc1a2JHbGphR3RsYVhRZ2RXNWtJSFpsY25OMVkyaGxMQ0JrWVhNc0lIZGhjeUJwWTJnZ1oyVmliM0psYmlCb1lXSmxMQ0I2ZFhMRHZHTnJlblZuWlhkcGJtNWxiZz09",
     },
   },
+  GameMessages: {
+    nothing: "All seems quiet here.",
+    notInCombat: "I am not in combat right now.",
+    cannotLeaveInCombat: "I cannot leave while in combat",
+    cannotPurchase: "I cannot purchase anything at this time.",
+    canBuyTheFollowing: "I can buy the following.",
+    noMarket: "There is no market where I am at.",
+    cannotEquipFmt: (itemName) => `I cannot equip ${itemName}. It is not possible to do so.`,
+    cannotCastFmt: (spellName) => `I do not know how to cast ${spellName}`,
+    questCompleteFmt: ({ title }) => `Completed ${title}!`,
+  },
   ActionResults: {
     reviveFmt: function({ fullName }) {
       return `${fullName} has been revived by the magic of the world.`;
@@ -439,10 +464,10 @@ const intlText = {
     deathFmt: function({ fullName }) {
       return `${fullName} has been slain by the misfortunes of this world`;
     },
-    moveFmt: function({ name, description, questComplete, questTitle }) {
+    moveFmt: function({ name, description, questComplete, questTitle, triggeredQuests }) {
       return `I move forth to ${name}. ${description}. ${
-        questComplete ? `Completed ${questTitle}!` : intlText.Empty
-      }`;
+        questComplete ? `Completed ${questTitle}! ` : intlText.Empty
+      }${triggeredQuests.join('. ')}`;
     },
     itemAddedToInventoryFmt: function({ name, description }) {
       return `${name} added to inventory. ${description}`;

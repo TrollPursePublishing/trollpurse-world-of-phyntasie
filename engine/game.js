@@ -81,19 +81,21 @@ function wop_game() {
         .filter(
           q =>
             q.quest.nameOfObject.toLowerCase() ===
-            targetPlayer.name.toLowerCase()
+            targetPlayer.name.toLowerCase() ||
+            q.quest.nameOfObject.toLowerCase() ===
+            targetPlayer.fullName.toLowerCase()
         )
         .forEach(q => {
           q.count = q.count + 1;
           if (q.isComplete()) {
             p.inventory.gold = p.inventory.gold + q.quest.gold;
-            result.push(`Completed ${q.quest.title}!`);
-            if (q.nextQuest) {
+            result.push(intlText.GameMessages.questCompleteFmt(q.quest));
+            if (q.quest.nextQuest) {
               p.quests.quests.push(
-                wop_playerQuestQuest({ quest: q.nextQuest })
+                wop_playerQuestQuest({ quest: q.quest.nextQuest })
               );
-              result.push(q.nextQuest.description);
-              result.push(q.nextQuest.instructions);
+              result.push(q.quest.nextQuest.description);
+              result.push(q.quest.nextQuest.instructions);
             }
           }
         });
@@ -122,7 +124,7 @@ function wop_game() {
         return p.engage(monster);
       }
     }
-    return "All seems quiet here.";
+    return intlText.GameMessages.nothing;
   }
   // End Utility functions
 
@@ -132,12 +134,12 @@ function wop_game() {
         postPlayerCombatAction(p, p.savedTarget)
       );
     }
-    return ["I am not in combat right now"];
+    return [intlText.GameMessages.notInCombat];
   }
 
   function buy(p, itemName) {
     if (p.isInCombat || p.isInside) {
-      return ["I cannot purchase anything at this time."];
+      return [intlText.GameMessages.cannotPurchase];
     }
 
     const market = p.currentLocation.market;
@@ -148,11 +150,11 @@ function wop_game() {
         return [p.buyItem(item.clone()), item.description];
       }
       return [
-        "I can buy the following.",
+        intlText.GameMessages.canBuyTheFollowing,
         ...market.inventory.allItems().map(item => item.name)
       ];
     } else {
-      return ["There is no market where I am at."];
+      return [intlText.GameMessages.noMarket];
     }
   }
 
@@ -171,7 +173,7 @@ function wop_game() {
         return [spell.description, p.castSpell(spell)];
       }
     }
-    return [`I do not know how to cast ${spellName}`];
+    return [intlText.GameMessages.cannotCastFmt(spellName)];
   }
 
   function equip(p, itemName) {
@@ -183,15 +185,15 @@ function wop_game() {
         case INVENTORY_SLOTS.Weapon:
           return [p.equipWeapon(equipment)];
         default:
-          return [`I cannot equip ${itemName}. It is not possible to do so.`];
+          return [intlText.GameMessages.cannotEquipFmt(itemName)];
       }
     }
-    return [`I do not have ${itemName} to equip.`];
+    return [intlText.GameMessages.cannotEquipFmt(itemName)];
   }
 
   function exit(p, _params) {
     if (p.isInCombat) {
-      return ["I cannot leave while in combat."];
+      return [intlText.GameMessages.cannotLeaveInCombat];
     }
 
     if (p.currentRoom) {

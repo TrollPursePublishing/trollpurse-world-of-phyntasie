@@ -10,13 +10,16 @@ angular
     "UserService",
     "CommandService",
     "$filter",
+    "gamename",
     function(
       $scope,
       $location,
       UserService,
       CommandService,
-      $filter
+      $filter,
+      gamename,
     ) {
+      $scope.$root.title = gamename;
       $scope.user;
       $scope.currentDescription = {};
       $scope.navigation = {};
@@ -144,7 +147,7 @@ angular
     "UserService",
     "gamename",
     function($scope, $location, UserService, gamename) {
-      $scope.$root.title = gamename + " | Login";
+      $scope.$root.title = gamename;
       $scope.authError = "";
       $scope.result = {};
       $scope.bAuthError = false;

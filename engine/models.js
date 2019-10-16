@@ -385,7 +385,7 @@ function wop_models() {
       value,
       slot,
       apply,
-      clone: () => wop_potion({ name, description, value, slot, apply })
+      clone: () => wop_potion({ hint, name, description, value, slot, apply })
     };
   }
 
@@ -532,58 +532,40 @@ function wop_models() {
       return intlText.ActionResults.deathFmt(instance);
     };
 
-    instance.onMove = function(where) {
-      if (instance.currentRoom != null) {
-        const quest = instance.quests.quests.find(
-          q =>
-            !q.isComplete() &&
-            q.quest.type === QUEST_TYPE.GoTo &&
-            q.quest.nameOfObject.toLowerCase() ===
-              instance.currentRoom.name.toLowerCase()
-        );
+    instance.onMove = function (where) {
+      const triggeredQuests = [];
 
-        if (quest) {
-          quest.count = quest.count + 1;
-        }
-      }
-
-      let qq = instance.quests.quests.find(
+      const quest = instance.quests.quests.find(
         q =>
           !q.isComplete() &&
           q.quest.type === QUEST_TYPE.GoTo &&
-          q.quest.nameOfObject === instance.currentLocation.name
+          q.quest.nameOfObject.toLowerCase() ===
+          where.name.toLowerCase()
       );
-      if (!qq) {
-        qq = instance.quests.quests.find(
-          q =>
-            !q.isComplete() &&
-            q.quest.type === QUEST_TYPE.GoTo &&
-            q.quest.nameOfObject === instance.currentArea.name
-        );
-      }
 
-      if (qq) {
-        qq.count = qq.count + 1;
+      if (quest) {
+        quest.count = quest.count + 1;
+        if (quest.isComplete()) {
+          instance.inventory.gold = instance.inventory.gold + quest.quest.gold;
+          if (quest.quest.nextQuest) {
+            instance.quests.quests.push(
+              wop_playerQuestQuest({ quest: quest.quest.nextQuest })
+            );
+            triggeredQuests.push(quest.quest.nextQuest.description);
+            triggeredQuests.push(quest.quest.nextQuest.instructions);
+          }
+        }
       }
 
       if (!instance.placesVisited.includes(where.name)) {
         instance.areasDiscovered = instance.placesVisited.push(where.name);
       }
 
-      if (qq && qq.isComplete()) {
-        if (qq.nextQuest) {
-          p.quests.quests.push(
-            wop_playerQuestQuest({ quest: qq.nextQuest })
-          );
-          result.push(qq.nextQuest.description);
-          result.push(qq.nextQuest.instructions);
-        }
-      }
-
       return intlText.ActionResults.moveFmt({
         ...where,
-        questComplete: qq && qq.isComplete(),
-        questTitle: qq ? qq.quest.title : intlText.Empty
+        questComplete: quest && quest.isComplete(),
+        questTitle: quest ? quest.quest.title : intlText.Empty,
+        triggeredQuests,
       });
     };
 
@@ -599,6 +581,16 @@ function wop_models() {
 
         if (quest) {
           quest.count = quest.count + 1;
+          if (quest.isComplete()) {
+            instance.inventory.gold = instance.inventory.gold + quest.quest.gold;
+            if (quest.quest.nextQuest) {
+              instance.quests.quests.push(
+                wop_playerQuestQuest({ quest: quest.quest.nextQuest })
+              );
+              triggeredQuests.push(quest.quest.nextQuest.description);
+              triggeredQuests.push(quest.quest.nextQuest.instructions);
+            }
+          }
         }
       }
       return intlText.ActionResults.itemAddedToInventoryFmt(item);

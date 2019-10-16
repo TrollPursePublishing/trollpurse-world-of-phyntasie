@@ -105,7 +105,7 @@ function gameContext() {
             restore(
               "stanima",
               10,
-              restore("strength", 10, restore("toughtness", 10))
+              restore("strength", 10, restore("toughness", 10))
             )
           )
         )
@@ -249,9 +249,24 @@ function gameContext() {
           stanima: 0
         }),
         inventory: wop_inventory({
-          potions: new Array(12).fill(
-            allPotions[intlText.Potions.flamingJarOfShit.name]
-          )
+          potions: [
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone(),
+            allPotions[intlText.Potions.flamingJarOfShit.name].clone()
+          ]
         })
       })
     ),
@@ -456,6 +471,47 @@ function gameContext() {
   );
 
   const questGivers = {
+    SoulCollector: wop_questGiver({
+      ...intlText.Characters.soulCollector,
+      quest: Object.keys(allMonsters)
+        .map(key => allMonsters[key])
+        .sort((a, b) => {
+          if (a.attributes.level() < b.attributes.level()) return -1;
+          if (a.attributes.level() === b.attributes.level()) return 0;
+          if (a.attributes.level() > b.attributes.level()) return 1;
+        })
+        .map(monster => monster.fullName)
+        .reduce((quest, monster) => {
+          if (!quest.nameOfObject) {
+            const {
+              title,
+              description,
+              instructions,
+              nameOfObject
+            } = intlText.Quests.collectSoulsFmt(monster);
+            quest.title = title;
+            quest.description = description;
+            quest.instructions = instructions;
+            quest.nameOfObject = nameOfObject;
+            quest.countNeeded = 1;
+            quest.gold = 100;
+            quest.type = QUEST_TYPE.Kill;
+          } else {
+            let nextQuest = wop_quests({
+              ...intlText.Quests.collectSoulsFmt(monster),
+              countNeeded: 1,
+              gold: 100,
+              type: QUEST_TYPE.Kill
+            });
+            let q = quest;
+            while (q.nextQuest) {
+              q = q.nextQuest;
+            }
+            q.nextQuest = nextQuest;
+          }
+          return quest;
+        }, wop_quests({}))
+    }),
     ButtleberryHerald: wop_questGiver({
       ...intlText.Characters.buttleberryHerald,
       quest: wop_quests({
@@ -648,13 +704,20 @@ function gameContext() {
     locations: [
       wop_location({
         ...intlText.Places.eventHorizon,
+        questGiver: questGivers.SoulCollector,
         isExit: true,
         monsters: [allMonsters[intlText.Monsters.infinity.key]],
         rooms: [
           wop_room({
+            relics: [
+              wop_relic({
+                ...intlText.Items.infinityShardRelic,
+                value: 1000000
+              })
+            ],
             isExit: true,
             ...intlText.Places.theBlackhole,
-            chanceForRelic: 0
+            chanceForRelic: 0.001
           })
         ]
       })
@@ -742,7 +805,7 @@ function gameContext() {
   const createWorld = () => {
     return wop_world({
       ...intlText.Places.phyntasieWorld,
-      areas: [HauntedForest, Reedton, Buttleberry, TheBarrenWastes],
+      areas: [HauntedForest, Reedton, Buttleberry, TheBarrenWastes]
     });
   };
 
@@ -751,6 +814,6 @@ function gameContext() {
     allMonsters,
     allPotions,
     createWorld,
-    TheVoid,
+    TheVoid
   };
 }
