@@ -47,6 +47,7 @@ angular
       activate();
 
       $scope.viewTab = "potions";
+      $scope.mainTab = "bag";
 
       $scope.messages = [];
       $scope.oldMessages = [];
@@ -121,8 +122,16 @@ angular
         return angular.copy(arr).reverse();
       };
 
-      $scope.togglemenu = function() {
+      $scope.togglemenu = function(focus) {
         $scope.showmenu = !$scope.showmenu;
+        if (focus) {
+          if (focus === 'shop') {
+            $scope.mainTab = 1;
+            $scope.getBuyList();
+          } else {
+            $scope.mainTab = 0;
+          }
+        }
       };
     }
   ])

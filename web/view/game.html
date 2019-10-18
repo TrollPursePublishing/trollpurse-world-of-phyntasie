@@ -111,13 +111,16 @@
                     </button>
                 </div>
                 <div class="col-xs-3">
-                    <button type="button" class="btn btn-block" data-ng-click="togglemenu()">{{showmenu ? 'Hide ' : 'Show '}} Menu</button>
+                    <button type="button" class="btn btn-block" data-ng-click="togglemenu('bag')">{{showmenu ? 'Hide ' : 'Show '}} Bag</button>
                 </div>
                 <div class="col-xs-3">
                     <button data-ng-disabled="!user.navigation.currentRoom || user.isInCombat" class="btn btn-block" data-ng-click="submit('explore')"><img style="float:left"  class="img-responsive" src="images/public/icon/scroll-unfurled.png" /><span> Explore</span></button>
                 </div>
                 <div class="col-xs-3">
                     <button data-ng-disabled="!user.navigation.currentLocation.hasMarket || user.isInCombat" class="btn btn-block" data-ng-click="submit('rest')"><img style="float:left"  class="img-responsive" src="images/public/icon/bed.png" /><span> Rest</span></button>
+                </div>
+                <div class="col-xs-3">
+                    <button data-ng-disabled="user.navigation.currentRoom || !user.navigation.currentLocation.hasMarket || user.isInCombat" type="button" class="btn btn-block" data-ng-click="togglemenu('shop')">{{showmenu ? 'Hide ' : 'Show '}} Shop</button>
                 </div>
             </div>
         </div>
@@ -127,8 +130,8 @@
                     {{user.navigation.currentArea.name}} / {{user.navigation.currentLocation.name}} / {{user.navigation.currentRoom.name}}
                 </h3>
             </div>
-            <uib-tabset active="activeJustified">
-                <uib-tab>
+            <uib-tabset active="mainTab">
+                <uib-tab index="0">
                     <uib-tab-heading>
                         <span><image class="img-responsive" src="images/public/icon/swap-bag.png" />Bag</span>
                     </uib-tab-heading>
@@ -272,7 +275,7 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab data-ng-show="user.navigation.currentLocation.hasMarket" select="getBuyList()">
+                <uib-tab index="1" data-ng-show="user.navigation.currentLocation.hasMarket" select="getBuyList()">
                     <uib-tab-heading>
                         <span class="text-center"><img class="img-responsive" src="images/public/icon/knapsack.png" />Shop</span>
                     </uib-tab-heading>
@@ -297,7 +300,7 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab>
+                <uib-tab index="2">
                     <uib-tab-heading>
                         <span class="text-center"><img class="img-responsive game-icon-32" src="images/public/icon/id-card.png">Profile</span>
                     </uib-tab-heading>
