@@ -1,64 +1,104 @@
 ﻿<!DOCTYPE html>
 <html lang="en" ng-app="app">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title ng-bind="title" data-game-name></title>
     <meta name="description" content="World of Phyntasie by Troll Purse" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="styles/hint.css" rel="stylesheet"/>
-    <link href="styles/img.css" rel="stylesheet"/>
-    <link href="styles/ui-bootstrap-csp.css" rel="stylesheet"/>
-    <link href="styles/game.css" rel="stylesheet"/>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link href="styles/hint.css" rel="stylesheet" />
+    <link href="styles/img.css" rel="stylesheet" />
+    <link href="styles/ui-bootstrap-csp.css" rel="stylesheet" />
+    <link href="styles/game.css" rel="stylesheet" />
 
     <link href="https://worldofphyntasie.com" rel="canonical" />
 
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="World of Phyntasie" />
-	<meta name="twitter:site" content="@trollpurse" />
-	<meta name="twitter:creator" content="@trollpurse" />
-	<meta name="twitter:url" content="https://worldofphyntasie.com/index.html" />
-	<meta name="twitter:image" content="https://worldofphyntasie.com/images/logos/logo_small.png" />
-	<meta name="twitter:description" content="World of Phyntasie. An adventure game for the adventurous." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="World of Phyntasie" />
+    <meta name="twitter:site" content="@trollpurse" />
+    <meta name="twitter:creator" content="@trollpurse" />
+    <meta
+      name="twitter:url"
+      content="https://worldofphyntasie.com/index.html"
+    />
+    <meta
+      name="twitter:image"
+      content="https://worldofphyntasie.com/images/logos/logo_small.png"
+    />
+    <meta
+      name="twitter:description"
+      content="World of Phyntasie. An adventure game for the adventurous."
+    />
 
-	<meta name="description" content="World of Phyntasie. An adventure game for the adventurous.">
+    <meta
+      name="description"
+      content="World of Phyntasie. An adventure game for the adventurous."
+    />
 
-	<meta property="og:title" content="World of Phyntasie" />
-	<meta property="og:type" content="website" />
-	<meta property="og:description" content="World of Phyntasie. An adventure game for the adventurous." />
-	<meta property="og:url" content="https://worldofphyntasie.com/index.html" />
-	<meta property="og:image" content="https://worldofphyntasie.com/images/logos/logo_small.png" />
+    <meta property="og:title" content="World of Phyntasie" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="World of Phyntasie. An adventure game for the adventurous."
+    />
+    <meta property="og:url" content="https://worldofphyntasie.com/index.html" />
+    <meta
+      property="og:image"
+      content="https://worldofphyntasie.com/images/logos/logo_small.png"
+    />
 
-	<meta name="author" content="Troll Purse" />
-</head>
-<body style="height: 100vh">
-    <nav class="nav navbar navbar-inverse navbar-fixed-top" role="navigation" ng-if=" !layout " style="z-index:1000;">
-        <div class="container">
-            <div class="navbar-header">
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="#/" class="navbar-brand"><i data-game-name></i> <i style="font-size:8px;" data-app-version></i></a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="#/manual">Manual</a>
-                    </li>
-                </ul>
-            </div>
+    <meta name="author" content="Troll Purse" />
+  </head>
+  <body style="height: 100vh">
+    <nav
+      class="nav navbar navbar-inverse navbar-fixed-top"
+      role="navigation"
+      ng-if=" !layout "
+      style="z-index:1000;"
+    >
+      <div class="container">
+        <div class="navbar-header">
+          <button
+            class="navbar-toggle"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+            aria-controls="navbar"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="#/" class="navbar-brand"
+            ><i data-game-name></i>
+            <i style="font-size:8px;" data-app-version></i
+          ></a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="#/manual">Manual</a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <div ng-view style="padding-top:50px; height:100%;">
-    </div>
+    <div ng-view style="padding-top:50px; height:100%;"></div>
     <script src="scripts/engine/text-en-us.js"></script>
     <script src="scripts/engine/models.js"></script>
     <script src="scripts/engine/gameContext.js"></script>
@@ -73,5 +113,18 @@
     <script src="scripts/app/services.js"></script>
     <script src="scripts/app/controllers.js"></script>
     <script src="scripts/app/app.js"></script>
-</body>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-150834115-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-150834115-1");
+    </script>
+  </body>
 </html>
